@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id            String     @id @default(uuid())
+    name          String
+    username      String
+    email         String     @unique
+    password_hash String
+    created_at    DateTime   @default(now())
+    review        Review[]
+    like          Like[]
+    bookList      BookList[]
+
+    @@map("users")
+}
+
+model Book {
+    id          String    @id @default(uuid())
+    title       String
+    subtitle    String?
+    authors     String[]
+    publisher   String?
+    publishDate DateTime?
+    language    String?
+    pageCount   Int?
+    description String?
+
+    reviews    Review[]
+    bookList   BookList? @relation(fields: [bookListId], references: [id])
+    bookListId String?
+}
+
+model Review {
+    id      String @id @default(uuid())
+    content String
+    rating  Float
+    user    User   @relation(fields: [userId], references: [id])
+    userId  String
+    likes   Like[]
+    book    Book?  @relation(fields: [bookId], references: [id])
+    bookId  String
+}
+
+model Like {
+    id       String @id @default(uuid())
+    user     User   @relation(fields: [userId], references: [id])
+    userId   String
+    review   Review @relation(fields: [reviewId], references: [id])
+    reviewId String
+}
+
+model BookList {
+    id     String @id @default(uuid())
+    name   String
+    books  Book[]
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+}
