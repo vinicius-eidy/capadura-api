@@ -45,9 +45,9 @@ export class CreateBookUseCase {
             subtitle,
             authors,
             publisher,
-            publishDate,
+            publish_date: publishDate,
             language,
-            pageCount,
+            page_count: pageCount,
             description,
         });
 

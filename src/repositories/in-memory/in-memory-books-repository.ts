@@ -3,10 +3,6 @@ import { Book, Prisma } from "@prisma/client";
 
 import { BooksRepository } from "../books-repository";
 
-type BookCreateInput = Omit<Prisma.BookCreateInput, "bookListId"> & {
-    bookListId?: string | null;
-};
-
 export class InMemoryBooksRepository implements BooksRepository {
     public items: Book[] = [];
 
@@ -16,18 +12,18 @@ export class InMemoryBooksRepository implements BooksRepository {
         return book ?? null;
     }
 
-    async create(data: BookCreateInput) {
+    async create(data: Prisma.BookUncheckedCreateInput) {
         const {
             id = randomUUID(),
             title,
             subtitle = null,
             authors = [],
             publisher = null,
-            publishDate = null,
+            publish_date = null,
             language = null,
-            pageCount = null,
+            page_count = null,
             description = null,
-            bookListId = null,
+            book_list_id = null,
         } = data;
 
         const book: Book = {
@@ -36,11 +32,11 @@ export class InMemoryBooksRepository implements BooksRepository {
             subtitle,
             authors: Array.isArray(authors) ? authors : [authors as string],
             publisher,
-            publishDate: publishDate ? new Date(publishDate) : null,
+            publish_date: publish_date ? new Date(publish_date) : null,
             language,
-            pageCount,
+            page_count,
             description,
-            bookListId,
+            book_list_id,
         };
 
         this.items.push(book);

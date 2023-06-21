@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Read" ADD COLUMN     "is_private" BOOLEAN NOT NULL DEFAULT false,
+ALTER COLUMN "status" SET DEFAULT 'ACTIVE';

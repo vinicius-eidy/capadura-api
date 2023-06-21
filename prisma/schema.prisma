@@ -19,74 +19,82 @@ model User {
     created_at    DateTime   @default(now())
     review        Review[]
     like          Like[]
-    bookList      BookList[]
+    book_list     BookList[]
     read          Read[]
 
     @@map("users")
 }
 
 model Book {
-    id          String    @id @default(uuid())
-    title       String
-    subtitle    String?
-    authors     String[]
-    publisher   String?
-    publishDate DateTime?
-    language    String?
-    pageCount   Int?
-    description String?
+    id           String    @id @default(uuid())
+    title        String
+    subtitle     String?
+    authors      String[]
+    publisher    String?
+    publish_date DateTime?
+    language     String?
+    page_count   Int?
+    description  String?
 
-    reviews    Review[]
-    bookList   BookList? @relation(fields: [bookListId], references: [id])
-    bookListId String?
-    like       Like[]
-    read       Read[]
+    reviews      Review[]
+    book_list    BookList? @relation(fields: [book_list_id], references: [id])
+    book_list_id String?
+    like         Like[]
+    read         Read[]
+}
+
+enum ReadStatus {
+    ACTIVE
+    FINISHED
+    CANCELLED
 }
 
 model Read {
-    id        String     @id @default(uuid())
-    startDate DateTime   @default(now())
-    endDate   DateTime?
-    user      User       @relation(fields: [userId], references: [id])
-    userId    String
-    book      Book       @relation(fields: [bookId], references: [id])
-    bookId    String
-    progress  Progress[]
+    id         String     @id @default(uuid())
+    start_date DateTime   @default(now())
+    end_date   DateTime?
+    status     ReadStatus @default(ACTIVE)
+    is_private Boolean    @default(false)
+    user       User       @relation(fields: [user_id], references: [id])
+    user_id    String
+    book       Book       @relation(fields: [book_id], references: [id])
+    book_id    String
+    progress   Progress[]
 }
 
 model Progress {
     id          String   @id @default(uuid())
     description String?
-    isSpoiler   Boolean
+    is_spoiler  Boolean
     page        Int?
     percentage  Float?
-    createdAt   DateTime @default(now())
-    read        Read     @relation(fields: [readId], references: [id])
-    readId      String
+    created_at  DateTime @default(now())
+    read        Read     @relation(fields: [read_id], references: [id])
+    read_id     String
 }
 
 model Review {
     id      String @id @default(uuid())
     content String
     rating  Float
-    user    User   @relation(fields: [userId], references: [id])
-    userId  String
-    book    Book   @relation(fields: [bookId], references: [id])
-    bookId  String
+    user    User   @relation(fields: [user_id], references: [id])
+    user_id String
+    book    Book   @relation(fields: [book_id], references: [id])
+    book_id String
 }
 
 model Like {
-    id     String @id @default(uuid())
-    user   User   @relation(fields: [userId], references: [id])
-    userId String
-    book   Book   @relation(fields: [bookId], references: [id])
-    bookId String
+    id      String @id @default(uuid())
+    user    User   @relation(fields: [user_id], references: [id])
+    user_id String
+    book    Book   @relation(fields: [book_id], references: [id])
+    book_id String
 }
 
 model BookList {
-    id     String @id @default(uuid())
-    name   String
-    books  Book[]
-    user   User   @relation(fields: [userId], references: [id])
-    userId String
+    id      String @id @default(uuid())
+    name    String
+    books   Book[]
+    user    User   @relation(fields: [user_id], references: [id])
+    user_id String
 }
