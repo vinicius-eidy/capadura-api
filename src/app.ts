@@ -8,7 +8,7 @@ import { ZodError } from "zod";
 import { env } from "./env";
 
 import { usersRoutes } from "./http/controllers/users/routes";
-import { bookRoutes } from "./http/controllers/book/routes";
+import { bookRoutes } from "./http/controllers/books/routes";
 
 export const app = fastify({
     bodyLimit: 1024 * 1024 * 1024 * 2.5, // 2.5GB
