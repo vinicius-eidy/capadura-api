@@ -25,6 +25,8 @@ export class InMemoryReadsRepository implements ReadsRepository {
             end_date,
             book_id,
             user_id,
+            review_rating = null,
+            review_content = null,
         } = data;
 
         const read = {
@@ -35,6 +37,8 @@ export class InMemoryReadsRepository implements ReadsRepository {
             end_date: end_date as Date,
             book_id,
             user_id,
+            review_rating,
+            review_content,
         };
 
         this.items.push(read);

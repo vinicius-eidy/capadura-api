@@ -17,7 +17,6 @@ model User {
     email         String     @unique
     password_hash String
     created_at    DateTime   @default(now())
-    review        Review[]
     like          Like[]
     book_list     BookList[]
     read          Read[]
@@ -36,7 +35,6 @@ model Book {
     page_count   Int?
     description  String?
 
-    reviews      Review[]
     book_list    BookList? @relation(fields: [book_list_id], references: [id])
     book_list_id String?
     like         Like[]
@@ -50,16 +48,18 @@ enum ReadStatus {
 }
 
 model Read {
-    id         String     @id @default(uuid())
-    start_date DateTime   @default(now())
-    end_date   DateTime?
-    status     ReadStatus @default(ACTIVE)
-    is_private Boolean    @default(false)
-    user       User       @relation(fields: [user_id], references: [id])
-    user_id    String
-    book       Book       @relation(fields: [book_id], references: [id])
-    book_id    String
-    progress   Progress[]
+    id             String     @id @default(uuid())
+    start_date     DateTime   @default(now())
+    end_date       DateTime?
+    status         ReadStatus @default(ACTIVE)
+    is_private     Boolean    @default(false)
+    review_rating  Float?
+    review_content String?
+    user           User       @relation(fields: [user_id], references: [id])
+    user_id        String
+    book           Book       @relation(fields: [book_id], references: [id])
+    book_id        String
+    progress       Progress[]
 }
 
 model Progress {
@@ -71,16 +71,6 @@ model Progress {
     created_at  DateTime @default(now())
     read        Read     @relation(fields: [read_id], references: [id])
     read_id     String
-}
-
-model Review {
-    id      String @id @default(uuid())
-    content String
-    rating  Float
-    user    User   @relation(fields: [user_id], references: [id])
-    user_id String
-    book    Book   @relation(fields: [book_id], references: [id])
-    book_id String
 }
 
 model Like {
