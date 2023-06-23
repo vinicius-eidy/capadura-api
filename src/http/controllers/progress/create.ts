@@ -4,7 +4,7 @@ import { z } from "zod";
 import { makeCreateProgressUseCase } from "@/use-cases/factories/make-create-progress-use-case";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
-    const createReadBodySchema = z.object({
+    const createProgressBodySchema = z.object({
         readId: z.string(),
         description: z.string().optional(),
         is_spoiler: z.boolean(),
@@ -13,9 +13,8 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     });
 
     try {
-        const { readId, description, is_spoiler, page, percentage } = createReadBodySchema.parse(
-            request.body,
-        );
+        const { readId, description, is_spoiler, page, percentage } =
+            createProgressBodySchema.parse(request.body);
 
         const createProgressUseCase = makeCreateProgressUseCase();
         const progress = await createProgressUseCase.execute({

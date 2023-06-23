@@ -10,6 +10,7 @@ import { env } from "./env";
 import { usersRoutes } from "./http/controllers/users/routes";
 import { bookRoutes } from "./http/controllers/books/routes";
 import { readRoutes } from "./http/controllers/read/routes";
+import { progressRoutes } from "./http/controllers/progress/routes";
 
 export const app = fastify({
     bodyLimit: 1024 * 1024 * 1024 * 2.5, // 2.5GB
@@ -42,6 +43,7 @@ app.register(fastifyCookie);
 app.register(usersRoutes);
 app.register(bookRoutes);
 app.register(readRoutes);
+app.register(progressRoutes);
 
 app.addHook("onSend", (request, reply, payload, done) => {
     reply.header("Cross-Origin-Embedder-Policy", "require-corp");
