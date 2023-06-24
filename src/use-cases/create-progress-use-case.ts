@@ -3,7 +3,7 @@ import { ProgressRepository } from "@/repositories/progress-repository";
 
 interface CreateProgressUseCaseRequest {
     description?: string;
-    is_spoiler: boolean;
+    isSpoiler: boolean;
     page?: number;
     percentage?: number;
     readId: string;
@@ -14,14 +14,14 @@ export class CreateProgressUseCase {
 
     async execute({
         description,
-        is_spoiler,
+        isSpoiler,
         page,
         percentage,
         readId,
     }: CreateProgressUseCaseRequest): Promise<Progress> {
         const read = await this.progressRepository.create({
             description,
-            is_spoiler,
+            is_spoiler: isSpoiler,
             page,
             percentage,
             read_id: readId,

@@ -8,25 +8,16 @@ export async function findManyByBookByUser(request: FastifyRequest, reply: Fasti
         bookId: z.string(),
     });
 
-    const findManyByBookByUserQuerySchema = z.object({
-        page: z.coerce.number(),
-    });
-
     try {
         const { bookId } = findManyByBookByUserParamsSchema.parse(request.params);
-        const { page } = findManyByBookByUserQuerySchema.parse(request.query);
 
         const fetchManyReadsByBookAndUserUseCase = makeFetchManyReadsByBookAndUserUseCase();
-        const { items, total } = await fetchManyReadsByBookAndUserUseCase.execute({
+        const reads = await fetchManyReadsByBookAndUserUseCase.execute({
             userId: request.user.sub,
             bookId,
-            page,
         });
 
-        reply.status(200).send({
-            items,
-            total,
-        });
+        reply.status(200).send(reads);
     } catch (err) {
         throw err;
     }

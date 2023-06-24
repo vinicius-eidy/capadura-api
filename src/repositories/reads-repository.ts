@@ -3,19 +3,9 @@ import { Prisma, Read } from "@prisma/client";
 export interface findManyByBookByUserIdRequest {
     userId: string;
     bookId: string;
-    page: number;
-}
-
-interface findManyByBookByUserIdResponse {
-    items: Read[];
-    total: number;
 }
 
 export interface ReadsRepository {
-    findManyByBookByUserId({
-        userId,
-        bookId,
-        page,
-    }: findManyByBookByUserIdRequest): Promise<findManyByBookByUserIdResponse>;
+    findManyByBookByUserId({ userId, bookId }: findManyByBookByUserIdRequest): Promise<Read[]>;
     create(data: Prisma.ReadUncheckedCreateInput): Promise<Read>;
 }

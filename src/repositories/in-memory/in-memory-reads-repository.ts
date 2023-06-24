@@ -6,15 +6,12 @@ import { ReadsRepository, findManyByBookByUserIdRequest } from "../reads-reposit
 export class InMemoryReadsRepository implements ReadsRepository {
     public items: Read[] = [];
 
-    async findManyByBookByUserId({ userId, bookId, page }: findManyByBookByUserIdRequest) {
-        const items = this.items
-            .filter((item) => item.user_id === userId && item.book_id === bookId)
-            .slice((page - 1) * 20, page * 20);
+    async findManyByBookByUserId({ userId, bookId }: findManyByBookByUserIdRequest) {
+        const items = this.items.filter(
+            (item) => item.user_id === userId && item.book_id === bookId,
+        );
 
-        return {
-            items,
-            total: this.items.length,
-        };
+        return items;
     }
 
     async create(data: Prisma.ReadUncheckedCreateInput) {

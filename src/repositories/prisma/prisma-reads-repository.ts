@@ -3,20 +3,18 @@ import { prisma } from "@/lib/prisma";
 import { ReadsRepository, findManyByBookByUserIdRequest } from "../reads-repository";
 
 export class PrismaReadRepository implements ReadsRepository {
-    async findManyByBookByUserId({ userId, bookId, page }: findManyByBookByUserIdRequest) {
+    async findManyByBookByUserId({ userId, bookId }: findManyByBookByUserIdRequest) {
         const reads = await prisma.read.findMany({
             where: {
                 user_id: userId,
                 book_id: bookId,
             },
-            take: 20,
-            skip: (page - 1) * 20,
+            include: {
+                progress: true,
+            },
         });
 
-        return {
-            items: reads,
-            total: reads.length,
-        };
+        return reads;
     }
 
     async create(data: Prisma.ReadUncheckedCreateInput) {
