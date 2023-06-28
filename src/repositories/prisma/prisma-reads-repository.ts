@@ -9,8 +9,16 @@ export class PrismaReadRepository implements ReadsRepository {
                 user_id: userId,
                 book_id: bookId,
             },
+            orderBy: {
+                start_date: "desc",
+            },
             include: {
-                progress: true,
+                progress: {
+                    orderBy: {
+                        created_at: "desc",
+                    },
+                    take: 3,
+                },
             },
         });
 
