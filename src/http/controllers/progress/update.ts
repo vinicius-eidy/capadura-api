@@ -1,11 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeCreateProgressUseCase } from "@/use-cases/factories/make-create-progress-use-case";
+import { makeUpdateProgressUseCase } from "@/use-cases/factories/make-update-progress-use-case";
 
-export async function create(request: FastifyRequest, reply: FastifyReply) {
-    const createProgressBodySchema = z.object({
-        readId: z.string(),
+export async function update(request: FastifyRequest, reply: FastifyReply) {
+    const updateProgressBodySchema = z.object({
+        id: z.string().uuid(),
         description: z.string().optional(),
         isSpoiler: z.boolean(),
         pagesCount: z.coerce.number(),
@@ -14,8 +14,8 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     });
 
     try {
-        const { readId, description, isSpoiler, pagesCount, countType, bookPageCount } =
-            createProgressBodySchema.parse(request.body);
+        const { id, description, isSpoiler, pagesCount, countType, bookPageCount } =
+            updateProgressBodySchema.parse(request.body);
 
         let page = 0;
         let percentage = 0;
@@ -35,16 +35,16 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             percentage = 100;
         }
 
-        const createProgressUseCase = makeCreateProgressUseCase();
-        const progress = await createProgressUseCase.execute({
-            readId,
+        const updateProgressUseCase = makeUpdateProgressUseCase();
+        const progress = await updateProgressUseCase.execute({
+            id,
             description,
             isSpoiler,
             page,
             percentage: percentage,
         });
 
-        reply.status(201).send(progress);
+        reply.status(200).send(progress);
     } catch (err) {
         throw err;
     }

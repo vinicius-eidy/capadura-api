@@ -25,6 +25,28 @@ export class PrismaReadRepository implements ReadsRepository {
         return reads;
     }
 
+    async update(data: Prisma.ReadUpdateInput) {
+        const { id, status, is_private } = data;
+
+        const updateData: Prisma.ReadUpdateInput = {};
+
+        if (status !== undefined) {
+            updateData.status = status;
+        }
+        if (is_private !== undefined) {
+            updateData.is_private = is_private;
+        }
+
+        const progress = await prisma.read.update({
+            where: {
+                id: id as string,
+            },
+            data: updateData,
+        });
+
+        return progress;
+    }
+
     async create(data: Prisma.ReadUncheckedCreateInput) {
         const read = await prisma.read.create({
             data,

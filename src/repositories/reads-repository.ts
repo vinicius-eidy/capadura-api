@@ -7,5 +7,6 @@ export interface findManyByBookByUserIdRequest {
 
 export interface ReadsRepository {
     findManyByBookByUserId({ userId, bookId }: findManyByBookByUserIdRequest): Promise<Read[]>;
+    update(data: Prisma.ReadUpdateInput): Promise<Read>;
     create(data: Prisma.ReadUncheckedCreateInput): Promise<Read>;
 }

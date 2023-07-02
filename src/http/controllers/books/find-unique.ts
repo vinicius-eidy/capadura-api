@@ -14,12 +14,16 @@ export async function findUnique(request: FastifyRequest, reply: FastifyReply) {
         const getBookUseCase = makeGetBookUseCase();
         const book = await getBookUseCase.execute({ id });
 
-        reply.status(200).send({
-            ...book,
-            pageCount: book?.page_count,
-            publishDate: book?.publish_date,
-            bookListId: book?.book_list_id,
-        });
+        if (book) {
+            reply.status(200).send({
+                ...book,
+                pageCount: book?.page_count,
+                publishDate: book?.publish_date,
+                bookListId: book?.book_list_id,
+            });
+        } else {
+            reply.status(200).send(null);
+        }
     } catch (err) {
         throw err;
     }
