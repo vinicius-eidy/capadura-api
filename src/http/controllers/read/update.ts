@@ -6,7 +6,7 @@ import { makeUpdateReadUseCase } from "@/use-cases/factories/make-update-read-us
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateProgressBodySchema = z.object({
         readId: z.string().uuid(),
-        status: z.enum(["ACTIVE", "FINISHED", "CANCELLED"]).optional(),
+        status: z.enum(["ACTIVE", "FINISHED", "CANCELLED", "DELETED"]).optional(),
         isPrivate: z.boolean().optional(),
     });
 

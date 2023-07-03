@@ -45,6 +45,7 @@ enum ReadStatus {
     ACTIVE
     FINISHED
     CANCELLED
+    DELETED
 }
 
 model Read {

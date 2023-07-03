@@ -3,7 +3,7 @@ import { ReadsRepository } from "@/repositories/reads-repository";
 
 interface UpdateReadUseCaseRequest {
     readId: string;
-    status?: "ACTIVE" | "FINISHED" | "CANCELLED";
+    status?: "ACTIVE" | "FINISHED" | "CANCELLED" | "DELETED";
     isPrivate?: boolean;
 }
 
