@@ -12,6 +12,25 @@ export class InMemoryProgressRepository implements ProgressRepository {
         return items;
     }
 
+    async update(data: Prisma.ProgressUpdateInput) {
+        const itemIndex = this.items.findIndex((item) => item.id === data.id);
+
+        if (itemIndex !== -1) {
+            const { description, is_spoiler, page, percentage } = this.items[itemIndex];
+
+            this.items[itemIndex] = {
+                ...this.items[itemIndex],
+                description: (data.description ?? description) as string | null,
+                is_spoiler: (data.is_spoiler ?? is_spoiler) as boolean,
+                page: (data.page ?? page) as number | null,
+                percentage: (data.percentage ?? percentage) as number | null,
+            };
+            return this.items[itemIndex];
+        }
+
+        return;
+    }
+
     async create(data: Prisma.ProgressUncheckedCreateInput) {
         const {
             id = randomUUID(),
