@@ -26,16 +26,7 @@ export class PrismaReadRepository implements ReadsRepository {
     }
 
     async update(data: Prisma.ReadUpdateInput) {
-        const { id, status, is_private } = data;
-
-        const updateData: Prisma.ReadUpdateInput = {};
-
-        if (status !== undefined) {
-            updateData.status = status;
-        }
-        if (is_private !== undefined) {
-            updateData.is_private = is_private;
-        }
+        const { id, ...updateData } = data;
 
         const progress = await prisma.read.update({
             where: {

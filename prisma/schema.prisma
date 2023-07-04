@@ -49,18 +49,19 @@ enum ReadStatus {
 }
 
 model Read {
-    id             String     @id @default(uuid())
-    start_date     DateTime   @default(now())
-    end_date       DateTime?
-    status         ReadStatus @default(ACTIVE)
-    is_private     Boolean    @default(false)
-    review_rating  Float?
-    review_content String?
-    user           User       @relation(fields: [user_id], references: [id])
-    user_id        String
-    book           Book       @relation(fields: [book_id], references: [id])
-    book_id        String
-    progress       Progress[]
+    id                String     @id @default(uuid())
+    start_date        DateTime   @default(now())
+    end_date          DateTime?
+    status            ReadStatus @default(ACTIVE)
+    is_private        Boolean    @default(false)
+    review_rating     Float?
+    review_content    String?
+    review_is_spoiler Boolean?
+    user              User       @relation(fields: [user_id], references: [id])
+    user_id           String
+    book              Book       @relation(fields: [book_id], references: [id])
+    book_id           String
+    progress          Progress[]
 }
 
 model Progress {
