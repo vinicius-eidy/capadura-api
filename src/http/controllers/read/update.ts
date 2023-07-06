@@ -15,10 +15,11 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             .optional(),
         reviewContent: z.string().optional(),
         reviewIsSpoiler: z.boolean().optional(),
+        endRead: z.boolean().default(false),
     });
 
     try {
-        const { readId, status, isPrivate, reviewRating, reviewContent, reviewIsSpoiler } =
+        const { readId, status, isPrivate, reviewRating, reviewContent, reviewIsSpoiler, endRead } =
             updateProgressBodySchema.parse(request.body);
 
         const updateReadUseCase = makeUpdateReadUseCase();
@@ -29,6 +30,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             reviewRating,
             reviewContent,
             reviewIsSpoiler,
+            endRead,
         });
 
         reply.status(200).send(read);

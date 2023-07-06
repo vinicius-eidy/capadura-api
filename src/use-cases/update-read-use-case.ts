@@ -8,6 +8,7 @@ interface UpdateReadUseCaseRequest {
     reviewRating?: number;
     reviewContent?: string;
     reviewIsSpoiler?: boolean;
+    endRead: boolean;
 }
 
 export class UpdateReadUseCase {
@@ -20,6 +21,7 @@ export class UpdateReadUseCase {
         reviewRating,
         reviewContent,
         reviewIsSpoiler,
+        endRead,
     }: UpdateReadUseCaseRequest): Promise<Read | undefined> {
         const read = await this.readsRepository.update({
             id: readId,
@@ -28,6 +30,7 @@ export class UpdateReadUseCase {
             review_rating: reviewRating,
             review_content: reviewContent,
             review_is_spoiler: reviewIsSpoiler,
+            end_date: endRead ? new Date() : undefined,
         });
 
         return read;
