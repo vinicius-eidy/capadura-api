@@ -10,7 +10,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
         subtitle: z.string().optional(),
         authors: z.string().array(),
         publisher: z.string().optional(),
-        publishDate: z.string().datetime().optional(),
+        publishDate: z.string().datetime().nullable(),
         language: z.string().optional(),
         pageCount: z.coerce.number().optional(),
         description: z.string().optional(),

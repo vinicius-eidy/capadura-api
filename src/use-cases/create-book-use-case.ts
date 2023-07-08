@@ -7,7 +7,7 @@ interface CreateBookUseCaseRequest {
     subtitle?: string;
     authors: string[];
     publisher?: string;
-    publishDate?: Date | string;
+    publishDate: Date | string | null;
     language?: string;
     pageCount?: number;
     description?: string;
