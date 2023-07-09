@@ -25,6 +25,41 @@ export class PrismaReadRepository implements ReadsRepository {
         return reads;
     }
 
+    async getAllReviewRatings(bookId: string) {
+        const ratings = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
+
+        const total = await prisma.read.count({
+            where: {
+                book_id: bookId,
+                review_rating: {
+                    not: null,
+                },
+            },
+        });
+
+        const data = await Promise.all(
+            ratings.map(async (rating) => {
+                const amount = await prisma.read.count({
+                    where: {
+                        book_id: bookId,
+                        review_rating: rating,
+                    },
+                });
+                const percentage = (amount / total) * 100;
+                return {
+                    rating,
+                    amount,
+                    percentage: Number(percentage.toFixed(2)),
+                };
+            }),
+        );
+
+        return {
+            data,
+            total,
+        };
+    }
+
     async update(data: Prisma.ReadUpdateInput) {
         const { id, ...updateData } = data;
 
