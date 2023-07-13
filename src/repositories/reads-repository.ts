@@ -1,8 +1,11 @@
 import { Prisma, Read } from "@prisma/client";
 
-export interface findManyByBookByUserIdRequest {
+export interface findManyByUserIdRequest {
     userId: string;
-    bookId: string;
+    bookId?: string;
+    status?: "ACTIVE" | "FINISHED" | "CANCELLED" | "DELETED";
+    page: number;
+    perPage: number;
 }
 
 interface getAllReviewRatingsResponse {
@@ -15,8 +18,14 @@ interface getAllReviewRatingsResponse {
 }
 
 export interface ReadsRepository {
-    findManyByBookByUserId({ userId, bookId }: findManyByBookByUserIdRequest): Promise<Read[]>;
-    getAllReviewRatings(bookId: string): Promise<getAllReviewRatingsResponse>;
+    findManyByUserId(data: findManyByUserIdRequest): Promise<Read[]>;
+    getAllReviewRatings({
+        bookId,
+        userId,
+    }: {
+        bookId?: string;
+        userId?: string;
+    }): Promise<getAllReviewRatingsResponse>;
     update(data: Prisma.ReadUpdateInput): Promise<Read | undefined>;
     create(data: Prisma.ReadUncheckedCreateInput): Promise<Read>;
 }

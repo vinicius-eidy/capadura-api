@@ -1,17 +1,23 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ReadsRepository, findManyByBookByUserIdRequest } from "../reads-repository";
+import { ReadsRepository, findManyByUserIdRequest } from "../reads-repository";
 
 export class PrismaReadRepository implements ReadsRepository {
-    async findManyByBookByUserId({ userId, bookId }: findManyByBookByUserIdRequest) {
+    async findManyByUserId({ userId, bookId, status, page, perPage }: findManyByUserIdRequest) {
         const reads = await prisma.read.findMany({
             where: {
                 user_id: userId,
-                book_id: bookId,
+                ...(bookId && { book_id: bookId }),
+                ...(status && { status }),
             },
-            orderBy: {
-                start_date: "desc",
-            },
+            orderBy: [
+                {
+                    end_date: "desc",
+                },
+                {
+                    start_date: "desc",
+                },
+            ],
             include: {
                 progress: {
                     orderBy: {
@@ -19,18 +25,22 @@ export class PrismaReadRepository implements ReadsRepository {
                     },
                     take: 3,
                 },
+                book: !bookId,
             },
+            take: perPage,
+            skip: (page - 1) * perPage,
         });
 
         return reads;
     }
 
-    async getAllReviewRatings(bookId: string) {
+    async getAllReviewRatings({ bookId, userId }: { bookId?: string; userId?: string }) {
         const ratings = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
         const total = await prisma.read.count({
             where: {
-                book_id: bookId,
+                ...(bookId && { book_id: bookId }),
+                ...(userId && { user_id: userId }),
                 review_rating: {
                     not: null,
                 },
@@ -41,7 +51,8 @@ export class PrismaReadRepository implements ReadsRepository {
             ratings.map(async (rating) => {
                 const amount = await prisma.read.count({
                     where: {
-                        book_id: bookId,
+                        ...(bookId && { book_id: bookId }),
+                        ...(userId && { user_id: userId }),
                         review_rating: rating,
                     },
                 });

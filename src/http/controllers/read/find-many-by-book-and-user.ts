@@ -3,18 +3,27 @@ import { z } from "zod";
 
 import { makeFetchManyReadsByBookAndUserUseCase } from "@/use-cases/factories/make-fetch-many-reads-by-book-and-user-use-case";
 
-export async function findManyByBookByUser(request: FastifyRequest, reply: FastifyReply) {
-    const findManyByBookByUserParamsSchema = z.object({
-        bookId: z.string(),
+export async function findManyByUser(request: FastifyRequest, reply: FastifyReply) {
+    const findManyByUserQuerySchema = z.object({
+        userId: z.string().optional(),
+        bookId: z.string().optional(),
+        status: z.enum(["ACTIVE", "FINISHED", "CANCELLED", "DELETED"]).optional(),
+        page: z.coerce.number().default(1),
+        perPage: z.coerce.number().default(20),
     });
 
     try {
-        const { bookId } = findManyByBookByUserParamsSchema.parse(request.params);
+        const { userId, bookId, status, page, perPage } = findManyByUserQuerySchema.parse(
+            request.query,
+        );
 
         const fetchManyReadsByBookAndUserUseCase = makeFetchManyReadsByBookAndUserUseCase();
         const reads = await fetchManyReadsByBookAndUserUseCase.execute({
-            userId: request.user.sub,
+            userId: userId ?? request.user.sub,
             bookId,
+            status,
+            page,
+            perPage,
         });
 
         reply.status(200).send(reads);

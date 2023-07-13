@@ -1,7 +1,8 @@
 import { ReadsRepository } from "@/repositories/reads-repository";
 
 interface GetBookRatingsUseCaseRequest {
-    bookId: string;
+    bookId?: string;
+    userId?: string;
 }
 
 interface DataRatings {
@@ -21,8 +22,9 @@ export class GetBookRatingsUseCase {
 
     async execute({
         bookId,
+        userId,
     }: GetBookRatingsUseCaseRequest): Promise<GetBookRatingsUseCaseResponse> {
-        const { data, total } = await this.readsRepository.getAllReviewRatings(bookId);
+        const { data, total } = await this.readsRepository.getAllReviewRatings({ bookId, userId });
 
         const averageRating = calculateAverageRating(data);
 

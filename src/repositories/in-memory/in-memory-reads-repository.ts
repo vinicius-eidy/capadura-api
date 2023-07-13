@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { Prisma, Read, ReadStatus } from "@prisma/client";
 
-import { ReadsRepository, findManyByBookByUserIdRequest } from "../reads-repository";
+import { ReadsRepository, findManyByUserIdRequest } from "../reads-repository";
 
 export class InMemoryReadsRepository implements ReadsRepository {
     public items: Read[] = [];
 
-    async findManyByBookByUserId({ userId, bookId }: findManyByBookByUserIdRequest) {
+    async findManyByUserId({ userId, bookId }: findManyByUserIdRequest) {
         const items = this.items.filter(
             (item) => item.user_id === userId && item.book_id === bookId,
         );

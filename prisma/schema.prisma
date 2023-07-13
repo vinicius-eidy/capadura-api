@@ -16,6 +16,10 @@ model User {
     username      String
     email         String     @unique
     password_hash String
+    description   String?
+    location      String?
+    website       String?
+    twitter       String?
     created_at    DateTime   @default(now())
     like          Like[]
     book_list     BookList[]
