@@ -23,6 +23,16 @@ export class PrismaUsersRepository implements UsersRepository {
         return user;
     }
 
+    async findByUsername(username: string) {
+        const user = await prisma.user.findUnique({
+            where: {
+                username,
+            },
+        });
+
+        return user;
+    }
+
     async create(data: Prisma.UserCreateInput) {
         const user = await prisma.user.create({
             data,
