@@ -9,6 +9,11 @@ interface FetchManyReadsByBookAndUserUseCaseRequest {
     perPage: number;
 }
 
+interface FetchManyReadsByBookAndUserUseCaseResponse {
+    items: Read[];
+    total: number;
+}
+
 export class FetchManyReadsByBookAndUserUseCase {
     constructor(private readsRepository: ReadsRepository) {}
 
@@ -18,8 +23,8 @@ export class FetchManyReadsByBookAndUserUseCase {
         status,
         page,
         perPage,
-    }: FetchManyReadsByBookAndUserUseCaseRequest): Promise<Read[]> {
-        const reads = await this.readsRepository.findManyByUserId({
+    }: FetchManyReadsByBookAndUserUseCaseRequest): Promise<FetchManyReadsByBookAndUserUseCaseResponse> {
+        const { reads, total } = await this.readsRepository.findManyByUserId({
             userId,
             bookId,
             status,
@@ -27,6 +32,6 @@ export class FetchManyReadsByBookAndUserUseCase {
             perPage,
         });
 
-        return reads;
+        return { items: reads, total };
     }
 }

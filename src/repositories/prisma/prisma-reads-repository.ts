@@ -1,37 +1,49 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ReadsRepository, findManyByUserIdRequest } from "../reads-repository";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export class PrismaReadRepository implements ReadsRepository {
     async findManyByUserId({ userId, bookId, status, page, perPage }: findManyByUserIdRequest) {
-        const reads = await prisma.read.findMany({
-            where: {
-                user_id: userId,
-                ...(bookId && { book_id: bookId }),
-                ...(status && { status }),
-            },
-            orderBy: [
-                {
-                    end_date: "desc",
+        const [reads, total] = await Promise.all([
+            prisma.read.findMany({
+                where: {
+                    user_id: userId,
+                    ...(bookId && { book_id: bookId }),
+                    ...(status && { status }),
                 },
-                {
-                    start_date: "desc",
-                },
-            ],
-            include: {
-                progress: {
-                    orderBy: {
-                        created_at: "desc",
+                orderBy: [
+                    {
+                        end_date: "desc",
                     },
-                    take: 3,
+                    {
+                        start_date: "desc",
+                    },
+                ],
+                include: {
+                    progress: {
+                        orderBy: {
+                            created_at: "desc",
+                        },
+                        take: 3,
+                    },
+                    book: !bookId,
                 },
-                book: !bookId,
-            },
-            take: perPage,
-            skip: (page - 1) * perPage,
-        });
+                take: perPage,
+                skip: (page - 1) * perPage,
+            }),
+            prisma.read.count({
+                where: {
+                    user_id: userId,
+                    ...(bookId && { book_id: bookId }),
+                    ...(status && { status }),
+                },
+            }),
+        ]);
 
-        return reads;
+        const readsCamelCase = transformKeysToCamelCase(reads);
+
+        return { reads: readsCamelCase, total };
     }
 
     async getAllReviewRatings({ bookId, userId }: { bookId?: string; userId?: string }) {
@@ -65,8 +77,10 @@ export class PrismaReadRepository implements ReadsRepository {
             }),
         );
 
+        const dataCamelCase = transformKeysToCamelCase(data);
+
         return {
-            data,
+            data: dataCamelCase,
             total,
         };
     }
@@ -81,7 +95,9 @@ export class PrismaReadRepository implements ReadsRepository {
             data: updateData,
         });
 
-        return progress;
+        const progressCamelCase = transformKeysToCamelCase(progress);
+
+        return progressCamelCase;
     }
 
     async create(data: Prisma.ReadUncheckedCreateInput) {
@@ -89,6 +105,8 @@ export class PrismaReadRepository implements ReadsRepository {
             data,
         });
 
-        return read;
+        const readCamelCase = transformKeysToCamelCase(read);
+
+        return readCamelCase;
     }
 }

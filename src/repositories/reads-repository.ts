@@ -8,6 +8,11 @@ export interface findManyByUserIdRequest {
     perPage: number;
 }
 
+interface findManyByUserIdResponse {
+    reads: Read[];
+    total: number;
+}
+
 interface getAllReviewRatingsResponse {
     data: {
         rating: number;
@@ -18,7 +23,7 @@ interface getAllReviewRatingsResponse {
 }
 
 export interface ReadsRepository {
-    findManyByUserId(data: findManyByUserIdRequest): Promise<Read[]>;
+    findManyByUserId(data: findManyByUserIdRequest): Promise<findManyByUserIdResponse>;
     getAllReviewRatings({
         bookId,
         userId,

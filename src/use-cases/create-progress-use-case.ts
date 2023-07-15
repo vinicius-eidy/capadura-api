@@ -7,6 +7,7 @@ interface CreateProgressUseCaseRequest {
     page?: number;
     percentage?: number;
     readId: string;
+    userId: string;
 }
 
 export class CreateProgressUseCase {
@@ -18,6 +19,7 @@ export class CreateProgressUseCase {
         page,
         percentage,
         readId,
+        userId,
     }: CreateProgressUseCaseRequest): Promise<Progress> {
         const read = await this.progressRepository.create({
             description,
@@ -25,6 +27,7 @@ export class CreateProgressUseCase {
             page,
             percentage,
             read_id: readId,
+            user_id: userId,
         });
 
         return read;

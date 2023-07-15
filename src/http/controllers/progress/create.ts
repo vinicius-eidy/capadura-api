@@ -42,6 +42,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             isSpoiler,
             page,
             percentage: percentage,
+            userId: request.user.sub,
         });
 
         reply.status(201).send(progress);

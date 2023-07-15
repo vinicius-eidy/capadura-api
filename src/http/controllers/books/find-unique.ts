@@ -15,12 +15,7 @@ export async function findUnique(request: FastifyRequest, reply: FastifyReply) {
         const book = await getBookUseCase.execute({ id });
 
         if (book) {
-            reply.status(200).send({
-                ...book,
-                pageCount: book?.page_count,
-                publishDate: book?.publish_date,
-                bookListId: book?.book_list_id,
-            });
+            reply.status(200).send(book);
         } else {
             reply.status(200).send(null);
         }

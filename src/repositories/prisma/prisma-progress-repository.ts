@@ -1,16 +1,62 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ProgressRepository } from "../progress-repository";
+import { ProgressRepository, findManyByRead, findManyByUser } from "../progress-repository";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export class PrismaProgressRepository implements ProgressRepository {
-    async findManyByRead(readId: string) {
-        const progress = await prisma.progress.findMany({
-            where: {
-                read_id: readId,
-            },
-        });
+    async findManyByRead({ readId, page, perPage }: findManyByRead) {
+        const [progress, total] = await Promise.all([
+            prisma.progress.findMany({
+                where: {
+                    read_id: readId,
+                },
+                orderBy: {
+                    created_at: "desc",
+                },
+                take: perPage,
+                skip: (page - 1) * perPage,
+            }),
+            prisma.progress.count({
+                where: {
+                    read_id: readId,
+                },
+            }),
+        ]);
 
-        return progress;
+        const progressCamelCase = transformKeysToCamelCase(progress);
+
+        return { progress: progressCamelCase, total };
+    }
+
+    async findManyByUser({ userId, page, perPage }: findManyByUser) {
+        const [progress, total] = await Promise.all([
+            prisma.progress.findMany({
+                where: {
+                    user_id: userId,
+                },
+                orderBy: {
+                    created_at: "desc",
+                },
+                include: {
+                    read: {
+                        include: {
+                            book: true,
+                        },
+                    },
+                },
+                take: perPage,
+                skip: (page - 1) * perPage,
+            }),
+            prisma.progress.count({
+                where: {
+                    user_id: userId,
+                },
+            }),
+        ]);
+
+        const progressCamelCase = transformKeysToCamelCase(progress);
+
+        return { progress: progressCamelCase, total };
     }
 
     async update(data: Prisma.ProgressUpdateInput) {
@@ -23,7 +69,9 @@ export class PrismaProgressRepository implements ProgressRepository {
             data: updateData,
         });
 
-        return progress;
+        const progressCamelCase = transformKeysToCamelCase(progress);
+
+        return progressCamelCase;
     }
 
     async create(data: Prisma.ProgressUncheckedCreateInput) {
@@ -31,6 +79,8 @@ export class PrismaProgressRepository implements ProgressRepository {
             data,
         });
 
-        return progress;
+        const progressCamelCase = transformKeysToCamelCase(progress);
+
+        return progressCamelCase;
     }
 }

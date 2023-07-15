@@ -1,15 +1,29 @@
 import { randomUUID } from "node:crypto";
 import { Prisma, Progress } from "@prisma/client";
 
-import { ProgressRepository } from "../progress-repository";
+import { ProgressRepository, findManyByRead, findManyByUser } from "../progress-repository";
 
 export class InMemoryProgressRepository implements ProgressRepository {
     public items: Progress[] = [];
 
-    async findManyByRead(readId: string) {
-        const items = this.items.filter((item) => item.read_id === readId);
+    async findManyByRead({ readId, page, perPage }: findManyByRead) {
+        const progress = this.items
+            .filter((item) => item.read_id === readId)
+            .slice((page - 1) * perPage, page * perPage);
 
-        return items;
+        const total = this.items.filter((item) => item.read_id === readId).length;
+
+        return { progress, total };
+    }
+
+    async findManyByUser({ userId, page, perPage }: findManyByUser) {
+        const progress = this.items
+            .filter((item) => item.user_id === userId)
+            .slice((page - 1) * perPage, page * perPage);
+
+        const total = this.items.filter((item) => item.user_id === userId).length;
+
+        return { progress, total };
     }
 
     async update(data: Prisma.ProgressUpdateInput) {
@@ -39,6 +53,7 @@ export class InMemoryProgressRepository implements ProgressRepository {
             page = null,
             percentage = null,
             read_id,
+            user_id,
         } = data;
 
         const progress = {
@@ -48,6 +63,7 @@ export class InMemoryProgressRepository implements ProgressRepository {
             page,
             percentage,
             read_id,
+            user_id,
             created_at: new Date(),
         };
 

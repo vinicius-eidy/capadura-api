@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { BooksRepository } from "../books-repository";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export class PrismaBooksRepository implements BooksRepository {
     async findById(bookId: string) {
@@ -10,7 +11,9 @@ export class PrismaBooksRepository implements BooksRepository {
             },
         });
 
-        return book ?? null;
+        const bookCamelCase = transformKeysToCamelCase(book);
+
+        return bookCamelCase ?? null;
     }
 
     async create(data: Prisma.BookCreateInput) {
@@ -18,6 +21,8 @@ export class PrismaBooksRepository implements BooksRepository {
             data,
         });
 
-        return book;
+        const bookCamelCase = transformKeysToCamelCase(book);
+
+        return bookCamelCase;
     }
 }

@@ -24,6 +24,7 @@ model User {
     like          Like[]
     book_list     BookList[]
     read          Read[]
+    progress      Progress[]
 
     @@map("users")
 }
@@ -77,6 +78,8 @@ model Progress {
     created_at  DateTime @default(now())
     read        Read     @relation(fields: [read_id], references: [id])
     read_id     String
+    user        User    @relation(fields: [user_id], references: [id])
+    user_id     String
 }
 
 model Like {

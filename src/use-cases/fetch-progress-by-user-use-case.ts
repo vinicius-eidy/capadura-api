@@ -1,34 +1,34 @@
 import { Progress } from "@prisma/client";
 import { ProgressRepository } from "@/repositories/progress-repository";
 
-interface FetchManyProgressByReadUseCaseRequest {
-    readId: string;
+interface FetchManyProgressByUserUseCaseRequest {
+    userId: string;
     page: number;
     perPage: number;
 }
 
-interface FetchManyProgressByReadUseCaseResponse {
+interface FetchManyProgressByUserUseCaseResponse {
     items: Progress[];
     total: number;
 }
 
-export class FetchManyProgressByReadUseCase {
+export class FetchManyProgressByUserUseCase {
     constructor(private progressRepository: ProgressRepository) {}
 
     async execute({
-        readId,
+        userId,
         page,
         perPage,
-    }: FetchManyProgressByReadUseCaseRequest): Promise<FetchManyProgressByReadUseCaseResponse> {
-        const { progress, total } = await this.progressRepository.findManyByRead({
-            readId,
+    }: FetchManyProgressByUserUseCaseRequest): Promise<FetchManyProgressByUserUseCaseResponse> {
+        const { progress, total } = await this.progressRepository.findManyByUser({
+            userId,
             page,
             perPage,
         });
 
         return {
             items: progress,
-            total,
+            total: total,
         };
     }
 }

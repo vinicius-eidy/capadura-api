@@ -18,7 +18,7 @@ export async function findManyByUser(request: FastifyRequest, reply: FastifyRepl
         );
 
         const fetchManyReadsByBookAndUserUseCase = makeFetchManyReadsByBookAndUserUseCase();
-        const reads = await fetchManyReadsByBookAndUserUseCase.execute({
+        const { items, total } = await fetchManyReadsByBookAndUserUseCase.execute({
             userId: userId ?? request.user.sub,
             bookId,
             status,
@@ -26,7 +26,7 @@ export async function findManyByUser(request: FastifyRequest, reply: FastifyRepl
             perPage,
         });
 
-        reply.status(200).send(reads);
+        reply.status(200).send({ items, total });
     } catch (err) {
         throw err;
     }
