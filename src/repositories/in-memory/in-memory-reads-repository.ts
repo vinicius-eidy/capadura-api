@@ -31,8 +31,6 @@ export class InMemoryReadsRepository implements ReadsRepository {
             };
             return this.items[itemIndex];
         }
-
-        return;
     }
 
     async create(data: Prisma.ReadUncheckedCreateInput) {

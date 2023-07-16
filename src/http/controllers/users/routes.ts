@@ -8,6 +8,7 @@ import { register } from "./register";
 import { googleOAuth } from "./google-oauth";
 import { refresh } from "./refresh";
 import { findByUsername } from "./find-by-username";
+import { update } from "./update";
 
 export async function usersRoutes(app: FastifyInstance) {
     app.post("/users", register);
@@ -20,5 +21,7 @@ export async function usersRoutes(app: FastifyInstance) {
     app.get("/users/:username", findByUsername);
 
     // Authenticated routes
+    app.put("/me", { onRequest: [verifyJWT] }, update);
+
     app.get("/me", { onRequest: [verifyJWT] }, profile);
 }
