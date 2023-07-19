@@ -20,7 +20,7 @@ export async function findByUsername(request: FastifyRequest, reply: FastifyRepl
         return reply.status(200).send({
             user: {
                 ...user,
-                password_hash: undefined,
+                passwordHash: undefined,
             },
         });
     } catch (err) {

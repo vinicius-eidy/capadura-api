@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { UsersRepository } from "../users-repository";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export class PrismaUsersRepository implements UsersRepository {
     async findById(id: string) {
@@ -10,7 +11,9 @@ export class PrismaUsersRepository implements UsersRepository {
             },
         });
 
-        return user;
+        const userCamelCase = transformKeysToCamelCase(user);
+
+        return userCamelCase;
     }
 
     async findByEmail(email: string) {
@@ -20,7 +23,9 @@ export class PrismaUsersRepository implements UsersRepository {
             },
         });
 
-        return user;
+        const userCamelCase = transformKeysToCamelCase(user);
+
+        return userCamelCase;
     }
 
     async findByUsername(username: string) {
@@ -30,7 +35,9 @@ export class PrismaUsersRepository implements UsersRepository {
             },
         });
 
-        return user;
+        const userCamelCase = transformKeysToCamelCase(user);
+
+        return userCamelCase;
     }
 
     async update(data: Prisma.UserUpdateInput) {
@@ -51,7 +58,9 @@ export class PrismaUsersRepository implements UsersRepository {
             },
         });
 
-        return user;
+        const userCamelCase = transformKeysToCamelCase(user);
+
+        return userCamelCase;
     }
 
     async create(data: Prisma.UserCreateInput) {
@@ -59,6 +68,8 @@ export class PrismaUsersRepository implements UsersRepository {
             data,
         });
 
-        return user;
+        const userCamelCase = transformKeysToCamelCase(user);
+
+        return userCamelCase;
     }
 }

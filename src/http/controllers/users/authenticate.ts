@@ -55,7 +55,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
                 refreshToken,
                 user: {
                     ...user,
-                    password_hash: undefined,
+                    passwordHash: undefined,
                 },
             });
     } catch (err) {
