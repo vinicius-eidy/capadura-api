@@ -8,6 +8,7 @@ interface UpdateUserUseCaseRequest {
     username: string;
     email: string;
     description?: string;
+    favoriteBooks?: string[];
     location?: string;
     website?: string;
     twitter?: string;
@@ -22,6 +23,7 @@ export class UpdateUserUseCase {
         username,
         email,
         description,
+        favoriteBooks,
         location,
         website,
         twitter,
@@ -37,6 +39,7 @@ export class UpdateUserUseCase {
             username,
             email,
             description,
+            favorite_books: favoriteBooks,
             location,
             website,
             twitter,

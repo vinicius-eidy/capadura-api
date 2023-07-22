@@ -7,18 +7,34 @@ import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-err
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateUserBodySchema = z.object({
         id: z.string(),
-        name: z.string(),
-        username: z.string(),
+        name: z
+            .string()
+            .min(1, { message: "Campo obrigatório." })
+            .max(50, { message: "Máximo 50 caracteres." }),
+        username: z
+            .string()
+            .min(1, { message: "Campo obrigatório." })
+            .max(50, { message: "Minimo 50 caracteres." }),
         email: z.string().email(),
         description: z.string().optional(),
-        location: z.string().max(40, { message: "Máximo 40 caracteres." }).optional(),
-        website: z.string().url({ message: "URL inválida." }).optional(),
+        favoriteBooks: z.string().array().optional(),
+        location: z.string().max(50, { message: "Máximo 50 caracteres." }).optional(),
+        website: z.union([z.literal(""), z.string().trim().url()]).optional(),
         twitter: z.string().optional(),
     });
 
     try {
-        const { id, name, username, email, description, location, website, twitter } =
-            updateUserBodySchema.parse(request.body);
+        const {
+            id,
+            name,
+            username,
+            email,
+            description,
+            favoriteBooks,
+            location,
+            website,
+            twitter,
+        } = updateUserBodySchema.parse(request.body);
 
         const updateUserUseCase = makeUpdateUserUseCase();
 
@@ -28,6 +44,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             username,
             email,
             description,
+            favoriteBooks,
             location,
             website,
             twitter,

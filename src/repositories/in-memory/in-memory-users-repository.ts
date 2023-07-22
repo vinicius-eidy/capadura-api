@@ -43,6 +43,7 @@ export class InMemoryUsersRepository implements UsersRepository {
             username: data.username,
             email: data.email,
             description: data.description ?? null,
+            favorite_books: [],
             location: data.location ?? null,
             website: data.website ?? null,
             twitter: data.twitter ?? null,

@@ -11,20 +11,21 @@ datasource db {
 }
 
 model User {
-    id            String     @id @default(uuid())
-    name          String
-    username      String     @unique
-    email         String     @unique
-    password_hash String
-    description   String?
-    location      String?
-    website       String?
-    twitter       String?
-    created_at    DateTime   @default(now())
-    like          Like[]
-    book_list     BookList[]
-    read          Read[]
-    progress      Progress[]
+    id             String     @id @default(uuid())
+    name           String
+    username       String     @unique
+    email          String     @unique
+    password_hash  String
+    description    String?
+    location       String?
+    website        String?
+    twitter        String?
+    created_at     DateTime   @default(now())
+    favorite_books String[]
+    like           Like[]
+    book_list      BookList[]
+    read           Read[]
+    progress       Progress[]
 
     @@map("users")
 }
@@ -78,7 +79,7 @@ model Progress {
     created_at  DateTime @default(now())
     read        Read     @relation(fields: [read_id], references: [id])
     read_id     String
-    user        User    @relation(fields: [user_id], references: [id])
+    user        User     @relation(fields: [user_id], references: [id])
     user_id     String
 }
 
