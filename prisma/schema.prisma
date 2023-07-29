@@ -89,6 +89,9 @@ model Like {
     user_id String
     book    Book   @relation(fields: [book_id], references: [id])
     book_id String
+
+    @@unique([user_id, book_id])
+    @@map("likes")
 }
 
 model BookList {
