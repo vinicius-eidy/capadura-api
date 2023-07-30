@@ -95,9 +95,10 @@ model Like {
 }
 
 model BookList {
-    id      String @id @default(uuid())
-    name    String
-    books   Book[]
-    user    User   @relation(fields: [user_id], references: [id])
-    user_id String
+    id          String  @id @default(uuid())
+    name        String
+    description String?
+    books       Book[]
+    user        User    @relation(fields: [user_id], references: [id])
+    user_id     String
 }

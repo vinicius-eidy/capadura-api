@@ -2,6 +2,8 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { LikesRepository } from "../likes-repository";
+import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-error";
+import { UnauthorizedError } from "@/use-cases/errors/unauthorized-error";
 
 export class PrismaLikesRepository implements LikesRepository {
     async findManyByUserId(userId: string) {
@@ -45,7 +47,25 @@ export class PrismaLikesRepository implements LikesRepository {
         return likeCamelCase;
     }
 
-    async delete(likeId: string) {
+    async delete(likeId: string, userId: string) {
+        const like = await prisma.like.findUnique({
+            where: {
+                id: likeId,
+            },
+            include: {
+                user: true,
+            },
+        });
+
+        if (!like) {
+            throw new ResourceNotFoundError();
+        }
+
+        // Check if the authenticated user is the owner of the like
+        if (like.user.id !== userId) {
+            throw new UnauthorizedError();
+        }
+
         await prisma.like.delete({
             where: {
                 id: likeId,

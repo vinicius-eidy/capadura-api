@@ -6,16 +6,15 @@ import { makeCreateLikeBookUseCase } from "@/use-cases/factories/make-create-lik
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createLikeBookBodySchema = z.object({
         bookId: z.string(),
-        userId: z.string(),
     });
 
     try {
-        const { bookId, userId } = createLikeBookBodySchema.parse(request.body);
+        const { bookId } = createLikeBookBodySchema.parse(request.body);
 
         const createLikeBookUseCase = makeCreateLikeBookUseCase();
         const like = await createLikeBookUseCase.execute({
             bookId,
-            userId,
+            userId: request.user.sub,
         });
 
         reply.status(201).send({

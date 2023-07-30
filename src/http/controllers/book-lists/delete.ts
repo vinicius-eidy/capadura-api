@@ -1,22 +1,22 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeDeleteLikeBookUseCase } from "@/use-cases/factories/make-delete-like-book-use-case";
+import { makeDeleteBookListUseCase } from "@/use-cases/factories/make-delete-booklist-use-case";
 
 import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-error";
 import { UnauthorizedError } from "@/use-cases/errors/unauthorized-error";
 
-export async function deleteLike(request: FastifyRequest, reply: FastifyReply) {
-    const deleteLikeBookParamsSchema = z.object({
-        likeId: z.string().uuid(),
+export async function deleteBookList(request: FastifyRequest, reply: FastifyReply) {
+    const deleteBookListParamsSchema = z.object({
+        bookListId: z.string().uuid(),
     });
 
     try {
-        const { likeId } = deleteLikeBookParamsSchema.parse(request.params);
+        const { bookListId } = deleteBookListParamsSchema.parse(request.params);
 
-        const deleteLikeBookUseCase = makeDeleteLikeBookUseCase();
-        await deleteLikeBookUseCase.execute({
-            likeId,
+        const deleteBookListUseCase = makeDeleteBookListUseCase();
+        await deleteBookListUseCase.execute({
+            bookListId,
             userId: request.user.sub,
         });
 

@@ -9,7 +9,7 @@ import { deleteLike } from "./delete";
 export async function likeRoutes(app: FastifyInstance) {
     app.addHook("onRequest", verifyJWT);
 
-    app.get("/likes/book/:bookId/user/:userId", findByBookAndUser);
+    app.get("/likes/book/:bookId", findByBookAndUser);
 
     app.post("/likes", create);
 

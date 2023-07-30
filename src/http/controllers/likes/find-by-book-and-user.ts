@@ -6,16 +6,15 @@ import { makeFindLikeByBookAndUserUseCase } from "@/use-cases/factories/make-fin
 export async function findByBookAndUser(request: FastifyRequest, reply: FastifyReply) {
     const findByBookAndUserParamsSchema = z.object({
         bookId: z.string(),
-        userId: z.string(),
     });
 
     try {
-        const { bookId, userId } = findByBookAndUserParamsSchema.parse(request.params);
+        const { bookId } = findByBookAndUserParamsSchema.parse(request.params);
 
         const findLikeByBookAndUserUseCase = makeFindLikeByBookAndUserUseCase();
         const like = await findLikeByBookAndUserUseCase.execute({
             bookId,
-            userId,
+            userId: request.user.sub,
         });
 
         reply.status(200).send({

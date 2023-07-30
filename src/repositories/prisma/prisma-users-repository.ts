@@ -23,9 +23,7 @@ export class PrismaUsersRepository implements UsersRepository {
             },
         });
 
-        const userCamelCase = transformKeysToCamelCase(user);
-
-        return userCamelCase;
+        return user;
     }
 
     async findByUsername(username: string) {
