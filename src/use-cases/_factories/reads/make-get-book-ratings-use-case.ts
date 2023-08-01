@@ -1,5 +1,5 @@
 import { PrismaReadRepository } from "@/repositories/prisma/prisma-reads-repository";
-import { GetBookRatingsUseCase } from "../get-book-ratings-use-case";
+import { GetBookRatingsUseCase } from "@/use-cases/get-book-ratings-use-case";
 
 export function makeGetBookRatingsUseCase() {
     const readsRepository = new PrismaReadRepository();

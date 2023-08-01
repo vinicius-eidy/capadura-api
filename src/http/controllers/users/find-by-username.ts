@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
 import { makeGetUserByUsernameUseCase } from "@/use-cases/factories/make-get-user-by-username-use-case";
-import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-error";
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 
 export async function findByUsername(request: FastifyRequest, reply: FastifyReply) {
     const getUserByUsernameParamsSchema = z.object({

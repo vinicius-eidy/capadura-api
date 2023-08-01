@@ -1,5 +1,5 @@
 import { PrismaLikesRepository } from "@/repositories/prisma/prisma-likes-repository";
-import { DeleteLikeBookUseCase } from "../delete-like-book-use-case";
+import { DeleteLikeBookUseCase } from "@/use-cases/delete-like-book-use-case";
 
 export function makeDeleteLikeBookUseCase() {
     const likesRepository = new PrismaLikesRepository();

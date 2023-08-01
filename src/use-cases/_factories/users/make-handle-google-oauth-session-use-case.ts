@@ -1,5 +1,5 @@
 import { PrismaUsersRepository } from "@/repositories/prisma/prisma-users-repository";
-import { HandleGoogleOAuthSessionUseCase } from "../handle-google-oauth-session-use-case";
+import { HandleGoogleOAuthSessionUseCase } from "@/use-cases/handle-google-oauth-session-use-case";
 
 export function makeHandleGoogleOAuthUseCase() {
     const usersRepository = new PrismaUsersRepository();

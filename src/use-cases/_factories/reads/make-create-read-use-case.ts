@@ -1,5 +1,5 @@
 import { PrismaReadRepository } from "@/repositories/prisma/prisma-reads-repository";
-import { CreateReadUseCase } from "../create-read-use-case";
+import { CreateReadUseCase } from "@/use-cases/create-read-use-case";
 
 export function makeCreateReadUseCase() {
     const readsRepository = new PrismaReadRepository();

@@ -1,5 +1,5 @@
 import { PrismaLikesRepository } from "@/repositories/prisma/prisma-likes-repository";
-import { CreateLikeBookUseCase } from "../create-like-book-use-case";
+import { CreateLikeBookUseCase } from "@/use-cases/create-like-book-use-case";
 
 export function makeCreateLikeBookUseCase() {
     const likesRepository = new PrismaLikesRepository();

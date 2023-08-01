@@ -1,5 +1,5 @@
 import { PrismaProgressRepository } from "@/repositories/prisma/prisma-progress-repository";
-import { UpdateProgressUseCase } from "../update-progress-use-case";
+import { UpdateProgressUseCase } from "@/use-cases/update-progress-use-case";
 
 export function makeUpdateProgressUseCase() {
     const progressRepository = new PrismaProgressRepository();

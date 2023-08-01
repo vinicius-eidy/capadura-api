@@ -1,5 +1,5 @@
 import { PrismaReadRepository } from "@/repositories/prisma/prisma-reads-repository";
-import { UpdateReadUseCase } from "../update-read-use-case";
+import { UpdateReadUseCase } from "@/use-cases/update-read-use-case";
 
 export function makeUpdateReadUseCase() {
     const readsRepository = new PrismaReadRepository();

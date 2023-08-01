@@ -3,8 +3,8 @@ import { z } from "zod";
 
 import { makeDeleteLikeBookUseCase } from "@/use-cases/factories/make-delete-like-book-use-case";
 
-import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-error";
-import { UnauthorizedError } from "@/use-cases/errors/unauthorized-error";
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
+import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
 
 export async function deleteLike(request: FastifyRequest, reply: FastifyReply) {
     const deleteLikeBookParamsSchema = z.object({

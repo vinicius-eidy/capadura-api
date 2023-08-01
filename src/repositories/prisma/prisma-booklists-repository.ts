@@ -2,8 +2,8 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { BookListsRepository, updateBookList } from "../booklist-repository";
-import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-error";
-import { UnauthorizedError } from "@/use-cases/errors/unauthorized-error";
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
+import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
 
 export class PrismaBookListsRepository implements BookListsRepository {
     async findManyByUserId(userId: string, q: string) {

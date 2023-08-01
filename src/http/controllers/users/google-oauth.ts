@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { sessionCookieSettings } from "./authenticate";
 import { makeHandleGoogleOAuthUseCase } from "@/use-cases/factories/make-handle-google-oauth-session-use-case";
-import { EmailNotVerifiedError } from "@/use-cases/errors/email-not-verified-error";
+import { EmailNotVerifiedError } from "@/use-cases/_errors/email-not-verified-error";
 import { env } from "@/env";
 
 export async function googleOAuth(request: FastifyRequest, reply: FastifyReply) {

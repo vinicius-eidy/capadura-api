@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Prisma, BookList, Book } from "@prisma/client";
 import { BookListsRepository, updateBookList } from "../booklist-repository";
-import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-error";
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 
 export class InMemoryBookListsRepository implements BookListsRepository {
     public items: (BookList & {

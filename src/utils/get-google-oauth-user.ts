@@ -1,5 +1,5 @@
 import axios from "axios";
-import { EmailNotVerifiedError } from "@/use-cases/errors/email-not-verified-error";
+import { EmailNotVerifiedError } from "@/use-cases/_errors/email-not-verified-error";
 
 interface GoogleOAuthUserRequest {
     id_token: string;

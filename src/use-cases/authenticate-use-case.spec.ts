@@ -1,8 +1,9 @@
 import { expect, describe, it, beforeEach } from "vitest";
 import { hash } from "bcryptjs";
+
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { AuthenticateUseCase } from "./authenticate-use-case";
-import { InvalidCredentialsError } from "./errors/invalid-credentials-error";
+import { InvalidCredentialsError } from "./_errors/invalid-credentials-error";
 
 let usersRepository: InMemoryUsersRepository;
 let sut: AuthenticateUseCase; // SUT means System Under Test
@@ -16,6 +17,7 @@ describe("Authenticate use case", () => {
     it("should be able to authenticate", async () => {
         await usersRepository.create({
             name: "John Doe",
+            username: "John Doe",
             email: "johndoe@example.com",
             password_hash: await hash("123456", 6),
         });
@@ -40,6 +42,7 @@ describe("Authenticate use case", () => {
     it("should not be able to authenticate with wrong password", async () => {
         await usersRepository.create({
             name: "John Doe",
+            username: "John Doe",
             email: "johndoe@example.com",
             password_hash: await hash("123456", 6),
         });

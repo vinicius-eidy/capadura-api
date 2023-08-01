@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
 import { makeUpdateUserUseCase } from "@/use-cases/factories/make-update-user-use-case";
-import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-error";
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateUserBodySchema = z.object({
