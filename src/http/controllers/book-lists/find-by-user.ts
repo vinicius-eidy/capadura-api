@@ -8,12 +8,18 @@ export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
         userId: z.string(),
     });
 
+    const fetchBookListsByUserQuerySchema = z.object({
+        q: z.string().default(""),
+    });
+
     try {
         const { userId } = fetchBookListsByUserParamsSchema.parse(request.params);
+        const { q } = fetchBookListsByUserQuerySchema.parse(request.query);
 
         const fetchBookListsByUserUseCase = makeFetchBookListsByUserUseCase();
         const bookList = await fetchBookListsByUserUseCase.execute({
             userId,
+            q,
         });
 
         reply.status(201).send(bookList);

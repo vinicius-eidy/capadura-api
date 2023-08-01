@@ -8,7 +8,7 @@ export interface updateBookList {
 }
 
 export interface BookListsRepository {
-    findManyByUserId(userId: string): Promise<BookList[]>;
+    findManyByUserId(userId: string, q: string): Promise<BookList[]>;
     update({ bookListId, name, description, bookId }: updateBookList): Promise<BookList>;
     delete(bookListId: string, userId: string): Promise<void>;
     create(data: Prisma.BookListUncheckedCreateInput): Promise<BookList>;

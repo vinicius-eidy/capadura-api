@@ -6,10 +6,14 @@ import { ResourceNotFoundError } from "@/use-cases/errors/resource-not-found-err
 import { UnauthorizedError } from "@/use-cases/errors/unauthorized-error";
 
 export class PrismaBookListsRepository implements BookListsRepository {
-    async findManyByUserId(userId: string) {
+    async findManyByUserId(userId: string, q: string) {
         const bookLists = await prisma.bookList.findMany({
             where: {
                 user_id: userId,
+                name: {
+                    contains: q,
+                    mode: "insensitive",
+                },
             },
         });
 
