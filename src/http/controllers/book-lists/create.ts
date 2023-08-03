@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeCreateBookListUseCase } from "@/use-cases/_factories/booklists/make-create-booklist-use-case";
+import { makeCreateBookListUseCase } from "@/use-cases/_factories/book-lists/make-create-book-list-use-case";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createBookListBodySchema = z.object({

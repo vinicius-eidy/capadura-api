@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
-import { BookListsRepository, updateBookList } from "../booklist-repository";
+import { BookListsRepository, updateBookList } from "../book-lists-repository";
 
 export class PrismaBookListsRepository implements BookListsRepository {
     async findUniqueById(bookListId: string) {
@@ -38,23 +38,7 @@ export class PrismaBookListsRepository implements BookListsRepository {
         return bookListsCamelCase;
     }
 
-    async update({ bookListId, name, description, bookId }: updateBookList) {
-        const bookList = await prisma.bookList.findUniqueOrThrow({
-            where: {
-                id: bookListId,
-            },
-            include: {
-                books: true,
-            },
-        });
-
-        // Conditionally disconnect or connect the book based on whether bookId exists
-        const bookToToggle = bookList.books.find((book) => book.id === bookId);
-
-        const updatedBooks = bookToToggle
-            ? { disconnect: { id: bookId } }
-            : { connect: { id: bookId } };
-
+    async update({ bookListId, name, description }: updateBookList) {
         const bookLists = await prisma.bookList.update({
             where: {
                 id: bookListId,
@@ -62,7 +46,6 @@ export class PrismaBookListsRepository implements BookListsRepository {
             data: {
                 name,
                 description,
-                books: bookId ? updatedBooks : undefined,
             },
         });
 

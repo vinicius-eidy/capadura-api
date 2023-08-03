@@ -4,19 +4,19 @@ import { z } from "zod";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
 
-import { makeDeleteBookListUseCase } from "@/use-cases/_factories/book-lists/make-delete-book-list-use-case";
+import { makeDeleteBookOnBookListUseCase } from "@/use-cases/_factories/books-on-book-lists/make-delete-book-on-book-list-use-case";
 
-export async function deleteBookList(request: FastifyRequest, reply: FastifyReply) {
-    const deleteBookListParamsSchema = z.object({
-        bookListId: z.string().uuid(),
+export async function deleteBookOnBookList(request: FastifyRequest, reply: FastifyReply) {
+    const deleteBookOnBookListParamsSchema = z.object({
+        bookOnBookListId: z.string().uuid(),
     });
 
     try {
-        const { bookListId } = deleteBookListParamsSchema.parse(request.params);
+        const { bookOnBookListId } = deleteBookOnBookListParamsSchema.parse(request.params);
 
-        const deleteBookListUseCase = makeDeleteBookListUseCase();
-        await deleteBookListUseCase.execute({
-            bookListId,
+        const deleteBookOnBookListUseCase = makeDeleteBookOnBookListUseCase();
+        await deleteBookOnBookListUseCase.execute({
+            bookOnBookListId,
             userId: request.user.sub,
         });
 

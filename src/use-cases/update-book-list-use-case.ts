@@ -1,5 +1,5 @@
 import { BookList } from "@prisma/client";
-import { BookListsRepository } from "@/repositories/booklist-repository";
+import { BookListsRepository } from "@/repositories/book-lists-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 import { UnauthorizedError } from "./_errors/unauthorized-error";
 
@@ -7,7 +7,6 @@ interface UpdateBookListUseCaseRequest {
     bookListId: string;
     name?: string;
     description?: string;
-    bookId?: string;
     userId: string;
 }
 
@@ -18,7 +17,6 @@ export class UpdateBookListUseCase {
         bookListId,
         name,
         description,
-        bookId,
         userId,
     }: UpdateBookListUseCaseRequest): Promise<BookList> {
         const existentBookList = await this.booksListsRepository.findUniqueById(bookListId);
@@ -35,7 +33,6 @@ export class UpdateBookListUseCase {
             bookListId,
             name,
             description,
-            bookId,
         });
 
         return bookList;

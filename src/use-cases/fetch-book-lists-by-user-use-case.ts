@@ -1,5 +1,5 @@
 import { BookList } from "@prisma/client";
-import { BookListsRepository } from "@/repositories/booklist-repository";
+import { BookListsRepository } from "@/repositories/book-lists-repository";
 
 interface FetchBookListsByUserUseCaseRequest {
     userId: string;

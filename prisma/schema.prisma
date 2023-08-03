@@ -41,10 +41,26 @@ model Book {
     page_count   Int?
     description  String?
 
-    book_list    BookList? @relation(fields: [book_list_id], references: [id])
-    book_list_id String?
-    like         Like[]
-    read         Read[]
+    books_on_list BooksOnBookLists[]
+    like          Like[]
+    read          Read[]
+}
+
+model BookList {
+    id          String       @id @default(uuid())
+    name        String
+    description String?
+    books       BooksOnBookLists[]
+    user        User         @relation(fields: [user_id], references: [id])
+    user_id     String
+}
+
+model BooksOnBookLists {
+    id           String   @id @default(uuid())
+    book         Book     @relation(fields: [book_id], references: [id])
+    book_id      String
+    book_list    BookList @relation(fields: [book_list_id], references: [id])
+    book_list_id String
 }
 
 enum ReadStatus {
@@ -92,13 +108,4 @@ model Like {
 
     @@unique([user_id, book_id])
     @@map("likes")
-}
-
-model BookList {
-    id          String  @id @default(uuid())
-    name        String
-    description String?
-    books       Book[]
-    user        User    @relation(fields: [user_id], references: [id])
-    user_id     String
 }

@@ -4,27 +4,23 @@ import { z } from "zod";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
 
-import { makeUpdateBookListUseCase } from "@/use-cases/_factories/booklists/make-update-booklist-use-case";
+import { makeUpdateBookListUseCase } from "@/use-cases/_factories/book-lists/make-update-book-list-use-case";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateBookListBodySchema = z.object({
         bookListId: z.string(),
         name: z.string().optional(),
         description: z.string().optional(),
-        bookId: z.string().optional(),
     });
 
     try {
-        const { bookListId, name, description, bookId } = updateBookListBodySchema.parse(
-            request.body,
-        );
+        const { bookListId, name, description } = updateBookListBodySchema.parse(request.body);
 
         const updateBookListUseCase = makeUpdateBookListUseCase();
         await updateBookListUseCase.execute({
             bookListId,
             name,
             description,
-            bookId,
             userId: request.user.sub,
         });
 

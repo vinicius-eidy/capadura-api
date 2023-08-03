@@ -1,5 +1,5 @@
-import { PrismaBookListsRepository } from "@/repositories/prisma/prisma-booklists-repository";
-import { CreateBookListUseCase } from "@/use-cases/create-booklist-use-case";
+import { PrismaBookListsRepository } from "@/repositories/prisma/prisma-book-lists-repository";
+import { CreateBookListUseCase } from "@/use-cases/create-book-list-use-case";
 
 export function makeCreateBookListUseCase() {
     const bookListsRepository = new PrismaBookListsRepository();
