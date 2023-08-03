@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeFindLikeByBookAndUserUseCase } from "@/use-cases/factories/make-find-like-by-book-and-user-use-case";
+import { makeFindLikeByBookAndUserUseCase } from "@/use-cases/_factories/likes/make-find-like-by-book-and-user-use-case";
 
 export async function findByBookAndUser(request: FastifyRequest, reply: FastifyReply) {
     const findByBookAndUserParamsSchema = z.object({

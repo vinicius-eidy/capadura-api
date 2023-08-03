@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
 import { sessionCookieSettings } from "./authenticate";
-import { makeHandleGoogleOAuthUseCase } from "@/use-cases/factories/make-handle-google-oauth-session-use-case";
+import { makeHandleGoogleOAuthUseCase } from "@/use-cases/_factories/users/make-handle-google-oauth-session-use-case";
 import { EmailNotVerifiedError } from "@/use-cases/_errors/email-not-verified-error";
 import { env } from "@/env";
 

@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeFetchManyReadsByBookAndUserUseCase } from "@/use-cases/factories/make-fetch-many-reads-by-book-and-user-use-case";
+import { makeFetchManyReadsByBookAndUserUseCase } from "@/use-cases/_factories/reads/make-fetch-many-reads-by-book-and-user-use-case";
 
 export async function findManyByUser(request: FastifyRequest, reply: FastifyReply) {
     const findManyByUserQuerySchema = z.object({

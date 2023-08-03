@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeGetBookRatingsUseCase } from "@/use-cases/factories/make-get-book-ratings-use-case";
+import { makeGetBookRatingsUseCase } from "@/use-cases/_factories/reads/make-get-book-ratings-use-case";
 
 export async function getReadsRatings(request: FastifyRequest, reply: FastifyReply) {
     const getBookRatingsParamsSchema = z.object({

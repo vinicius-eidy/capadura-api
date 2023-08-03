@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeFetchBookListsByUserUseCase } from "@/use-cases/factories/make-fetch-booklists-by-user-use-case";
+import { makeFetchBookListsByUserUseCase } from "@/use-cases/_factories/booklists/make-fetch-booklists-by-user-use-case";
 
 export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
     const fetchBookListsByUserParamsSchema = z.object({

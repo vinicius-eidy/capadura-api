@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeFetchManyProgressByReadUseCase } from "@/use-cases/factories/make-fetch-many-progress-by-read-use-case";
+import { makeFetchManyProgressByReadUseCase } from "@/use-cases/_factories/progress/make-fetch-many-progress-by-read-use-case";
 
 export async function findManyByRead(request: FastifyRequest, reply: FastifyReply) {
     const findManyByReadParamsSchema = z.object({

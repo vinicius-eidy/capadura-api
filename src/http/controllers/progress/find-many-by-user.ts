@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeFetchManyProgressByUserUseCase } from "@/use-cases/factories/make-fetch-many-progress-by-user-use-case";
+import { makeFetchManyProgressByUserUseCase } from "@/use-cases/_factories/progress/make-fetch-many-progress-by-user-use-case";
 
 export async function findManyByUser(request: FastifyRequest, reply: FastifyReply) {
     const findManyByUserParamsSchema = z.object({

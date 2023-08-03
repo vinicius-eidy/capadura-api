@@ -1,10 +1,10 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeDeleteBookListUseCase } from "@/use-cases/factories/make-delete-booklist-use-case";
-
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
+
+import { makeDeleteBookListUseCase } from "@/use-cases/_factories/booklists/make-delete-booklist-use-case";
 
 export async function deleteBookList(request: FastifyRequest, reply: FastifyReply) {
     const deleteBookListParamsSchema = z.object({

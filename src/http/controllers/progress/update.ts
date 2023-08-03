@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeUpdateProgressUseCase } from "@/use-cases/factories/make-update-progress-use-case";
+import { makeUpdateProgressUseCase } from "@/use-cases/_factories/progress/make-update-progress-use-case";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateProgressBodySchema = z.object({

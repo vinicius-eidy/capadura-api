@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeCreateReadUseCase } from "@/use-cases/factories/make-create-read-use-case";
+import { makeCreateReadUseCase } from "@/use-cases/_factories/reads/make-create-read-use-case";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createReadBodySchema = z.object({

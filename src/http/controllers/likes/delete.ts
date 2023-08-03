@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeDeleteLikeBookUseCase } from "@/use-cases/factories/make-delete-like-book-use-case";
+import { makeDeleteLikeBookUseCase } from "@/use-cases/_factories/likes/make-delete-like-book-use-case";
 
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";

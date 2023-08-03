@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeGetBookUseCase } from "@/use-cases/factories/make-get-book-use-case";
+import { makeGetBookUseCase } from "@/use-cases/_factories/books/make-get-book-use-case";
 
 export async function findUnique(request: FastifyRequest, reply: FastifyReply) {
     const findUniqueBookParamsSchema = z.object({
