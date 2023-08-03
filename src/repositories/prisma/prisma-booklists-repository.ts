@@ -2,10 +2,21 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { BookListsRepository, updateBookList } from "../booklist-repository";
-import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
-import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
 
 export class PrismaBookListsRepository implements BookListsRepository {
+    async findUniqueById(bookListId: string) {
+        const bookList = await prisma.bookList.findUnique({
+            where: {
+                id: bookListId,
+            },
+            include: {
+                user: true,
+            },
+        });
+
+        return bookList;
+    }
+
     async findManyByUserId(userId: string, q: string) {
         const bookLists = await prisma.bookList.findMany({
             where: {
@@ -14,6 +25,9 @@ export class PrismaBookListsRepository implements BookListsRepository {
                     contains: q,
                     mode: "insensitive",
                 },
+            },
+            include: {
+                books: true,
             },
         });
 
@@ -34,20 +48,22 @@ export class PrismaBookListsRepository implements BookListsRepository {
             },
         });
 
-        const bookToRemove = bookList.books.find((book) => book.id === bookId);
+        // Conditionally disconnect or connect the book based on whether bookId exists
+        const bookToToggle = bookList.books.find((book) => book.id === bookId);
 
-        const dataToUpdate = {
-            ...(name && { name }),
-            ...(description && { description }),
-            // Conditionally disconnect or connect the book based on whether bookToRemove exists
-            books: bookToRemove ? { disconnect: { id: bookId } } : { connect: { id: bookId } },
-        };
+        const updatedBooks = bookToToggle
+            ? { disconnect: { id: bookId } }
+            : { connect: { id: bookId } };
 
         const bookLists = await prisma.bookList.update({
             where: {
                 id: bookListId,
             },
-            data: dataToUpdate,
+            data: {
+                name,
+                description,
+                books: bookId ? updatedBooks : undefined,
+            },
         });
 
         const bookListsCamelCase = transformKeysToCamelCase(bookLists);
@@ -55,25 +71,7 @@ export class PrismaBookListsRepository implements BookListsRepository {
         return bookListsCamelCase;
     }
 
-    async delete(bookListId: string, userId: string) {
-        const bookList = await prisma.bookList.findUnique({
-            where: {
-                id: bookListId,
-            },
-            include: {
-                user: true,
-            },
-        });
-
-        if (!bookList) {
-            throw new ResourceNotFoundError();
-        }
-
-        // Check if the authenticated user is the owner of the BookList
-        if (bookList.user.id !== userId) {
-            throw new UnauthorizedError();
-        }
-
+    async delete(bookListId: string) {
         await prisma.bookList.delete({
             where: {
                 id: bookListId,

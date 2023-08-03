@@ -1,4 +1,6 @@
 import { BookListsRepository } from "@/repositories/booklist-repository";
+import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
+import { UnauthorizedError } from "./_errors/unauthorized-error";
 
 interface DeleteBookListUseCaseRequest {
     bookListId: string;
@@ -10,7 +12,17 @@ export class DeleteBookListUseCase {
 
     async execute({ bookListId, userId }: DeleteBookListUseCaseRequest): Promise<void> {
         try {
-            return await this.booksListsRepository.delete(bookListId, userId);
+            const existentBookList = await this.booksListsRepository.findUniqueById(bookListId);
+
+            if (!existentBookList) {
+                throw new ResourceNotFoundError();
+            }
+
+            if (existentBookList?.user_id !== userId) {
+                throw new UnauthorizedError();
+            }
+
+            return await this.booksListsRepository.delete(bookListId);
         } catch (err) {
             throw err;
         }

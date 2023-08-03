@@ -8,6 +8,12 @@ export class InMemoryBookListsRepository implements BookListsRepository {
         books: Book[];
     })[] = [];
 
+    async findUniqueById(bookListId: string) {
+        const bookList = this.items.find((item) => item.id === bookListId) || null;
+
+        return bookList;
+    }
+
     async findManyByUserId(userId: string, q: string) {
         const bookLists = this.items.filter((item) => {
             if (q) {
