@@ -16,7 +16,7 @@ export class PrismaBookListsRepository implements BookListsRepository {
         return bookList;
     }
 
-    async findManyByUserId(userId: string, q: string) {
+    async findManyByUserId(userId: string, q: string, bookId?: string) {
         const bookLists = await prisma.bookList.findMany({
             where: {
                 user_id: userId,
@@ -26,7 +26,15 @@ export class PrismaBookListsRepository implements BookListsRepository {
                 },
             },
             include: {
-                books: true,
+                // just include book if bookId is provided
+                books: bookId
+                    ? {
+                          where: {
+                              book_id: bookId,
+                          },
+                          take: 1,
+                      }
+                    : false,
             },
         });
 

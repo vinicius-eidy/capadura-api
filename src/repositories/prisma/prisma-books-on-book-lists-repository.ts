@@ -1,6 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { BooksOnBookListsRepository } from "../books-on-book-lists-repository";
+import {
+    BooksOnBookListsRepository,
+    fetchManyByBookListData,
+} from "../books-on-book-lists-repository";
 
 export class PrismaBooksOnBookListsRepository implements BooksOnBookListsRepository {
     async findUnique(bookOnBookListId: string) {
@@ -14,6 +17,21 @@ export class PrismaBooksOnBookListsRepository implements BooksOnBookListsReposit
         });
 
         return bookOnBookList || null;
+    }
+
+    async fetchManyByBookList({ bookListId, page, perPage }: fetchManyByBookListData) {
+        const bookOnBookList = await prisma.booksOnBookLists.findMany({
+            where: {
+                book_list_id: bookListId,
+            },
+            include: {
+                book: true,
+            },
+            take: perPage,
+            skip: (page - 1) * perPage,
+        });
+
+        return bookOnBookList;
     }
 
     async delete(bookOnBookListId: string) {

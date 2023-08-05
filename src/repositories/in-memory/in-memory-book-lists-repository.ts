@@ -14,7 +14,7 @@ export class InMemoryBookListsRepository implements BookListsRepository {
         return bookList;
     }
 
-    async findManyByUserId(userId: string, q: string) {
+    async findManyByUserId(userId: string, q: string, bookId?: string) {
         const bookLists = this.items.filter((item) => {
             if (q) {
                 return item.user_id === userId && item.name.includes(q);
