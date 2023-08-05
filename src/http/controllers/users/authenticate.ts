@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { InvalidCredentialsError } from "@/use-cases/_errors/invalid-credentials-error";
 import { makeAuthenticateUseCase } from "@/use-cases/_factories/users/make-authenticate-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export const sessionCookieSettings = {
     path: "/",
@@ -54,7 +55,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
                 token,
                 refreshToken,
                 user: {
-                    ...user,
+                    ...transformKeysToCamelCase(user),
                     passwordHash: undefined,
                 },
             });

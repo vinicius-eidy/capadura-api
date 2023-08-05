@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeFetchBookListsByUserUseCase } from "@/use-cases/_factories/book-lists/make-fetch-book-lists-by-user-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
     const fetchBookListsByUserParamsSchema = z.object({
@@ -22,7 +23,7 @@ export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
             q,
         });
 
-        reply.status(201).send(bookList);
+        reply.status(201).send(transformKeysToCamelCase(bookList));
     } catch (err) {
         throw err;
     }

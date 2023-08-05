@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ReadsRepository, findManyByUserIdRequest } from "../reads-repository";
-import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export class PrismaReadRepository implements ReadsRepository {
     async findManyByUserId({ userId, bookId, status, page, perPage }: findManyByUserIdRequest) {
@@ -41,9 +40,7 @@ export class PrismaReadRepository implements ReadsRepository {
             }),
         ]);
 
-        const readsCamelCase = transformKeysToCamelCase(reads);
-
-        return { reads: readsCamelCase, total };
+        return { reads, total };
     }
 
     async getAllReviewRatings({ bookId, userId }: { bookId?: string; userId?: string }) {
@@ -77,10 +74,8 @@ export class PrismaReadRepository implements ReadsRepository {
             }),
         );
 
-        const dataCamelCase = transformKeysToCamelCase(data);
-
         return {
-            data: dataCamelCase,
+            data,
             total,
         };
     }
@@ -95,9 +90,7 @@ export class PrismaReadRepository implements ReadsRepository {
             data: updateData,
         });
 
-        const progressCamelCase = transformKeysToCamelCase(progress);
-
-        return progressCamelCase;
+        return progress;
     }
 
     async create(data: Prisma.ReadUncheckedCreateInput) {
@@ -105,8 +98,6 @@ export class PrismaReadRepository implements ReadsRepository {
             data,
         });
 
-        const readCamelCase = transformKeysToCamelCase(read);
-
-        return readCamelCase;
+        return read;
     }
 }

@@ -1,4 +1,5 @@
 import { makeGetUserProfileUseCase } from "@/use-cases/_factories/users/make-get-user-profile-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { FastifyRequest, FastifyReply } from "fastify";
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
@@ -10,7 +11,7 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
 
     return reply.status(200).send({
         user: {
-            ...user,
+            ...transformKeysToCamelCase(user),
             passwordHash: undefined,
         },
     });

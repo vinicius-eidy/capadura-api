@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { BooksOnBookListsRepository } from "../books-on-book-lists-repository";
 
 export class PrismaBooksOnBookListsRepository implements BooksOnBookListsRepository {
@@ -32,8 +31,6 @@ export class PrismaBooksOnBookListsRepository implements BooksOnBookListsReposit
             data,
         });
 
-        const bookOnBookListCamelCase = transformKeysToCamelCase(bookOnBookList);
-
-        return bookOnBookListCamelCase;
+        return bookOnBookList;
     }
 }

@@ -7,11 +7,11 @@ export class InMemoryReadsRepository implements ReadsRepository {
     public items: Read[] = [];
 
     async findManyByUserId({ userId, bookId }: findManyByUserIdRequest) {
-        const items = this.items.filter(
+        const reads = this.items.filter(
             (item) => item.user_id === userId && item.book_id === bookId,
         );
 
-        return items;
+        return { reads, total: reads.length };
     }
 
     async update(data: Prisma.ReadUpdateInput) {

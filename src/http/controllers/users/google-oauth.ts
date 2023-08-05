@@ -41,7 +41,7 @@ export async function googleOAuth(request: FastifyRequest, reply: FastifyReply) 
         reply.setCookie("token", token, sessionCookieSettings);
         reply.setCookie("refreshToken", refreshToken, sessionCookieSettings);
 
-        reply.redirect(`${env.BASE_URL_FRONT_END}/books`);
+        reply.redirect(`${env.BASE_URL_FRONT_END}/livros`);
     } catch (err) {
         if (err instanceof EmailNotVerifiedError) {
             return reply.status(403).send({ message: "Email not verified." });

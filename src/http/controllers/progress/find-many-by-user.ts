@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeFetchManyProgressByUserUseCase } from "@/use-cases/_factories/progress/make-fetch-many-progress-by-user-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function findManyByUser(request: FastifyRequest, reply: FastifyReply) {
     const findManyByUserParamsSchema = z.object({
@@ -24,7 +25,7 @@ export async function findManyByUser(request: FastifyRequest, reply: FastifyRepl
         });
 
         reply.status(200).send({
-            items,
+            items: transformKeysToCamelCase(items),
             total,
         });
     } catch (err) {

@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ProgressRepository, findManyByRead, findManyByUser } from "../progress-repository";
-import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export class PrismaProgressRepository implements ProgressRepository {
     async findManyByRead({ readId, page, perPage }: findManyByRead) {
@@ -23,9 +22,7 @@ export class PrismaProgressRepository implements ProgressRepository {
             }),
         ]);
 
-        const progressCamelCase = transformKeysToCamelCase(progress);
-
-        return { progress: progressCamelCase, total };
+        return { progress, total };
     }
 
     async findManyByUser({ userId, page, perPage }: findManyByUser) {
@@ -54,9 +51,7 @@ export class PrismaProgressRepository implements ProgressRepository {
             }),
         ]);
 
-        const progressCamelCase = transformKeysToCamelCase(progress);
-
-        return { progress: progressCamelCase, total };
+        return { progress, total };
     }
 
     async update(data: Prisma.ProgressUpdateInput) {
@@ -69,9 +64,7 @@ export class PrismaProgressRepository implements ProgressRepository {
             data: updateData,
         });
 
-        const progressCamelCase = transformKeysToCamelCase(progress);
-
-        return progressCamelCase;
+        return progress;
     }
 
     async create(data: Prisma.ProgressUncheckedCreateInput) {
@@ -79,8 +72,6 @@ export class PrismaProgressRepository implements ProgressRepository {
             data,
         });
 
-        const progressCamelCase = transformKeysToCamelCase(progress);
-
-        return progressCamelCase;
+        return progress;
     }
 }

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeGetUserByUsernameUseCase } from "@/use-cases/_factories/users/make-get-user-by-username-use-case";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function findByUsername(request: FastifyRequest, reply: FastifyReply) {
     const getUserByUsernameParamsSchema = z.object({
@@ -18,10 +19,8 @@ export async function findByUsername(request: FastifyRequest, reply: FastifyRepl
         });
 
         return reply.status(200).send({
-            user: {
-                ...user,
-                passwordHash: undefined,
-            },
+            ...transformKeysToCamelCase(user),
+            passwordHash: undefined,
         });
     } catch (err) {
         if (err instanceof ResourceNotFoundError) {

@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeFetchManyReadsByBookAndUserUseCase } from "@/use-cases/_factories/reads/make-fetch-many-reads-by-book-and-user-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function findManyByUser(request: FastifyRequest, reply: FastifyReply) {
     const findManyByUserQuerySchema = z.object({
@@ -26,7 +27,10 @@ export async function findManyByUser(request: FastifyRequest, reply: FastifyRepl
             perPage,
         });
 
-        reply.status(200).send({ items, total });
+        reply.status(200).send({
+            items: transformKeysToCamelCase(items),
+            total,
+        });
     } catch (err) {
         throw err;
     }

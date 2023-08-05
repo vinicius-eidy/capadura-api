@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { BookListsRepository, updateBookList } from "../book-lists-repository";
 
 export class PrismaBookListsRepository implements BookListsRepository {
@@ -31,11 +30,7 @@ export class PrismaBookListsRepository implements BookListsRepository {
             },
         });
 
-        if (!bookLists) return [];
-
-        const bookListsCamelCase = transformKeysToCamelCase(bookLists);
-
-        return bookListsCamelCase;
+        return bookLists || [];
     }
 
     async update({ bookListId, name, description }: updateBookList) {
@@ -49,9 +44,7 @@ export class PrismaBookListsRepository implements BookListsRepository {
             },
         });
 
-        const bookListsCamelCase = transformKeysToCamelCase(bookLists);
-
-        return bookListsCamelCase;
+        return bookLists;
     }
 
     async delete(bookListId: string) {
@@ -69,8 +62,6 @@ export class PrismaBookListsRepository implements BookListsRepository {
             data,
         });
 
-        const bookListCamelCase = transformKeysToCamelCase(bookList);
-
-        return bookListCamelCase;
+        return bookList;
     }
 }

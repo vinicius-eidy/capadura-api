@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeGetBookRatingsUseCase } from "@/use-cases/_factories/reads/make-get-book-ratings-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function getReadsRatings(request: FastifyRequest, reply: FastifyReply) {
     const getBookRatingsParamsSchema = z.object({
@@ -19,7 +20,7 @@ export async function getReadsRatings(request: FastifyRequest, reply: FastifyRep
         });
 
         reply.status(201).send({
-            data,
+            data: transformKeysToCamelCase(data),
             total,
             averageRating,
         });

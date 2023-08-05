@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeUpdateUserUseCase } from "@/use-cases/_factories/users/make-update-user-use-case";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateUserBodySchema = z.object({
@@ -52,7 +53,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
         return reply.status(200).send({
             user: {
-                ...user,
+                ...transformKeysToCamelCase(user),
                 passwordHash: undefined,
             },
         });

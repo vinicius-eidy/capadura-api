@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeCreateBookListUseCase } from "@/use-cases/_factories/book-lists/make-create-book-list-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createBookListBodySchema = z.object({
@@ -19,7 +20,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             userId: request.user.sub,
         });
 
-        reply.status(201).send(bookList);
+        reply.status(201).send(transformKeysToCamelCase(bookList));
     } catch (err) {
         throw err;
     }

@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeUpdateProgressUseCase } from "@/use-cases/_factories/progress/make-update-progress-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateProgressBodySchema = z.object({
@@ -44,7 +45,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             percentage: percentage,
         });
 
-        reply.status(200).send(progress);
+        reply.status(200).send(transformKeysToCamelCase(progress));
     } catch (err) {
         throw err;
     }

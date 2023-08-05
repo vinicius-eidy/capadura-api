@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { LikesRepository } from "../likes-repository";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
@@ -13,9 +12,7 @@ export class PrismaLikesRepository implements LikesRepository {
             },
         });
 
-        const likesCamelCase = transformKeysToCamelCase(likes);
-
-        return likesCamelCase;
+        return likes;
     }
 
     async findManyByBookId(bookId: string) {
@@ -25,9 +22,7 @@ export class PrismaLikesRepository implements LikesRepository {
             },
         });
 
-        const likesCamelCase = transformKeysToCamelCase(likes);
-
-        return likesCamelCase;
+        return likes;
     }
 
     async findUniqueByBookIdAndUserId(bookId: string, userId: string) {
@@ -38,13 +33,7 @@ export class PrismaLikesRepository implements LikesRepository {
             },
         });
 
-        if (!like) {
-            return null;
-        }
-
-        const likeCamelCase = transformKeysToCamelCase(like);
-
-        return likeCamelCase;
+        return like || null;
     }
 
     async delete(likeId: string, userId: string) {
@@ -80,8 +69,6 @@ export class PrismaLikesRepository implements LikesRepository {
             data,
         });
 
-        const likeCamelCase = transformKeysToCamelCase(like);
-
-        return likeCamelCase;
+        return like;
     }
 }

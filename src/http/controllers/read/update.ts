@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeUpdateReadUseCase } from "@/use-cases/_factories/reads/make-update-read-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateProgressBodySchema = z.object({
@@ -33,7 +34,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             endRead,
         });
 
-        reply.status(200).send(read);
+        reply.status(200).send(transformKeysToCamelCase(read));
     } catch (err) {
         throw err;
     }

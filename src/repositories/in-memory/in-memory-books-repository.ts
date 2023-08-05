@@ -23,7 +23,6 @@ export class InMemoryBooksRepository implements BooksRepository {
             language = null,
             page_count = null,
             description = null,
-            book_list_id = null,
         } = data;
 
         const book: Book = {
@@ -36,7 +35,6 @@ export class InMemoryBooksRepository implements BooksRepository {
             language,
             page_count,
             description,
-            book_list_id,
         };
 
         this.items.push(book);
