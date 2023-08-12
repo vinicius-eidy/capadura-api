@@ -10,9 +10,7 @@ export async function profile(request: FastifyRequest, reply: FastifyReply) {
     });
 
     return reply.status(200).send({
-        user: {
-            ...transformKeysToCamelCase(user),
-            passwordHash: undefined,
-        },
+        ...transformKeysToCamelCase(user),
+        passwordHash: undefined,
     });
 }

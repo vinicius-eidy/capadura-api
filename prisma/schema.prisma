@@ -22,6 +22,7 @@ model User {
     twitter        String?
     created_at     DateTime   @default(now())
     favorite_books String[]
+    image_key      String?
     like           Like[]
     book_list      BookList[]
     read           Read[]
@@ -51,6 +52,7 @@ model BookList {
     id          String             @id @default(uuid())
     name        String
     description String?
+    image_key   String?
     books       BooksOnBookLists[]
     user        User               @relation(fields: [user_id], references: [id])
     user_id     String

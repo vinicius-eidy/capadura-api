@@ -23,6 +23,14 @@ export class InMemoryBookListsRepository implements BookListsRepository {
             return item.user_id === userId;
         });
 
+        if (!bookId) {
+            const bookListsWithoutBooks = bookLists.filter((item) => {
+                return { ...item, books: undefined };
+            });
+
+            return bookListsWithoutBooks;
+        }
+
         return bookLists;
     }
 
@@ -52,10 +60,11 @@ export class InMemoryBookListsRepository implements BookListsRepository {
 
     async create(data: Prisma.BookListUncheckedCreateInput) {
         const bookList = {
-            id: data.id || randomUUID(),
+            id: data.id ?? randomUUID(),
             name: data.name,
-            description: data.description || null,
+            description: data.description ?? null,
             user_id: data.user_id,
+            image_key: data.image_key ?? null,
             books: [],
         };
 
