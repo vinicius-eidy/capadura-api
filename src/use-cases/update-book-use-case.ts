@@ -4,12 +4,12 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "@/env";
 import { BooksRepository } from "@/repositories/books-repository";
 import { S3 } from "@/lib/s3";
+import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 
-interface CreateBookUseCaseRequest {
+interface UpdateBookUseCaseRequest {
     id: string;
-    title: string;
     subtitle?: string;
-    authors: string[];
+    authors?: string[];
     publisher?: string;
     publishDate?: Date | string;
     language?: string;
@@ -18,16 +18,15 @@ interface CreateBookUseCaseRequest {
     imageLink?: string;
 }
 
-interface CreateBookUseCaseResponse {
+interface UpdateBookUseCaseResponse {
     book: Book;
 }
 
-export class CreateBookUseCase {
+export class UpdateBookUseCase {
     constructor(private booksRepository: BooksRepository) {}
 
     async execute({
         id,
-        title,
         subtitle,
         authors,
         publisher,
@@ -36,13 +35,11 @@ export class CreateBookUseCase {
         pageCount,
         description,
         imageLink,
-    }: CreateBookUseCaseRequest): Promise<CreateBookUseCaseResponse> {
+    }: UpdateBookUseCaseRequest): Promise<UpdateBookUseCaseResponse> {
         const book = await this.booksRepository.findById(id);
 
-        if (book) {
-            return {
-                book,
-            };
+        if (!book) {
+            throw new ResourceNotFoundError();
         }
 
         // save image book on AWS S3
@@ -61,9 +58,8 @@ export class CreateBookUseCase {
             await S3.send(command);
         }
 
-        const createdBook = await this.booksRepository.create({
+        const updatedBook = await this.booksRepository.update({
             id,
-            title,
             subtitle,
             authors,
             publisher,
@@ -75,7 +71,7 @@ export class CreateBookUseCase {
         });
 
         return {
-            book: createdBook,
+            book: updatedBook,
         };
     }
 }

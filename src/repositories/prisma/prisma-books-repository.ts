@@ -13,6 +13,19 @@ export class PrismaBooksRepository implements BooksRepository {
         return book ?? null;
     }
 
+    async update(data: Prisma.BookUpdateInput) {
+        const { id, ...updateData } = data;
+
+        const book = await prisma.book.update({
+            where: {
+                id: id as string,
+            },
+            data: updateData,
+        });
+
+        return book;
+    }
+
     async create(data: Prisma.BookCreateInput) {
         const book = await prisma.book.create({
             data,

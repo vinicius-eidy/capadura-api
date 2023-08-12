@@ -1,15 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeCreateBookUseCase } from "@/use-cases/_factories/books/make-create-book-use-case";
+import { makeUpdateBookUseCase } from "@/use-cases/_factories/books/make-update-book-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
-export async function create(request: FastifyRequest, reply: FastifyReply) {
-    const createBookBodySchema = z.object({
+export async function update(request: FastifyRequest, reply: FastifyReply) {
+    const updateBookBodySchema = z.object({
         id: z.string(),
-        title: z.string(),
         subtitle: z.string().optional(),
-        authors: z.string().array(),
+        authors: z.string().array().optional(),
         publisher: z.string().optional(),
         publishDate: z.string().datetime().optional(),
         language: z.string().optional(),
@@ -21,7 +20,6 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     try {
         const {
             id,
-            title,
             subtitle,
             authors,
             publisher,
@@ -30,12 +28,11 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             pageCount,
             description,
             imageLink,
-        } = createBookBodySchema.parse(request.body);
+        } = updateBookBodySchema.parse(request.body);
 
-        const createBookUseCase = makeCreateBookUseCase();
-        const book = await createBookUseCase.execute({
+        const updateBookUseCase = makeUpdateBookUseCase();
+        const book = await updateBookUseCase.execute({
             id,
-            title,
             subtitle,
             authors,
             publisher,

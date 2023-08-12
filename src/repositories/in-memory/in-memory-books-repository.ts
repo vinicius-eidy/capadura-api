@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Book, Prisma } from "@prisma/client";
 
 import { BooksRepository } from "../books-repository";
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 
 export class InMemoryBooksRepository implements BooksRepository {
     public items: Book[] = [];
@@ -10,6 +11,38 @@ export class InMemoryBooksRepository implements BooksRepository {
         const book = this.items.find((item) => item.id === bookId);
 
         return book ?? null;
+    }
+
+    async update(data: Prisma.BookUpdateInput) {
+        let updateItem = this.items.find((item) => item.id === data.id);
+
+        if (!updateItem) {
+            throw new ResourceNotFoundError();
+        }
+
+        const {
+            subtitle,
+            authors,
+            publisher,
+            publish_date,
+            language,
+            page_count,
+            description,
+            image_key,
+        } = updateItem;
+
+        updateItem = {
+            ...updateItem,
+            subtitle: (data.subtitle ?? subtitle) as string | null,
+            authors: (data.authors ?? authors) as string[],
+            publisher: (data.publisher ?? publisher) as string | null,
+            publish_date: (data.publish_date ?? publish_date) as Date | null,
+            language: (data.language ?? language) as string | null,
+            page_count: (data.page_count ?? page_count) as number | null,
+            description: (data.description ?? description) as string | null,
+            image_key: (data.image_key ?? image_key) as string | null,
+        };
+        return updateItem;
     }
 
     async create(data: Prisma.BookUncheckedCreateInput) {
@@ -23,6 +56,7 @@ export class InMemoryBooksRepository implements BooksRepository {
             language = null,
             page_count = null,
             description = null,
+            image_key = null,
         } = data;
 
         const book: Book = {
@@ -35,6 +69,7 @@ export class InMemoryBooksRepository implements BooksRepository {
             language,
             page_count,
             description,
+            image_key,
         };
 
         this.items.push(book);

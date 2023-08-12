@@ -28,7 +28,9 @@ if (env.NODE_ENV === "dev") {
     });
 }
 
-app.register(fastifyMultipart);
+app.register(fastifyMultipart, {
+    addToBody: true,
+});
 
 app.register(fastifyJwt, {
     secret: env.JWT_SECRET,

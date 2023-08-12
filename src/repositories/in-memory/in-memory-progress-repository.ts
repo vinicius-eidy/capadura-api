@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Prisma, Progress } from "@prisma/client";
 
 import { ProgressRepository, findManyByRead, findManyByUser } from "../progress-repository";
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 
 export class InMemoryProgressRepository implements ProgressRepository {
     public items: Progress[] = [];
@@ -27,22 +28,22 @@ export class InMemoryProgressRepository implements ProgressRepository {
     }
 
     async update(data: Prisma.ProgressUpdateInput) {
-        const itemIndex = this.items.findIndex((item) => item.id === data.id);
+        let updateItem = this.items.find((item) => item.id === data.id);
 
-        if (itemIndex !== -1) {
-            const { description, is_spoiler, page, percentage } = this.items[itemIndex];
-
-            this.items[itemIndex] = {
-                ...this.items[itemIndex],
-                description: (data.description ?? description) as string | null,
-                is_spoiler: (data.is_spoiler ?? is_spoiler) as boolean,
-                page: (data.page ?? page) as number | null,
-                percentage: (data.percentage ?? percentage) as number | null,
-            };
-            return this.items[itemIndex];
+        if (!updateItem) {
+            throw new ResourceNotFoundError();
         }
 
-        return;
+        const { description, is_spoiler, page, percentage } = updateItem;
+
+        updateItem = {
+            ...updateItem,
+            description: (data.description ?? description) as string | null,
+            is_spoiler: (data.is_spoiler ?? is_spoiler) as boolean,
+            page: (data.page ?? page) as number | null,
+            percentage: (data.percentage ?? percentage) as number | null,
+        };
+        return updateItem;
     }
 
     async create(data: Prisma.ProgressUncheckedCreateInput) {

@@ -19,7 +19,7 @@ export class UpdateProgressUseCase {
         page,
         percentage,
     }: UpdateProgressUseCaseRequest): Promise<Progress> {
-        const read = await this.progressRepository.update({
+        const progress = await this.progressRepository.update({
             id,
             description,
             is_spoiler: isSpoiler,
@@ -27,6 +27,6 @@ export class UpdateProgressUseCase {
             percentage,
         });
 
-        return read;
+        return progress;
     }
 }

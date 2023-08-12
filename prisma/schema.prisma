@@ -40,6 +40,7 @@ model Book {
     language     String?
     page_count   Int?
     description  String?
+    image_key    String?
 
     books_on_list BooksOnBookLists[]
     like          Like[]
@@ -47,11 +48,11 @@ model Book {
 }
 
 model BookList {
-    id          String       @id @default(uuid())
+    id          String             @id @default(uuid())
     name        String
     description String?
     books       BooksOnBookLists[]
-    user        User         @relation(fields: [user_id], references: [id])
+    user        User               @relation(fields: [user_id], references: [id])
     user_id     String
 }
 
