@@ -3,6 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { ProgressRepository, findManyByRead, findManyByUser } from "../progress-repository";
 
 export class PrismaProgressRepository implements ProgressRepository {
+    async findUniqueById(progressId: string) {
+        const progress = await prisma.progress.findUnique({
+            where: {
+                id: progressId,
+            },
+        });
+
+        return progress || null;
+    }
+
     async findManyByRead({ readId, page, perPage }: findManyByRead) {
         const [progress, total] = await Promise.all([
             prisma.progress.findMany({

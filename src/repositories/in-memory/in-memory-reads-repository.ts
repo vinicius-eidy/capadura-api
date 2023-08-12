@@ -6,6 +6,12 @@ import { ReadsRepository, findManyByUserIdRequest } from "../reads-repository";
 export class InMemoryReadsRepository implements ReadsRepository {
     public items: Read[] = [];
 
+    async findUniqueById(readId: string) {
+        const read = this.items.find((item) => item.id === readId);
+
+        return read || null;
+    }
+
     async findManyByUserId({ userId, bookId }: findManyByUserIdRequest) {
         const reads = this.items.filter(
             (item) => item.user_id === userId && item.book_id === bookId,

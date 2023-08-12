@@ -7,6 +7,12 @@ import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-er
 export class InMemoryProgressRepository implements ProgressRepository {
     public items: Progress[] = [];
 
+    async findUniqueById(progressId: string) {
+        const progress = this.items.find((item) => item.id === progressId);
+
+        return progress || null;
+    }
+
     async findManyByRead({ readId, page, perPage }: findManyByRead) {
         const progress = this.items
             .filter((item) => item.read_id === readId)

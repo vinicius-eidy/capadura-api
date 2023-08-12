@@ -18,6 +18,7 @@ interface findManyProgress {
 }
 
 export interface ProgressRepository {
+    findUniqueById(progressId: string): Promise<Progress | null>;
     findManyByRead({ readId, page, perPage }: findManyByRead): Promise<findManyProgress>;
     findManyByUser({ userId, page, perPage }: findManyByUser): Promise<findManyProgress>;
     update(data: Prisma.ProgressUpdateInput): Promise<Progress>;

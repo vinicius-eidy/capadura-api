@@ -23,6 +23,7 @@ interface getAllReviewRatingsResponse {
 }
 
 export interface ReadsRepository {
+    findUniqueById(readId: string): Promise<Read | null>;
     findManyByUserId(data: findManyByUserIdRequest): Promise<findManyByUserIdResponse>;
     getAllReviewRatings({
         bookId,

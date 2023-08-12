@@ -19,13 +19,13 @@ export class UpdateBookListUseCase {
         description,
         userId,
     }: UpdateBookListUseCaseRequest): Promise<BookList> {
-        const existentBookList = await this.booksListsRepository.findUniqueById(bookListId);
+        const bookListToUpdate = await this.booksListsRepository.findUniqueById(bookListId);
 
-        if (!existentBookList) {
+        if (!bookListToUpdate) {
             throw new ResourceNotFoundError();
         }
 
-        if (existentBookList?.user_id !== userId) {
+        if (bookListToUpdate.user_id !== userId) {
             throw new UnauthorizedError();
         }
 

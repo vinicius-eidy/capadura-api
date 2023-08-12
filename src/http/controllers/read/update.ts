@@ -4,6 +4,9 @@ import { z } from "zod";
 import { makeUpdateReadUseCase } from "@/use-cases/_factories/reads/make-update-read-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
+import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
+
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateProgressBodySchema = z.object({
         readId: z.string().uuid(),
@@ -32,10 +35,19 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             reviewContent,
             reviewIsSpoiler,
             endRead,
+            userId: request.user.sub,
         });
 
         reply.status(200).send(transformKeysToCamelCase(read));
     } catch (err) {
+        if (err instanceof ResourceNotFoundError) {
+            reply.status(404).send({ message: err.message });
+        }
+
+        if (err instanceof UnauthorizedError) {
+            reply.status(401).send({ message: err.message });
+        }
+
         throw err;
     }
 }

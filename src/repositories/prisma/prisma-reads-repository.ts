@@ -3,6 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { ReadsRepository, findManyByUserIdRequest } from "../reads-repository";
 
 export class PrismaReadRepository implements ReadsRepository {
+    async findUniqueById(readId: string) {
+        const read = await prisma.read.findUnique({
+            where: {
+                id: readId,
+            },
+        });
+
+        return read || null;
+    }
+
     async findManyByUserId({ userId, bookId, status, page, perPage }: findManyByUserIdRequest) {
         const [reads, total] = await Promise.all([
             prisma.read.findMany({
