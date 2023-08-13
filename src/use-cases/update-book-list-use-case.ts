@@ -2,6 +2,11 @@ import { BookList } from "@prisma/client";
 import { BookListsRepository } from "@/repositories/book-lists-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 import { UnauthorizedError } from "./_errors/unauthorized-error";
+import { getSignedUrlUtil } from "@/utils/get-signed-url";
+
+interface BookListWithImageUrl extends BookList {
+    imageUrl: string | null;
+}
 
 interface UpdateBookListUseCaseRequest {
     bookListId: string;
@@ -18,7 +23,7 @@ export class UpdateBookListUseCase {
         name,
         description,
         userId,
-    }: UpdateBookListUseCaseRequest): Promise<BookList> {
+    }: UpdateBookListUseCaseRequest): Promise<BookListWithImageUrl> {
         const bookListToUpdate = await this.booksListsRepository.findUniqueById(bookListId);
 
         if (!bookListToUpdate) {
@@ -35,6 +40,16 @@ export class UpdateBookListUseCase {
             description,
         });
 
-        return bookList;
+        let imageUrl = null;
+        if (bookList.image_key) {
+            imageUrl = getSignedUrlUtil({ key: bookList.image_key });
+        }
+
+        const bookListWithImageUrl = {
+            ...bookList,
+            imageUrl,
+        };
+
+        return bookListWithImageUrl;
     }
 }

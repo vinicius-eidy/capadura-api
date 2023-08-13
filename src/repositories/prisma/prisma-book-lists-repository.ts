@@ -41,7 +41,7 @@ export class PrismaBookListsRepository implements BookListsRepository {
         return bookLists || [];
     }
 
-    async update({ bookListId, name, description }: updateBookList) {
+    async update({ bookListId, name, description, imageKey }: updateBookList) {
         const bookLists = await prisma.bookList.update({
             where: {
                 id: bookListId,
@@ -49,6 +49,7 @@ export class PrismaBookListsRepository implements BookListsRepository {
             data: {
                 name,
                 description,
+                image_key: imageKey,
             },
         });
 

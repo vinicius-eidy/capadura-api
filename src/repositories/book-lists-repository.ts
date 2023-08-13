@@ -4,6 +4,7 @@ export interface updateBookList {
     bookListId: string;
     name?: string;
     description?: string;
+    imageKey?: string;
 }
 
 export interface BookListsRepository {

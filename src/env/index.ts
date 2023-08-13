@@ -10,6 +10,10 @@ const envSchema = z.object({
     S3_ACCESS_KEY: z.string(),
     S3_SECRET_ACCESS_KEY: z.string(),
 
+    CLOUDFRONT_BASE_URL: z.string(),
+    CLOUDFRONT_PRIVATE_KEY: z.string(),
+    CLOUDFRONT_KEY_PAIR_ID: z.string(),
+
     JWT_SECRET: z.string(),
 
     GOOGLE_CLIENT_ID: z.string(),

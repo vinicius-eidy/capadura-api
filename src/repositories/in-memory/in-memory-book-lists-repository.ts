@@ -40,7 +40,7 @@ export class InMemoryBookListsRepository implements BookListsRepository {
         return;
     }
 
-    async update({ bookListId, name, description }: updateBookList) {
+    async update({ bookListId, name, description, imageKey }: updateBookList) {
         const itemToUpdate = this.items.find((item) => item.id === bookListId);
 
         if (!itemToUpdate) {
@@ -51,9 +51,8 @@ export class InMemoryBookListsRepository implements BookListsRepository {
             itemToUpdate.name = name;
         }
 
-        if (description) {
-            itemToUpdate.description = description;
-        }
+        itemToUpdate.description = description || null;
+        itemToUpdate.image_key = imageKey || null;
 
         return itemToUpdate;
     }

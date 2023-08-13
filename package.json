@@ -22,7 +22,9 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@aws-sdk/client-cloudfront": "3.388.0",
         "@aws-sdk/client-s3": "3.325.0",
+        "@aws-sdk/cloudfront-signer": "3.387.0",
         "@aws-sdk/s3-request-presigner": "3.325.0",
         "@aws-sdk/signature-v4-crt": "3.310.0",
         "@fastify/cookie": "8.3.0",

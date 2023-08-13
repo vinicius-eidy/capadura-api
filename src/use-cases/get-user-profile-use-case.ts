@@ -1,13 +1,19 @@
 import { User } from "@prisma/client";
+
 import { UsersRepository } from "@/repositories/users-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
+import { getSignedUrlUtil } from "@/utils/get-signed-url";
+
+interface UserWithImageUrl extends User {
+    imageUrl: string | null;
+}
 
 interface GetUsersProfileUseCaseRequest {
     userId: string;
 }
 
 interface GetUsersProfileUseCaseResponse {
-    user: User;
+    user: UserWithImageUrl;
 }
 
 export class GetUserProfileUseCase {
@@ -21,8 +27,18 @@ export class GetUserProfileUseCase {
             throw new ResourceNotFoundError();
         }
 
+        let imageUrl = null;
+        if (user.image_key) {
+            imageUrl = getSignedUrlUtil({ key: user.image_key });
+        }
+
+        const userWithImageUrl = {
+            ...user,
+            imageUrl,
+        };
+
         return {
-            user,
+            user: userWithImageUrl,
         };
     }
 }
