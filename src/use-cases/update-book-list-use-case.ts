@@ -5,7 +5,7 @@ import { UnauthorizedError } from "./_errors/unauthorized-error";
 import { getSignedUrlUtil } from "@/utils/get-signed-url";
 
 interface BookListWithImageUrl extends BookList {
-    imageUrl: string | null;
+    imageUrl?: string;
 }
 
 interface UpdateBookListUseCaseRequest {
@@ -40,7 +40,7 @@ export class UpdateBookListUseCase {
             description,
         });
 
-        let imageUrl = null;
+        let imageUrl;
         if (bookList.image_key) {
             imageUrl = getSignedUrlUtil({ key: bookList.image_key });
         }

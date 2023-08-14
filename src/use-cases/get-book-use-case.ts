@@ -3,7 +3,7 @@ import { BooksRepository } from "@/repositories/books-repository";
 import { getSignedUrlUtil } from "@/utils/get-signed-url";
 
 interface BookWithImageUrl extends Book {
-    imageUrl: string | null;
+    imageUrl?: string;
 }
 
 interface GetBookUseCaseRequest {
@@ -18,7 +18,7 @@ export class GetBookUseCase {
 
         if (!book) return null;
 
-        let imageUrl = null;
+        let imageUrl;
         if (book.image_key) {
             imageUrl = getSignedUrlUtil({ key: book.image_key });
         }

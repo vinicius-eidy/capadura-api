@@ -46,9 +46,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             imageLink,
         });
 
-        reply.status(200).send({
-            book: transformKeysToCamelCase(book),
-        });
+        reply.status(200).send(transformKeysToCamelCase(book));
     } catch (err) {
         throw err;
     }

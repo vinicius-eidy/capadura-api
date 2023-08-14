@@ -4,6 +4,11 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "@/env";
 import { BooksRepository } from "@/repositories/books-repository";
 import { S3 } from "@/lib/s3";
+import { getSignedUrlUtil } from "@/utils/get-signed-url";
+
+interface BookWithImageUrl extends Book {
+    imageUrl?: string;
+}
 
 interface CreateBookUseCaseRequest {
     id: string;
@@ -16,10 +21,6 @@ interface CreateBookUseCaseRequest {
     pageCount?: number;
     description?: string;
     imageLink?: string;
-}
-
-interface CreateBookUseCaseResponse {
-    book: Book;
 }
 
 export class CreateBookUseCase {
@@ -36,12 +37,18 @@ export class CreateBookUseCase {
         pageCount,
         description,
         imageLink,
-    }: CreateBookUseCaseRequest): Promise<CreateBookUseCaseResponse> {
+    }: CreateBookUseCaseRequest): Promise<BookWithImageUrl> {
         const book = await this.booksRepository.findById(id);
 
         if (book) {
+            let imageUrl;
+            if (book.image_key) {
+                imageUrl = getSignedUrlUtil({ key: book.image_key });
+            }
+
             return {
-                book,
+                ...book,
+                imageUrl,
             };
         }
 
@@ -74,8 +81,11 @@ export class CreateBookUseCase {
             image_key: imageLink ? `book-${id}` : null,
         });
 
+        const imageUrl = imageLink ? getSignedUrlUtil({ key: `book-${id}` }) : undefined;
+
         return {
-            book: createdBook,
+            ...createdBook,
+            imageUrl,
         };
     }
 }

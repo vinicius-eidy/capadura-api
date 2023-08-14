@@ -11,6 +11,7 @@ const envSchema = z.object({
     S3_SECRET_ACCESS_KEY: z.string(),
 
     CLOUDFRONT_BASE_URL: z.string(),
+    CLOUDFRONT_DISTRIBUTION_ID: z.string(),
     CLOUDFRONT_PRIVATE_KEY: z.string(),
     CLOUDFRONT_KEY_PAIR_ID: z.string(),
 
