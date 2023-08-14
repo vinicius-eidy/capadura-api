@@ -1,9 +1,11 @@
 import { User } from "@prisma/client";
-import { S3 } from "@/lib/s3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
 import sharp from "sharp";
 
+import { S3 } from "@/lib/s3";
 import { env } from "@/env";
+import { cloudFront } from "@/lib/cloudfront";
 import { UsersRepository } from "@/repositories/users-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 
@@ -41,6 +43,23 @@ export class UpdateUserUseCase {
         }
 
         if (imageBuffer) {
+            // invalidate the cloudfront cache for the previous image
+            if (existentUser.image_key) {
+                const invalidationParams = {
+                    DistributionId: env.CLOUDFRONT_DISTRIBUTION_ID,
+                    InvalidationBatch: {
+                        CallerReference: existentUser.image_key,
+                        Paths: {
+                            Quantity: 1,
+                            Items: ["/" + existentUser.image_key],
+                        },
+                    },
+                };
+
+                const invalidationCommand = new CreateInvalidationCommand(invalidationParams);
+                await cloudFront.send(invalidationCommand);
+            }
+
             const updatedBuffer = await sharp(imageBuffer).jpeg({ quality: 80 }).toBuffer();
 
             const params = {
