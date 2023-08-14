@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Prisma, BookList, Book } from "@prisma/client";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
-import { BookListsRepository, updateBookList } from "../book-lists-repository";
+import { BookListsRepository } from "../book-lists-repository";
 
 export class InMemoryBookListsRepository implements BookListsRepository {
     public items: (BookList & {
@@ -40,19 +40,19 @@ export class InMemoryBookListsRepository implements BookListsRepository {
         return;
     }
 
-    async update({ bookListId, name, description, imageKey }: updateBookList) {
-        const itemToUpdate = this.items.find((item) => item.id === bookListId);
+    async update(data: Prisma.BookListUpdateInput) {
+        const itemToUpdate = this.items.find((item) => item.id === data.id);
 
         if (!itemToUpdate) {
             throw new ResourceNotFoundError();
         }
 
-        if (name) {
-            itemToUpdate.name = name;
+        if (data.name) {
+            itemToUpdate.name = data.name as string;
         }
 
-        itemToUpdate.description = description || null;
-        itemToUpdate.image_key = imageKey || null;
+        itemToUpdate.description = (data.description as string) || null;
+        itemToUpdate.image_key = (data.image_key as string) || null;
 
         return itemToUpdate;
     }

@@ -1,16 +1,9 @@
 import { BookList, Prisma } from "@prisma/client";
 
-export interface updateBookList {
-    bookListId: string;
-    name?: string;
-    description?: string;
-    imageKey?: string;
-}
-
 export interface BookListsRepository {
     findUniqueById(bookListId: string): Promise<BookList | null>;
     findManyByUserId(userId: string, q: string, bookId?: string): Promise<BookList[]>;
-    update({ bookListId, name, description }: updateBookList): Promise<BookList>;
+    update(data: Prisma.BookListUpdateInput): Promise<BookList>;
     delete(bookListId: string): Promise<void>;
     create(data: Prisma.BookListUncheckedCreateInput): Promise<BookList>;
 }

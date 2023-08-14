@@ -60,6 +60,7 @@ export class UpdateUserUseCase {
                 await cloudFront.send(invalidationCommand);
             }
 
+            // upload new image in S3
             const updatedBuffer = await sharp(imageBuffer).jpeg({ quality: 80 }).toBuffer();
 
             const params = {

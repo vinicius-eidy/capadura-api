@@ -56,7 +56,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             name,
             username,
             email,
-            imageBuffer: image[0].data,
+            imageBuffer: image?.[0]?.data,
             description,
             favoriteBooks,
             location,

@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { BookListsRepository, updateBookList } from "../book-lists-repository";
+import { BookListsRepository } from "../book-lists-repository";
 
 export class PrismaBookListsRepository implements BookListsRepository {
     async findUniqueById(bookListId: string) {
@@ -41,15 +41,15 @@ export class PrismaBookListsRepository implements BookListsRepository {
         return bookLists || [];
     }
 
-    async update({ bookListId, name, description, imageKey }: updateBookList) {
+    async update(data: Prisma.BookListUpdateInput) {
         const bookLists = await prisma.bookList.update({
             where: {
-                id: bookListId,
+                id: data.id as string,
             },
             data: {
-                name,
-                description,
-                image_key: imageKey,
+                name: data.name,
+                description: data.description,
+                image_key: data.image_key,
             },
         });
 
