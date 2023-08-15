@@ -60,9 +60,9 @@ model BookList {
 
 model BooksOnBookLists {
     id           String   @id @default(uuid())
-    book         Book     @relation(fields: [book_id], references: [id])
+    book         Book     @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     book_id      String
-    book_list    BookList @relation(fields: [book_list_id], references: [id])
+    book_list    BookList @relation(fields: [book_list_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     book_list_id String
 }
 
