@@ -1,3 +1,7 @@
+import { env } from "@/env";
+import { invalidateCloudFrontCache } from "@/utils/invalidate-cloudfront-cache";
+import { deleteS3Object } from "@/utils/delete-s3-object";
+
 import { BookListsRepository } from "@/repositories/book-lists-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 import { UnauthorizedError } from "./_errors/unauthorized-error";
@@ -18,8 +22,16 @@ export class DeleteBookListUseCase {
                 throw new ResourceNotFoundError();
             }
 
-            if (existentBookList?.user_id !== userId) {
+            if (existentBookList.user_id !== userId) {
                 throw new UnauthorizedError();
+            }
+
+            if (existentBookList.image_key) {
+                await invalidateCloudFrontCache({ key: existentBookList.image_key });
+                await deleteS3Object({
+                    Bucket: env.S3_BUCKET_NAME,
+                    Key: existentBookList.image_key,
+                });
             }
 
             return await this.booksListsRepository.delete(bookListId);

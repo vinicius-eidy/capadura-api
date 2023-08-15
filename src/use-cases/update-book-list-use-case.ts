@@ -1,12 +1,10 @@
 import { BookList } from "@prisma/client";
-import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 
 import { env } from "@/env";
+import { putS3Object } from "@/utils/put-s3-object";
 import { getSignedUrlUtil } from "@/utils/get-signed-url";
-import { cloudFront } from "@/lib/cloudfront";
-import { S3 } from "@/lib/s3";
+import { invalidateCloudFrontCache } from "@/utils/invalidate-cloudfront-cache";
 
 import { BookListsRepository } from "@/repositories/book-lists-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
@@ -45,34 +43,19 @@ export class UpdateBookListUseCase {
         }
 
         if (imageBuffer) {
-            // invalidate the cloudfront cache for the previous image
             if (bookListToUpdate.image_key) {
-                const invalidationParams = {
-                    DistributionId: env.CLOUDFRONT_DISTRIBUTION_ID,
-                    InvalidationBatch: {
-                        CallerReference: bookListToUpdate.image_key,
-                        Paths: {
-                            Quantity: 1,
-                            Items: ["/" + bookListToUpdate.image_key],
-                        },
-                    },
-                };
-
-                const invalidationCommand = new CreateInvalidationCommand(invalidationParams);
-                await cloudFront.send(invalidationCommand);
+                await invalidateCloudFrontCache({ key: bookListToUpdate.image_key });
             }
 
             // upload new image in S3
             const updatedBuffer = await sharp(imageBuffer).jpeg({ quality: 80 }).toBuffer();
 
-            const params = {
+            await putS3Object({
                 Bucket: env.S3_BUCKET_NAME,
                 Key: `booklist-${bookListId}`,
                 Body: updatedBuffer,
                 ContentType: "image/jpeg",
-            };
-            const command = new PutObjectCommand(params);
-            await S3.send(command);
+            });
         }
 
         const bookList = await this.booksListsRepository.update({

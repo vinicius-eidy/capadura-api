@@ -29,6 +29,10 @@ export async function findManyByRead(request: FastifyRequest, reply: FastifyRepl
             total,
         });
     } catch (err) {
+        if (err instanceof Error) {
+            reply.status(500).send({ message: err.message });
+        }
+
         throw err;
     }
 }

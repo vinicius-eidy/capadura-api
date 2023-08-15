@@ -5,6 +5,7 @@ import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-er
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
 
 import { makeUpdateBookListUseCase } from "@/use-cases/_factories/book-lists/make-update-book-list-use-case";
+import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const MAX_FILE_SIZE = 1024 * 1024 * 2; // 2 MB;
@@ -30,7 +31,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
         );
 
         const updateBookListUseCase = makeUpdateBookListUseCase();
-        await updateBookListUseCase.execute({
+        const updatedBookList = await updateBookListUseCase.execute({
             bookListId,
             name,
             description,
@@ -38,7 +39,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             userId: request.user.sub,
         });
 
-        reply.status(200).send();
+        reply.status(200).send(transformKeysToCamelCase(updatedBookList));
     } catch (err) {
         if (err instanceof ResourceNotFoundError) {
             reply.status(404).send({ message: err.message });
@@ -46,6 +47,10 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
         if (err instanceof UnauthorizedError) {
             reply.status(401).send({ message: err.message });
+        }
+
+        if (err instanceof Error) {
+            reply.status(500).send({ message: err.message });
         }
 
         throw err;

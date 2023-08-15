@@ -47,6 +47,10 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             book: transformKeysToCamelCase(book),
         });
     } catch (err) {
+        if (err instanceof Error) {
+            reply.status(500).send({ message: err.message });
+        }
+
         throw err;
     }
 }

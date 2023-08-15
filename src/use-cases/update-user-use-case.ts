@@ -1,11 +1,10 @@
 import { User } from "@prisma/client";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
 import sharp from "sharp";
 
-import { S3 } from "@/lib/s3";
 import { env } from "@/env";
-import { cloudFront } from "@/lib/cloudfront";
+import { invalidateCloudFrontCache } from "@/utils/invalidate-cloudfront-cache";
+import { putS3Object } from "@/utils/put-s3-object";
+
 import { UsersRepository } from "@/repositories/users-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 
@@ -43,34 +42,19 @@ export class UpdateUserUseCase {
         }
 
         if (imageBuffer) {
-            // invalidate the cloudfront cache for the previous image
             if (existentUser.image_key) {
-                const invalidationParams = {
-                    DistributionId: env.CLOUDFRONT_DISTRIBUTION_ID,
-                    InvalidationBatch: {
-                        CallerReference: existentUser.image_key,
-                        Paths: {
-                            Quantity: 1,
-                            Items: ["/" + existentUser.image_key],
-                        },
-                    },
-                };
-
-                const invalidationCommand = new CreateInvalidationCommand(invalidationParams);
-                await cloudFront.send(invalidationCommand);
+                await invalidateCloudFrontCache({ key: existentUser.image_key });
             }
 
             // upload new image in S3
             const updatedBuffer = await sharp(imageBuffer).jpeg({ quality: 80 }).toBuffer();
 
-            const params = {
+            await putS3Object({
                 Bucket: env.S3_BUCKET_NAME,
                 Key: `user-${id}`,
                 Body: updatedBuffer,
                 ContentType: "image/jpeg",
-            };
-            const command = new PutObjectCommand(params);
-            await S3.send(command);
+            });
         }
 
         const user = await this.usersRepository.update({

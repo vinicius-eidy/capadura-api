@@ -1,9 +1,9 @@
 import { Book } from "@prisma/client";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { env } from "@/env";
+import { putS3Object } from "@/utils/put-s3-object";
+
 import { BooksRepository } from "@/repositories/books-repository";
-import { S3 } from "@/lib/s3";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 
 interface UpdateBookUseCaseRequest {
@@ -48,14 +48,12 @@ export class UpdateBookUseCase {
             const imageBuffer: ArrayBuffer = await response.arrayBuffer();
             const imageContentType = response.headers.get("Content-Type") || undefined;
 
-            const params = {
+            await putS3Object({
                 Bucket: env.S3_BUCKET_NAME,
                 Key: `book-${id}`,
                 Body: Buffer.from(imageBuffer),
                 ContentType: imageContentType,
-            };
-            const command = new PutObjectCommand(params);
-            await S3.send(command);
+            });
         }
 
         const updatedBook = await this.booksRepository.update({

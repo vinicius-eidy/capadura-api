@@ -19,6 +19,10 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(201).send(read);
     } catch (err) {
+        if (err instanceof Error) {
+            reply.status(500).send({ message: err.message });
+        }
+
         throw err;
     }
 }
