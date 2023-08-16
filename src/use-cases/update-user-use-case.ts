@@ -15,7 +15,6 @@ interface UpdateUserUseCaseRequest {
     email: string;
     imageBuffer?: Buffer;
     description?: string;
-    favoriteBooks?: string[];
     location?: string;
     website?: string;
     twitter?: string;
@@ -31,7 +30,6 @@ export class UpdateUserUseCase {
         email,
         imageBuffer,
         description,
-        favoriteBooks,
         location,
         website,
         twitter,
@@ -64,7 +62,6 @@ export class UpdateUserUseCase {
             email,
             image_key: imageBuffer ? `user-${id}` : null,
             description,
-            favorite_books: favoriteBooks,
             location,
             website,
             twitter,

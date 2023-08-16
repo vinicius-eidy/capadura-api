@@ -11,22 +11,22 @@ datasource db {
 }
 
 model User {
-    id             String     @id @default(uuid())
-    name           String
-    username       String     @unique
-    email          String     @unique
-    password_hash  String
-    description    String?
-    location       String?
-    website        String?
-    twitter        String?
-    created_at     DateTime   @default(now())
-    favorite_books String[]
-    image_key      String?
-    like           Like[]
-    book_list      BookList[]
-    read           Read[]
-    progress       Progress[]
+    id            String         @id @default(uuid())
+    name          String
+    username      String         @unique
+    email         String         @unique
+    password_hash String
+    description   String?
+    location      String?
+    website       String?
+    twitter       String?
+    created_at    DateTime       @default(now())
+    image_key     String?
+    like          Like[]
+    book_list     BookList[]
+    read          Read[]
+    progress      Progress[]
+    favorite_book FavoriteBook[]
 
     @@map("users")
 }
@@ -46,6 +46,17 @@ model Book {
     books_on_list BooksOnBookLists[]
     like          Like[]
     read          Read[]
+    favorite_book FavoriteBook[]
+}
+
+model FavoriteBook {
+    id         String   @id @default(uuid())
+    order      Int
+    updated_at DateTime @default(now())
+    book       Book     @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    book_id    String
+    user       User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    user_id    String
 }
 
 model BookList {

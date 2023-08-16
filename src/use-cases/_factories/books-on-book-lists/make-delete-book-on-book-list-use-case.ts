@@ -1,5 +1,5 @@
 import { PrismaBooksOnBookListsRepository } from "@/repositories/prisma/prisma-books-on-book-lists-repository";
-import { DeleteBookOnBookListUseCase } from "@/use-cases/delete-book-on-book-list-use-case copy";
+import { DeleteBookOnBookListUseCase } from "@/use-cases/delete-book-on-book-list-use-case";
 
 export function makeDeleteBookOnBookListUseCase() {
     const booksOnBookListsRepository = new PrismaBooksOnBookListsRepository();

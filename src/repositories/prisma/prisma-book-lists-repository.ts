@@ -25,6 +25,9 @@ export class PrismaBookListsRepository implements BookListsRepository {
                     mode: "insensitive",
                 },
             },
+            orderBy: {
+                name: "asc",
+            },
             include: {
                 // just include book if bookId is provided
                 books: bookId

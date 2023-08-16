@@ -29,25 +29,14 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             )
             .optional(),
         description: z.string().optional(),
-        favoriteBooks: z.string().array().optional(),
         location: z.string().max(50, { message: "Máximo 50 caracteres." }).optional(),
         website: z.union([z.literal(""), z.string().trim().url()]).optional(),
         twitter: z.string().optional(),
     });
 
     try {
-        const {
-            id,
-            name,
-            username,
-            email,
-            image,
-            description,
-            favoriteBooks,
-            location,
-            website,
-            twitter,
-        } = updateUserBodySchema.parse(request.body);
+        const { id, name, username, email, image, description, location, website, twitter } =
+            updateUserBodySchema.parse(request.body);
 
         const updateUserUseCase = makeUpdateUserUseCase();
 
@@ -58,7 +47,6 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             email,
             imageBuffer: image?.[0]?.data,
             description,
-            favoriteBooks,
             location,
             website,
             twitter,
