@@ -52,7 +52,7 @@ model Book {
 model FavoriteBook {
     id         String   @id @default(uuid())
     order      Int
-    updated_at DateTime @default(now())
+    updated_at DateTime @updatedAt
     book       Book     @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     book_id    String
     user       User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)

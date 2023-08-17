@@ -10,11 +10,11 @@ import { deleteFavoriteBook } from "./delete";
 export async function favoriteBooksRoutes(app: FastifyInstance) {
     app.addHook("onRequest", verifyJWT);
 
-    app.get("/favorite-books/user/:userId", findByUser);
+    app.get("/favorite-books/user/:username", findByUser);
 
     app.put("/favorite-books", update);
 
     app.post("/favorite-books", create);
 
-    app.delete("/favorite-books/:bookListId", deleteFavoriteBook);
+    app.delete("/favorite-books/:favoriteBookId", deleteFavoriteBook);
 }

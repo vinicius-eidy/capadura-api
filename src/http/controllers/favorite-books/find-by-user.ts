@@ -6,15 +6,15 @@ import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
     const fetchFavoriteBooksByUserParamsSchema = z.object({
-        userId: z.string(),
+        username: z.string(),
     });
 
     try {
-        const { userId } = fetchFavoriteBooksByUserParamsSchema.parse(request.params);
+        const { username } = fetchFavoriteBooksByUserParamsSchema.parse(request.params);
 
         const fetchManyFavoriteBooksByUserUseCase = makeFetchManyFavoriteBooksByUserUseCase();
         const favoriteBooks = await fetchManyFavoriteBooksByUserUseCase.execute({
-            userId,
+            username,
         });
 
         reply.status(201).send(transformKeysToCamelCase(favoriteBooks));

@@ -6,7 +6,9 @@ import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createFavoriteBookBodySchema = z.object({
-        order: z.coerce.number(),
+        order: z.coerce.number().refine((value) => [1, 2, 3, 4].includes(value), {
+            message: "Order must be 1, 2, 3 or 4.",
+        }),
         bookId: z.string(),
     });
 

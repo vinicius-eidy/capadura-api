@@ -8,6 +8,9 @@ export class PrismaFavoriteBooksRepository implements FavoriteBooksRepository {
             where: {
                 id: favoriteBookId,
             },
+            include: {
+                book: true,
+            },
         });
 
         return favoriteBook || null;
@@ -41,6 +44,9 @@ export class PrismaFavoriteBooksRepository implements FavoriteBooksRepository {
                 book: {
                     connect: bookId,
                 },
+            },
+            include: {
+                book: true,
             },
         });
 

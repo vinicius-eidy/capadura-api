@@ -10,7 +10,12 @@ import { makeUpdateFavoriteBookUseCase } from "@/use-cases/_factories/favorite-b
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateFavoriteBookBodySchema = z.object({
         favoriteBookId: z.string().uuid(),
-        order: z.coerce.number().optional(),
+        order: z.coerce
+            .number()
+            .refine((value) => [1, 2, 3, 4].includes(value), {
+                message: "Order must be 1, 2, 3 or 4.",
+            })
+            .optional(),
         bookId: z.string(),
     });
 
