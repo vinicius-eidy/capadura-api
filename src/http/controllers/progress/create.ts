@@ -2,10 +2,12 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeCreateProgressUseCase } from "@/use-cases/_factories/progress/make-create-progress-use-case";
+import { makeCreateUserActivityUseCase } from "@/use-cases/_factories/user-activities/make-create-user-activity-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createProgressBodySchema = z.object({
+        bookId: z.string(),
         readId: z.string(),
         description: z.string().optional(),
         isSpoiler: z.boolean(),
@@ -15,7 +17,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     });
 
     try {
-        const { readId, description, isSpoiler, pagesCount, countType, bookPageCount } =
+        const { bookId, readId, description, isSpoiler, pagesCount, countType, bookPageCount } =
             createProgressBodySchema.parse(request.body);
 
         let page = 0;
@@ -37,7 +39,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
         }
 
         const createProgressUseCase = makeCreateProgressUseCase();
-        const progress = await createProgressUseCase.execute({
+        const createProgressUseCasePromise = createProgressUseCase.execute({
             readId,
             description,
             isSpoiler,
@@ -45,6 +47,19 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             percentage: percentage,
             userId: request.user.sub,
         });
+
+        const createUserActivityUseCase = makeCreateUserActivityUseCase();
+        const createUserActivityUseCasePromise = createUserActivityUseCase.execute({
+            activity: percentage.toString(),
+            activityType: "ADD_BOOK_PROGRESS",
+            bookId,
+            userId: request.user.sub,
+        });
+
+        const [progress] = await Promise.all([
+            createProgressUseCasePromise,
+            createUserActivityUseCasePromise,
+        ]);
 
         reply.status(201).send(transformKeysToCamelCase(progress));
     } catch (err) {

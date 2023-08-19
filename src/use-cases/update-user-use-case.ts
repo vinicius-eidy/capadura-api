@@ -60,7 +60,7 @@ export class UpdateUserUseCase {
             name,
             username,
             email,
-            image_key: imageBuffer ? `user-${id}` : null,
+            image_key: imageBuffer ? `user-${id}` : undefined,
             description,
             location,
             website,

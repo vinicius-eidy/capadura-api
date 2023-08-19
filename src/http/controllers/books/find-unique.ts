@@ -15,11 +15,12 @@ export async function findUnique(request: FastifyRequest, reply: FastifyReply) {
         const getBookUseCase = makeGetBookUseCase();
         const book = await getBookUseCase.execute({ id });
 
-        if (book) {
-            reply.status(200).send(transformKeysToCamelCase(book));
-        } else {
+        if (!book) {
             reply.status(200).send(null);
+            return;
         }
+
+        reply.status(200).send(transformKeysToCamelCase(book));
     } catch (err) {
         if (err instanceof Error) {
             reply.status(500).send({ message: err.message });

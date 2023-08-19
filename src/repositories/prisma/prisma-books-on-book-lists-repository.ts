@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
     BooksOnBookListsRepository,
-    fetchManyByBookListData,
+    findManyByBookListData,
 } from "../books-on-book-lists-repository";
 
 export class PrismaBooksOnBookListsRepository implements BooksOnBookListsRepository {
@@ -19,7 +19,7 @@ export class PrismaBooksOnBookListsRepository implements BooksOnBookListsReposit
         return bookOnBookList || null;
     }
 
-    async fetchManyByBookList({ bookListId, page, perPage }: fetchManyByBookListData) {
+    async findManyByBookList({ bookListId, page, perPage }: findManyByBookListData) {
         const bookOnBookList = await prisma.booksOnBookLists.findMany({
             where: {
                 book_list_id: bookListId,

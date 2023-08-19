@@ -1,15 +1,30 @@
 import { randomUUID } from "node:crypto";
-import { Prisma } from "@prisma/client";
+import { Book, Prisma } from "@prisma/client";
 import {
     BooksOnBookListsRepository,
     BooksOnBookListsWithBookList,
+    findManyByBookListData,
 } from "../books-on-book-lists-repository";
 
 export class InMemoryBooksOnBookListsRepository implements BooksOnBookListsRepository {
-    public items: BooksOnBookListsWithBookList[] = [];
+    public items: (BooksOnBookListsWithBookList & {
+        book?: Book;
+    })[] = [];
 
     async findUnique(bookOnBookListId: string) {
         return this.items.find((item) => item.id === bookOnBookListId) || null;
+    }
+
+    async findManyByBookList({ bookListId, page, perPage }: findManyByBookListData) {
+        const booksOnBookLists = this.items
+            .filter((item) => item.book_list_id === bookListId)
+            .slice((page - 1) * perPage, page * perPage);
+
+        booksOnBookLists.forEach((item) => {
+            item.book === undefined;
+        });
+
+        return booksOnBookLists;
     }
 
     async delete(bookOnBookListId: string) {

@@ -17,7 +17,7 @@ export class FetchManyByBookListUseCase {
         page,
         perPage,
     }: FetchManyByBookListUseCaseRequest): Promise<BooksOnBookListsWithBook[] | null> {
-        const booksOnBookList = await this.booksOnBookListsRepository.fetchManyByBookList({
+        const booksOnBookList = await this.booksOnBookListsRepository.findManyByBookList({
             bookListId,
             page,
             perPage,

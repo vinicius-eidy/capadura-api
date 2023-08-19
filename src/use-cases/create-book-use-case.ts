@@ -75,7 +75,7 @@ export class CreateBookUseCase {
             language,
             page_count: pageCount,
             description,
-            image_key: imageLink ? `book-${id}` : null,
+            image_key: imageLink ? `book-${id}` : undefined,
         });
 
         const imageUrl = imageLink ? getSignedUrlUtil({ key: `book-${id}` }) : undefined;

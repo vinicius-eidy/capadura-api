@@ -65,7 +65,7 @@ export class UpdateBookUseCase {
             language,
             page_count: pageCount,
             description,
-            image_key: imageLink ? `book-${id}` : null,
+            image_key: imageLink ? `book-${id}` : undefined,
         });
 
         return {

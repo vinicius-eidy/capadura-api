@@ -4,22 +4,22 @@ export type BooksOnBookListsWithBookList = BooksOnBookLists & {
     book_list?: BookList;
 };
 
-export interface fetchManyByBookListData {
+export interface findManyByBookListData {
     bookListId: string;
     page: number;
     perPage: number;
 }
 export type BooksOnBookListsWithBook = BooksOnBookLists & {
-    book: Book;
+    book?: Book;
 };
 
 export interface BooksOnBookListsRepository {
     findUnique(bookOnBookListId: string): Promise<BooksOnBookListsWithBookList | null>;
-    fetchManyByBookList({
+    findManyByBookList({
         bookListId,
         page,
         perPage,
-    }: fetchManyByBookListData): Promise<BooksOnBookListsWithBook[] | null>;
+    }: findManyByBookListData): Promise<BooksOnBookListsWithBook[] | null>;
     delete(bookOnBookListId: string): Promise<void>;
     create(data: Prisma.BooksOnBookListsUncheckedCreateInput): Promise<BooksOnBookLists>;
 }

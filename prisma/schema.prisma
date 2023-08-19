@@ -27,6 +27,7 @@ model User {
     read          Read[]
     progress      Progress[]
     favorite_book FavoriteBook[]
+    user_activity UserActivity[]
 
     @@map("users")
 }
@@ -47,6 +48,7 @@ model Book {
     like          Like[]
     read          Read[]
     favorite_book FavoriteBook[]
+    user_activity UserActivity[]
 }
 
 model FavoriteBook {
@@ -59,13 +61,33 @@ model FavoriteBook {
     user_id    String
 }
 
+enum ActivityType {
+    LIKE_BOOK
+    START_READ
+    PAUSE_READ
+    RESUME_READ
+    ADD_BOOK_PROGRESS
+    ADD_BOOK_REVIEW
+}
+
+model UserActivity {
+    id            String       @id @default(uuid())
+    activity      String?
+    activity_type ActivityType
+    created_at    DateTime     @default(now())
+    book          Book?        @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    book_id       String?
+    user          User         @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    user_id       String
+}
+
 model BookList {
     id          String             @id @default(uuid())
     name        String
     description String?
     image_key   String?
     books       BooksOnBookLists[]
-    user        User               @relation(fields: [user_id], references: [id])
+    user        User               @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     user_id     String
 }
 
@@ -93,9 +115,9 @@ model Read {
     review_rating     Float?
     review_content    String?
     review_is_spoiler Boolean?
-    user              User       @relation(fields: [user_id], references: [id])
+    user              User       @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     user_id           String
-    book              Book       @relation(fields: [book_id], references: [id])
+    book              Book       @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     book_id           String
     progress          Progress[]
 }
@@ -107,17 +129,17 @@ model Progress {
     page        Int?
     percentage  Float?
     created_at  DateTime @default(now())
-    read        Read     @relation(fields: [read_id], references: [id])
+    read        Read     @relation(fields: [read_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     read_id     String
-    user        User     @relation(fields: [user_id], references: [id])
+    user        User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     user_id     String
 }
 
 model Like {
     id      String @id @default(uuid())
-    user    User   @relation(fields: [user_id], references: [id])
+    user    User   @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     user_id String
-    book    Book   @relation(fields: [book_id], references: [id])
+    book    Book   @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     book_id String
 
     @@unique([user_id, book_id])
