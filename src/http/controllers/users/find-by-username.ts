@@ -28,6 +28,10 @@ export async function findByUsername(request: FastifyRequest, reply: FastifyRepl
             return;
         }
 
+        if (err instanceof Error) {
+            reply.status(500).send({ message: err.message });
+        }
+
         throw err;
     }
 }

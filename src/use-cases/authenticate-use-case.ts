@@ -2,7 +2,12 @@ import { compare } from "bcryptjs";
 import { User } from "@prisma/client";
 
 import { UsersRepository } from "@/repositories/users-repository";
+import { getSignedUrlUtil } from "@/utils/get-signed-url";
 import { InvalidCredentialsError } from "./_errors/invalid-credentials-error";
+
+interface UserWithImageUrl extends User {
+    imageUrl?: string;
+}
 
 interface AuthenticateUseCaseRequest {
     email: string;
@@ -10,7 +15,7 @@ interface AuthenticateUseCaseRequest {
 }
 
 interface AuthenticateUseCaseResponse {
-    user: User;
+    user: UserWithImageUrl;
 }
 
 export class AuthenticateUseCase {
@@ -20,7 +25,6 @@ export class AuthenticateUseCase {
         email,
         password,
     }: AuthenticateUseCaseRequest): Promise<AuthenticateUseCaseResponse> {
-        // auth
         const user = await this.usersRepository.findByEmail(email);
         if (!user) {
             throw new InvalidCredentialsError();
@@ -31,8 +35,18 @@ export class AuthenticateUseCase {
             throw new InvalidCredentialsError();
         }
 
+        let imageUrl;
+        if (user.image_key) {
+            imageUrl = getSignedUrlUtil({ key: user.image_key });
+        }
+
+        const userWithImageUrl = {
+            ...user,
+            imageUrl,
+        };
+
         return {
-            user,
+            user: userWithImageUrl,
         };
     }
 }

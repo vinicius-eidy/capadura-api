@@ -47,6 +47,10 @@ export async function googleOAuth(request: FastifyRequest, reply: FastifyReply) 
             return reply.status(403).send({ message: "Email not verified." });
         }
 
+        if (err instanceof Error) {
+            reply.status(500).send({ message: err.message });
+        }
+
         throw err;
     }
 }
