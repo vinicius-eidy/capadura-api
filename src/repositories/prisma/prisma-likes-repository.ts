@@ -42,7 +42,11 @@ export class PrismaLikesRepository implements LikesRepository {
                 id: likeId,
             },
             include: {
-                user: true,
+                user: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
 

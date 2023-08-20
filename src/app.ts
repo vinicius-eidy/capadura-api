@@ -8,6 +8,7 @@ import { ZodError } from "zod";
 import { env } from "./env";
 
 import { usersRoutes } from "./http/controllers/users/routes";
+import { followsRoutes } from "./http/controllers/follows/routes";
 import { userActivitiesRoutes } from "./http/controllers/user-activities/routes";
 import { bookRoutes } from "./http/controllers/books/routes";
 import { favoriteBooksRoutes } from "./http/controllers/favorite-books/routes";
@@ -48,6 +49,7 @@ app.register(fastifyJwt, {
 app.register(fastifyCookie);
 
 app.register(usersRoutes);
+app.register(followsRoutes);
 app.register(userActivitiesRoutes);
 app.register(bookRoutes);
 app.register(favoriteBooksRoutes);

@@ -9,7 +9,14 @@ export class PrismaBookListsRepository implements BookListsRepository {
                 id: bookListId,
             },
             include: {
-                user: true,
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                        image_key: true,
+                    },
+                },
             },
         });
 
