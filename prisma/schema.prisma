@@ -41,6 +41,7 @@ model Follow {
     following_id String
 
     @@id([follower_id, following_id])
+    @@map("follows")
 }
 
 model Book {
@@ -60,6 +61,8 @@ model Book {
     read          Read[]
     favorite_book FavoriteBook[]
     user_activity UserActivity[]
+
+    @@map("books")
 }
 
 model FavoriteBook {
@@ -70,6 +73,8 @@ model FavoriteBook {
     book_id    String
     user       User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     user_id    String
+
+    @@map("favorite_books")
 }
 
 enum ActivityType {
@@ -90,6 +95,8 @@ model UserActivity {
     book_id       String?
     user          User         @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     user_id       String
+
+    @@map("user_activities")
 }
 
 model BookList {
@@ -100,6 +107,8 @@ model BookList {
     books       BooksOnBookLists[]
     user        User               @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     user_id     String
+
+    @@map("book_lists")
 }
 
 model BooksOnBookLists {
@@ -108,6 +117,8 @@ model BooksOnBookLists {
     book_id      String
     book_list    BookList @relation(fields: [book_list_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     book_list_id String
+
+    @@map("books_on_book_lists")
 }
 
 enum ReadStatus {
@@ -131,6 +142,8 @@ model Read {
     book              Book       @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     book_id           String
     progress          Progress[]
+
+    @@map("reads")
 }
 
 model Progress {
@@ -144,6 +157,8 @@ model Progress {
     read_id     String
     user        User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     user_id     String
+
+    @@map("progress")
 }
 
 model Like {

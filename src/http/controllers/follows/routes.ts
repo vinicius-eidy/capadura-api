@@ -13,8 +13,8 @@ export async function followsRoutes(app: FastifyInstance) {
     app.addHook("onRequest", verifyJWT);
 
     app.get("/count-user-follows/:userId", getCountUserFollows);
-    app.get("/user-followers/:userId", fetchManyUserFollowers);
-    app.get("/user-following/:userId", fetchManyUserFollowing);
+    app.get("/user-followers/:userId/:currentUserId?", fetchManyUserFollowers);
+    app.get("/user-following/:userId/:currentUserId?", fetchManyUserFollowing);
     app.get("/user-is-following/:followingId", getIsCurrentUserFollowingAnUniqueUser);
 
     app.post("/user-followers", create);
