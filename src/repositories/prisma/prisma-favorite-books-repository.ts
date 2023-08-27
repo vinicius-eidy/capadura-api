@@ -25,7 +25,16 @@ export class PrismaFavoriteBooksRepository implements FavoriteBooksRepository {
                 order: "asc",
             },
             include: {
-                book: true,
+                book: {
+                    select: {
+                        id: true,
+                        title: true,
+                        authors: true,
+                        image_key: true,
+                        page_count: true,
+                        publish_date: true,
+                    },
+                },
             },
         });
 

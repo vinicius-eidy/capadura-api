@@ -12,17 +12,16 @@ export async function fetchManyUserFollowers(request: FastifyRequest, reply: Fas
 
     const fetchManyUserFollowersParamsSchema = z.object({
         userId: z.string(),
-        currentUserId: z.string().optional(),
     });
 
     try {
         const { page, perPage } = fetchManyUserFollowersQuerySchema.parse(request.query);
-        const { userId, currentUserId } = fetchManyUserFollowersParamsSchema.parse(request.params);
+        const { userId } = fetchManyUserFollowersParamsSchema.parse(request.params);
 
         const fetchManyUserFollowersUseCase = makeFetchManyUserFollowersUseCase();
         const follows = await fetchManyUserFollowersUseCase.execute({
             userId,
-            currentUserId,
+            currentUserId: request.user.sub,
             page,
             perPage,
         });

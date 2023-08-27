@@ -1,11 +1,15 @@
-import { Book, FavoriteBook, Prisma } from "@prisma/client";
-
-interface BookWithImageUrl extends Book {
-    imageUrl?: string;
-}
+import { FavoriteBook, Prisma } from "@prisma/client";
 
 export interface FavoriteBooksWithBookAndBookImageUrl extends FavoriteBook {
-    book: BookWithImageUrl;
+    book: {
+        id: string;
+        title: string;
+        authors: string[];
+        image_key: string | null;
+        page_count: number | null;
+        publish_date: Date | null;
+        imageUrl?: string;
+    };
 }
 
 export interface FavoriteBooksRepository {

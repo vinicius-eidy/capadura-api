@@ -12,7 +12,11 @@ export class PrismaUserActivitiesRepository implements UserActivitiesRepository 
                 created_at: "desc",
             },
             include: {
-                book: true,
+                book: {
+                    select: {
+                        title: true,
+                    },
+                },
             },
             take: perPage,
             skip: (page - 1) * perPage,
