@@ -8,11 +8,9 @@ import { findManyByUser } from "./find-many-by-book-and-user";
 import { getReadsRatings } from "./get-reads-ratings";
 
 export async function readRoutes(app: FastifyInstance) {
-    app.addHook("onRequest", verifyJWT);
+    app.post("/read", { onRequest: [verifyJWT] }, create);
 
-    app.post("/read", create);
-
-    app.put("/read", update);
+    app.put("/read", { onRequest: [verifyJWT] }, update);
 
     app.get("/user-reads", findManyByUser);
     app.get("/read/ratings", getReadsRatings);

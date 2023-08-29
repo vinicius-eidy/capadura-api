@@ -5,6 +5,7 @@ import { putS3Object } from "@/utils/put-s3-object";
 
 import { BooksRepository } from "@/repositories/books-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
+import { getSignedUrlUtil } from "@/utils/get-signed-url";
 
 interface UpdateBookUseCaseRequest {
     id: string;
@@ -18,8 +19,8 @@ interface UpdateBookUseCaseRequest {
     imageLink?: string;
 }
 
-interface UpdateBookUseCaseResponse {
-    book: Book;
+interface BookWithImageUrl extends Book {
+    imageUrl?: string;
 }
 
 export class UpdateBookUseCase {
@@ -35,7 +36,7 @@ export class UpdateBookUseCase {
         pageCount,
         description,
         imageLink,
-    }: UpdateBookUseCaseRequest): Promise<UpdateBookUseCaseResponse> {
+    }: UpdateBookUseCaseRequest): Promise<BookWithImageUrl> {
         const book = await this.booksRepository.findById(id);
 
         if (!book) {
@@ -68,8 +69,11 @@ export class UpdateBookUseCase {
             image_key: imageLink ? `book-${id}` : undefined,
         });
 
+        const imageUrl = imageLink ? getSignedUrlUtil({ key: `book-${id}` }) : undefined;
+
         return {
-            book: updatedBook,
+            ...updatedBook,
+            imageUrl,
         };
     }
 }

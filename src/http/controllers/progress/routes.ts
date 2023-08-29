@@ -8,11 +8,9 @@ import { findManyByRead } from "./find-many-by-read";
 import { findManyByUser } from "./find-many-by-user";
 
 export async function progressRoutes(app: FastifyInstance) {
-    app.addHook("onRequest", verifyJWT);
+    app.post("/progress", { onRequest: [verifyJWT] }, create);
 
-    app.post("/progress", create);
-
-    app.put("/progress", update);
+    app.put("/progress", { onRequest: [verifyJWT] }, update);
 
     app.get("/progress/read/:readId", findManyByRead);
     app.get("/user-progress/:userId", findManyByUser);

@@ -43,9 +43,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
             imageLink,
         });
 
-        reply.status(200).send({
-            book: transformKeysToCamelCase(book),
-        });
+        reply.status(200).send(transformKeysToCamelCase(book));
     } catch (err) {
         if (err instanceof Error) {
             reply.status(500).send({ message: err.message });

@@ -40,7 +40,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
         const updateUserUseCase = makeUpdateUserUseCase();
 
-        const user = await updateUserUseCase.execute({
+        const { user } = await updateUserUseCase.execute({
             id,
             name,
             username,

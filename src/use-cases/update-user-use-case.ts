@@ -7,6 +7,7 @@ import { putS3Object } from "@/utils/put-s3-object";
 
 import { UsersRepository } from "@/repositories/users-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
+import { getSignedUrlUtil } from "@/utils/get-signed-url";
 
 interface UpdateUserUseCaseRequest {
     id: string;
@@ -18,6 +19,14 @@ interface UpdateUserUseCaseRequest {
     location?: string;
     website?: string;
     twitter?: string;
+}
+
+interface UserWithImageUrl extends User {
+    imageUrl?: string;
+}
+
+interface UpdateUserUseCaseResponse {
+    user: UserWithImageUrl;
 }
 
 export class UpdateUserUseCase {
@@ -33,7 +42,7 @@ export class UpdateUserUseCase {
         location,
         website,
         twitter,
-    }: UpdateUserUseCaseRequest): Promise<User> {
+    }: UpdateUserUseCaseRequest): Promise<UpdateUserUseCaseResponse> {
         const existentUser = await this.usersRepository.findById(id);
         if (!existentUser) {
             throw new ResourceNotFoundError();
@@ -67,6 +76,18 @@ export class UpdateUserUseCase {
             twitter,
         });
 
-        return user;
+        let imageUrl;
+        if (user.image_key) {
+            imageUrl = getSignedUrlUtil({ key: user.image_key });
+        }
+
+        const userWithImageUrl = {
+            ...user,
+            imageUrl,
+        };
+
+        return {
+            user: userWithImageUrl,
+        };
     }
 }

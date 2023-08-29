@@ -10,14 +10,20 @@ import { deleteFollow } from "./delete";
 import { getIsCurrentUserFollowingAnUniqueUser } from "./get-is-current-user-following-an-unique-user";
 
 export async function followsRoutes(app: FastifyInstance) {
-    app.addHook("onRequest", verifyJWT);
-
     app.get("/count-user-follows/:userId", getCountUserFollows);
-    app.get("/user-followers/:userId/:currentUserId?", fetchManyUserFollowers);
-    app.get("/user-following/:userId/:currentUserId?", fetchManyUserFollowing);
-    app.get("/user-is-following/:followingId", getIsCurrentUserFollowingAnUniqueUser);
+    app.get("/user-followers/:userId", { onRequest: [verifyJWT] }, fetchManyUserFollowers);
+    app.get("/user-following/:userId", { onRequest: [verifyJWT] }, fetchManyUserFollowing);
+    app.get(
+        "/user-is-following/:followingId",
+        { onRequest: [verifyJWT] },
+        getIsCurrentUserFollowingAnUniqueUser,
+    );
 
-    app.post("/user-followers", create);
+    app.post("/user-followers", { onRequest: [verifyJWT] }, create);
 
-    app.delete("/user-followers/:followerId/:followingId", deleteFollow);
+    app.delete(
+        "/user-followers/:followerId/:followingId",
+        { onRequest: [verifyJWT] },
+        deleteFollow,
+    );
 }

@@ -8,13 +8,11 @@ import { create } from "./create";
 import { deleteBookList } from "./delete";
 
 export async function bookListRoutes(app: FastifyInstance) {
-    app.addHook("onRequest", verifyJWT);
-
     app.get("/booklists/user/:userId", findByUser);
 
-    app.put("/booklists", update);
+    app.put("/booklists", { onRequest: [verifyJWT] }, update);
 
-    app.post("/booklists", create);
+    app.post("/booklists", { onRequest: [verifyJWT] }, create);
 
-    app.delete("/booklists/:bookListId", deleteBookList);
+    app.delete("/booklists/:bookListId", { onRequest: [verifyJWT] }, deleteBookList);
 }
