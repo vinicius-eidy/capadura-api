@@ -12,6 +12,6 @@ export async function readRoutes(app: FastifyInstance) {
 
     app.put("/read", { onRequest: [verifyJWT] }, update);
 
-    app.get("/user-reads", findManyByUser);
+    app.get("/user-reads", { onRequest: [verifyJWT] }, findManyByUser);
     app.get("/read/ratings", getReadsRatings);
 }

@@ -10,16 +10,16 @@ import { BookListsRepository } from "@/repositories/book-lists-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 import { UnauthorizedError } from "./_errors/unauthorized-error";
 
-interface BookListWithImageUrl extends BookList {
-    imageUrl?: string;
-}
-
 interface UpdateBookListUseCaseRequest {
     bookListId: string;
     name?: string;
     description?: string;
     imageBuffer?: Buffer;
     userId: string;
+}
+
+interface BookListWithImageUrl extends BookList {
+    imageUrl?: string;
 }
 
 export class UpdateBookListUseCase {

@@ -13,8 +13,8 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
     const updateBookListBodySchema = z.object({
         bookListId: z.string(),
-        name: z.string().optional(),
-        description: z.string().optional(),
+        name: z.string().max(80, { message: "Máximo 80 caracteres" }).optional(),
+        description: z.string().max(600, { message: "Máximo 600 caracteres" }).optional(),
         image: z
             .any()
             .refine((file) => file[0]?.data?.length <= MAX_FILE_SIZE, `O tamanho máximo é 2MB.`)

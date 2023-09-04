@@ -14,7 +14,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
         name: z
             .string()
             .min(1, { message: "Campo obrigatório." })
-            .max(50, { message: "Máximo 50 caracteres." }),
+            .max(100, { message: "Máximo 100 caracteres." }),
         username: z
             .string()
             .min(1, { message: "Campo obrigatório." })
@@ -28,7 +28,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
                 "Formatos permitidos: .jpg, .jpeg, .png and .webp.",
             )
             .optional(),
-        description: z.string().optional(),
+        description: z.string().max(600, { message: "Máximo 600 caracteres." }).optional(),
         location: z.string().max(50, { message: "Máximo 50 caracteres." }).optional(),
         website: z.union([z.literal(""), z.string().trim().url()]).optional(),
         twitter: z.string().optional(),
