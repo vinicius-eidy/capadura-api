@@ -1,7 +1,7 @@
 {
-    "name": "contopia-api",
+    "name": "capadura-api",
     "version": "1.0.0",
-    "description": "contopia API",
+    "description": "capadura API",
     "main": "index.js",
     "scripts": {
         "start:dev": "tsx watch src/server.ts",

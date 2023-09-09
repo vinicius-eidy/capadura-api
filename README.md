@@ -1,5 +1,5 @@
 # App
-contopia app.
+capadura app.
 
 ## RFs (Functional Requirements)
 
