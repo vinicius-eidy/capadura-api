@@ -1,6 +1,7 @@
 import { Like, Prisma } from "@prisma/client";
 
 export interface LikesRepository {
+    findUniqueById(likeId: string): Promise<Like | null>;
     findManyByUserId(userId: string): Promise<Like[] | null>;
     findManyByBookId(bookId: string): Promise<Like[] | null>;
     findUniqueByBookIdAndUserId(bookId: string, userId: string): Promise<Like | null>;

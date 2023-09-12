@@ -78,4 +78,8 @@ export class InMemoryProgressRepository implements ProgressRepository {
 
         return progress;
     }
+
+    async delete(progressId: string) {
+        this.items = this.items.filter((item) => item.id !== progressId);
+    }
 }

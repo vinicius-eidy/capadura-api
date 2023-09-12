@@ -29,8 +29,6 @@ export class InMemoryBooksOnBookListsRepository implements BooksOnBookListsRepos
 
     async delete(bookOnBookListId: string) {
         this.items = this.items.filter((item) => item.id !== bookOnBookListId);
-
-        return;
     }
 
     async create(data: Prisma.BooksOnBookListsUncheckedCreateInput) {

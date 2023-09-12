@@ -34,4 +34,5 @@ export interface ReadsRepository {
     }): Promise<getAllReviewRatingsResponse>;
     update(data: Prisma.ReadUpdateInput): Promise<Read | undefined>;
     create(data: Prisma.ReadUncheckedCreateInput): Promise<Read>;
+    delete(readId: string): Promise<void>;
 }

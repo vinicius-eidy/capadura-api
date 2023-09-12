@@ -24,12 +24,11 @@ export async function findByUsername(request: FastifyRequest, reply: FastifyRepl
         });
     } catch (err) {
         if (err instanceof ResourceNotFoundError) {
-            reply.status(404).send({ message: err.message });
-            return;
+            return reply.status(404).send({ message: err.message });
         }
 
         if (err instanceof Error) {
-            reply.status(500).send({ message: err.message });
+            return reply.status(500).send({ message: err.message });
         }
 
         throw err;

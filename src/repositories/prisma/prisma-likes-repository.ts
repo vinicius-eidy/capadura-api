@@ -5,6 +5,16 @@ import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-er
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
 
 export class PrismaLikesRepository implements LikesRepository {
+    async findUniqueById(likeId: string) {
+        const like = await prisma.like.findUnique({
+            where: {
+                id: likeId,
+            },
+        });
+
+        return like;
+    }
+
     async findManyByUserId(userId: string) {
         const likes = await prisma.like.findMany({
             where: {

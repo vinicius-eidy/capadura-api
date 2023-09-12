@@ -20,6 +20,8 @@ export class InMemoryReadsRepository implements ReadsRepository {
         return { reads, total: reads.length };
     }
 
+    async getAllReviewRatings({ bookId, userId }: { bookId?: string; userId?: string }) {}
+
     async update(data: Prisma.ReadUpdateInput) {
         const itemIndex = this.items.findIndex((item) => item.id === data.id);
 
@@ -68,5 +70,9 @@ export class InMemoryReadsRepository implements ReadsRepository {
         this.items.push(read);
 
         return read;
+    }
+
+    async delete(readId: string) {
+        this.items = this.items.filter((item) => item.id !== readId);
     }
 }

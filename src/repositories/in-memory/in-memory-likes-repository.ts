@@ -5,6 +5,12 @@ import { LikesRepository } from "../likes-repository";
 export class InMemoryLikesRepository implements LikesRepository {
     public items: Like[] = [];
 
+    async findUniqueById(likeId: string) {
+        const like = this.items.find((item) => item.id === likeId);
+
+        return like || null;
+    }
+
     async findManyByUserId(userId: string) {
         const likes = this.items.filter((item) => item.user_id === userId);
 

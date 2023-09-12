@@ -6,6 +6,7 @@ import { create } from "./create";
 import { update } from "./update";
 import { findManyByUser } from "./find-many-by-book-and-user";
 import { getReadsRatings } from "./get-reads-ratings";
+import { deleteRead } from "./delete";
 
 export async function readRoutes(app: FastifyInstance) {
     app.post("/read", { onRequest: [verifyJWT] }, create);
@@ -14,4 +15,6 @@ export async function readRoutes(app: FastifyInstance) {
 
     app.get("/user-reads", { onRequest: [verifyJWT] }, findManyByUser);
     app.get("/read/ratings", getReadsRatings);
+
+    app.delete("/read/:readId", { onRequest: [verifyJWT] }, deleteRead);
 }

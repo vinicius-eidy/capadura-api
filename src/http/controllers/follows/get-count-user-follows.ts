@@ -22,7 +22,7 @@ export async function getCountUserFollows(request: FastifyRequest, reply: Fastif
         });
     } catch (err) {
         if (err instanceof Error) {
-            reply.status(500).send({ message: err.message });
+            return reply.status(500).send({ message: err.message });
         }
 
         throw err;

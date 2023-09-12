@@ -110,4 +110,12 @@ export class PrismaReadRepository implements ReadsRepository {
 
         return read;
     }
+
+    async delete(readId: string) {
+        await prisma.read.delete({
+            where: {
+                id: readId,
+            },
+        });
+    }
 }

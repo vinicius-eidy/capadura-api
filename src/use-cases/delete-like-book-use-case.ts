@@ -1,5 +1,8 @@
 import { LikesRepository } from "@/repositories/likes-repository";
 
+import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
+import { UnauthorizedError } from "./_errors/unauthorized-error";
+
 interface DeleteLikeBookUseCaseRequest {
     likeId: string;
     userId: string;
@@ -10,9 +13,17 @@ export class DeleteLikeBookUseCase {
 
     async execute({ likeId, userId }: DeleteLikeBookUseCaseRequest): Promise<void> {
         try {
-            await this.likesRepository.delete(likeId, userId);
+            const likeToDelete = await this.likesRepository.findUniqueById(likeId);
 
-            return;
+            if (!likeToDelete) {
+                throw new ResourceNotFoundError();
+            }
+
+            if (likeToDelete?.user_id !== userId) {
+                throw new UnauthorizedError();
+            }
+
+            await this.likesRepository.delete(likeId, userId);
         } catch (err) {
             throw err;
         }

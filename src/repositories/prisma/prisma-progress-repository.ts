@@ -84,4 +84,12 @@ export class PrismaProgressRepository implements ProgressRepository {
 
         return progress;
     }
+
+    async delete(progressId: string) {
+        await prisma.progress.delete({
+            where: {
+                id: progressId,
+            },
+        });
+    }
 }

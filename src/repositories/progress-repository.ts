@@ -23,4 +23,5 @@ export interface ProgressRepository {
     findManyByUser({ userId, page, perPage }: findManyByUser): Promise<findManyProgress>;
     update(data: Prisma.ProgressUpdateInput): Promise<Progress>;
     create(data: Prisma.ProgressUncheckedCreateInput): Promise<Progress>;
+    delete(progressId: string): Promise<void>;
 }

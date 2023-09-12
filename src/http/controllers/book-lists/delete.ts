@@ -23,15 +23,15 @@ export async function deleteBookList(request: FastifyRequest, reply: FastifyRepl
         reply.status(204).send();
     } catch (err) {
         if (err instanceof ResourceNotFoundError) {
-            reply.status(404).send({ message: err.message });
+            return reply.status(404).send({ message: err.message });
         }
 
         if (err instanceof UnauthorizedError) {
-            reply.status(401).send({ message: err.message });
+            return reply.status(401).send({ message: err.message });
         }
 
         if (err instanceof Error) {
-            reply.status(500).send({ message: err.message });
+            return reply.status(500).send({ message: err.message });
         }
 
         throw err;

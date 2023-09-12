@@ -6,6 +6,7 @@ import { create } from "./create";
 import { update } from "./update";
 import { findManyByRead } from "./find-many-by-read";
 import { findManyByUser } from "./find-many-by-user";
+import { deleteProgress } from "./delete";
 
 export async function progressRoutes(app: FastifyInstance) {
     app.post("/progress", { onRequest: [verifyJWT] }, create);
@@ -14,4 +15,6 @@ export async function progressRoutes(app: FastifyInstance) {
 
     app.get("/progress/read/:readId", findManyByRead);
     app.get("/user-progress/:userId", findManyByUser);
+
+    app.delete("/progress/:progressId", { onRequest: [verifyJWT] }, deleteProgress);
 }

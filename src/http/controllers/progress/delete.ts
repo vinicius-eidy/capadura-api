@@ -1,22 +1,22 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
+import { makeDeleteProgressUseCase } from "@/use-cases/_factories/progress/make-delete-progress-use-case copy";
+
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
 
-import { makeDeleteFavoriteBookUseCase } from "@/use-cases/_factories/favorite-books/make-delete-favorite-book-use-case";
-
-export async function deleteFavoriteBook(request: FastifyRequest, reply: FastifyReply) {
-    const deleteFavoriteBookParamsSchema = z.object({
-        favoriteBookId: z.string().uuid(),
+export async function deleteProgress(request: FastifyRequest, reply: FastifyReply) {
+    const deleteProgressParamsSchema = z.object({
+        progressId: z.string().uuid(),
     });
 
     try {
-        const { favoriteBookId } = deleteFavoriteBookParamsSchema.parse(request.params);
+        const { progressId } = deleteProgressParamsSchema.parse(request.params);
 
-        const deleteFavoriteBookUseCase = makeDeleteFavoriteBookUseCase();
-        await deleteFavoriteBookUseCase.execute({
-            favoriteBookId,
+        const deleteProgressUseCase = makeDeleteProgressUseCase();
+        await deleteProgressUseCase.execute({
+            progressId,
             userId: request.user.sub,
         });
 
