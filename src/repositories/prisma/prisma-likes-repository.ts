@@ -35,6 +35,26 @@ export class PrismaLikesRepository implements LikesRepository {
         return likes;
     }
 
+    async getTotalCountByUser(userId: string) {
+        const count = await prisma.like.count({
+            where: {
+                user_id: userId,
+            },
+        });
+
+        return count;
+    }
+
+    async getTotalCountByBook(bookId: string) {
+        const count = await prisma.like.count({
+            where: {
+                book_id: bookId,
+            },
+        });
+
+        return count;
+    }
+
     async findUniqueByBookIdAndUserId(bookId: string, userId: string) {
         const like = await prisma.like.findFirst({
             where: {

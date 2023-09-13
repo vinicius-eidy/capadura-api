@@ -2,9 +2,16 @@ import { FastifyInstance } from "fastify";
 
 import { verifyJWT } from "@/http/middlewares/verify-jwt";
 
+// GET
 import { findByUser } from "./find-by-user";
-import { update } from "./update";
+
+// POST
 import { create } from "./create";
+
+// PUT
+import { update } from "./update";
+
+// DELETE
 import { deleteBookList } from "./delete";
 
 export async function bookListRoutes(app: FastifyInstance) {

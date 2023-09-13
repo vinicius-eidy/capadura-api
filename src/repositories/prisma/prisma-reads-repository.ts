@@ -90,6 +90,17 @@ export class PrismaReadRepository implements ReadsRepository {
         };
     }
 
+    async getTotalFinishedReadsCountByBook(bookId: string) {
+        const count = await prisma.read.count({
+            where: {
+                book_id: bookId,
+                status: "FINISHED",
+            },
+        });
+
+        return count;
+    }
+
     async update(data: Prisma.ReadUpdateInput) {
         const { id, ...updateData } = data;
 

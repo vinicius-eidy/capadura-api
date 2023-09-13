@@ -34,6 +34,17 @@ export class PrismaBooksOnBookListsRepository implements BooksOnBookListsReposit
         return bookOnBookList;
     }
 
+    async getTotalListsWithSomeBookCount(bookId: string) {
+        const uniqueBookLists = await prisma.booksOnBookLists.findMany({
+            where: {
+                book_id: bookId,
+            },
+            distinct: ["book_list_id"],
+        });
+
+        return uniqueBookLists.length;
+    }
+
     async delete(bookOnBookListId: string) {
         await prisma.booksOnBookLists.delete({
             where: {

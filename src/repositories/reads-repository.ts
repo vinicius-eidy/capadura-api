@@ -32,6 +32,7 @@ export interface ReadsRepository {
         bookId?: string;
         userId?: string;
     }): Promise<getAllReviewRatingsResponse>;
+    getTotalFinishedReadsCountByBook(bookId: string): Promise<number>;
     update(data: Prisma.ReadUpdateInput): Promise<Read | undefined>;
     create(data: Prisma.ReadUncheckedCreateInput): Promise<Read>;
     delete(readId: string): Promise<void>;

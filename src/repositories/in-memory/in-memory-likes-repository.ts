@@ -23,6 +23,18 @@ export class InMemoryLikesRepository implements LikesRepository {
         return likes;
     }
 
+    async getTotalCountByUser(userId: string) {
+        const count = this.items.filter((item) => item.user_id === userId).length;
+
+        return count;
+    }
+
+    async getTotalCountByBook(bookId: string) {
+        const count = this.items.filter((item) => item.book_id === bookId).length;
+
+        return count;
+    }
+
     async findUniqueByBookIdAndUserId(bookId: string, userId: string) {
         const like = this.items.find((item) => {
             return item.book_id === bookId && item.user_id === userId;

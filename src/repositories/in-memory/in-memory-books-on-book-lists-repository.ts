@@ -26,6 +26,18 @@ export class InMemoryBooksOnBookListsRepository implements BooksOnBookListsRepos
 
         return booksOnBookLists;
     }
+    async getTotalListsWithSomeBookCount(bookId: string) {
+        const uniqueBookLists = new Set();
+
+        this.items.forEach((item) => {
+            if (item.book_id === bookId) {
+                uniqueBookLists.add(item.book_list_id);
+            }
+        });
+
+        const count = uniqueBookLists.size;
+        return count;
+    }
 
     async delete(bookOnBookListId: string) {
         this.items = this.items.filter((item) => item.id !== bookOnBookListId);

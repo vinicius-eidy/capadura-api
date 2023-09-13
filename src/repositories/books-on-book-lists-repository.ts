@@ -20,6 +20,7 @@ export interface BooksOnBookListsRepository {
         page,
         perPage,
     }: findManyByBookListData): Promise<BooksOnBookListsWithBook[] | null>;
+    getTotalListsWithSomeBookCount(bookId: string): Promise<number>;
     delete(bookOnBookListId: string): Promise<void>;
     create(data: Prisma.BooksOnBookListsUncheckedCreateInput): Promise<BooksOnBookLists>;
 }

@@ -22,6 +22,14 @@ export class InMemoryReadsRepository implements ReadsRepository {
 
     async getAllReviewRatings({ bookId, userId }: { bookId?: string; userId?: string }) {}
 
+    async getTotalFinishedReadsCountByBook(bookId: string) {
+        const count = this.items.filter(
+            (item) => item.book_id === bookId && item.status === "FINISHED",
+        ).length;
+
+        return count;
+    }
+
     async update(data: Prisma.ReadUpdateInput) {
         const itemIndex = this.items.findIndex((item) => item.id === data.id);
 
