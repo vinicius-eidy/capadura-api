@@ -1,4 +1,4 @@
-import { Prisma, Read } from "@prisma/client";
+import { Book, Prisma, Read } from "@prisma/client";
 
 export interface findManyByUserIdRequest {
     userId: string;
@@ -8,8 +8,16 @@ export interface findManyByUserIdRequest {
     perPage: number;
 }
 
+interface BookWithImageUrl extends Book {
+    imageUrl?: string;
+}
+
+export interface ReadWithBook extends Read {
+    book: BookWithImageUrl;
+}
+
 interface findManyByUserIdResponse {
-    reads: Read[];
+    reads: ReadWithBook[];
     total: number;
 }
 

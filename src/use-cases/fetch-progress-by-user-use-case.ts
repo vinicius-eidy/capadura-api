@@ -1,5 +1,6 @@
-import { Progress } from "@prisma/client";
-import { ProgressRepository } from "@/repositories/progress-repository";
+import { ProgressRepository, ProgressWithRead } from "@/repositories/progress-repository";
+
+import { getSignedUrlUtil } from "@/utils/get-signed-url";
 
 interface FetchManyProgressByUserUseCaseRequest {
     userId: string;
@@ -8,7 +9,7 @@ interface FetchManyProgressByUserUseCaseRequest {
 }
 
 interface FetchManyProgressByUserUseCaseResponse {
-    items: Progress[];
+    items: ProgressWithRead[];
     total: number;
 }
 
@@ -24,6 +25,12 @@ export class FetchManyProgressByUserUseCase {
             userId,
             page,
             perPage,
+        });
+
+        progress.forEach((item) => {
+            if (item.read.book.image_key) {
+                item.read.book.imageUrl = getSignedUrlUtil({ key: item.read.book.image_key });
+            }
         });
 
         return {

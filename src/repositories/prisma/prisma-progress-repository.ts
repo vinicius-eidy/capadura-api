@@ -1,6 +1,10 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ProgressRepository, findManyByRead, findManyByUser } from "../progress-repository";
+import {
+    ProgressRepository,
+    FindManyByReadInput,
+    FindManyByUserInput,
+} from "../progress-repository";
 
 export class PrismaProgressRepository implements ProgressRepository {
     async findUniqueById(progressId: string) {
@@ -13,7 +17,7 @@ export class PrismaProgressRepository implements ProgressRepository {
         return progress || null;
     }
 
-    async findManyByRead({ readId, page, perPage }: findManyByRead) {
+    async findManyByRead({ readId, page, perPage }: FindManyByReadInput) {
         const [progress, total] = await Promise.all([
             prisma.progress.findMany({
                 where: {
@@ -35,7 +39,7 @@ export class PrismaProgressRepository implements ProgressRepository {
         return { progress, total };
     }
 
-    async findManyByUser({ userId, page, perPage }: findManyByUser) {
+    async findManyByUser({ userId, page, perPage }: FindManyByUserInput) {
         const [progress, total] = await Promise.all([
             prisma.progress.findMany({
                 where: {
@@ -46,8 +50,17 @@ export class PrismaProgressRepository implements ProgressRepository {
                 },
                 include: {
                     read: {
-                        include: {
-                            book: true,
+                        select: {
+                            id: true,
+                            book_id: true,
+                            book: {
+                                select: {
+                                    id: true,
+                                    title: true,
+                                    page_count: true,
+                                    image_key: true,
+                                },
+                            },
                         },
                     },
                 },

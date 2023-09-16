@@ -1,7 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { Prisma, Progress } from "@prisma/client";
 
-import { ProgressRepository, findManyByRead, findManyByUser } from "../progress-repository";
+import {
+    FindManyByReadInput,
+    FindManyByUserInput,
+    ProgressRepository,
+} from "../progress-repository";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 
 export class InMemoryProgressRepository implements ProgressRepository {
@@ -13,7 +17,7 @@ export class InMemoryProgressRepository implements ProgressRepository {
         return progress || null;
     }
 
-    async findManyByRead({ readId, page, perPage }: findManyByRead) {
+    async findManyByRead({ readId, page, perPage }: FindManyByReadInput) {
         const progress = this.items
             .filter((item) => item.read_id === readId)
             .slice((page - 1) * perPage, page * perPage);
@@ -23,7 +27,8 @@ export class InMemoryProgressRepository implements ProgressRepository {
         return { progress, total };
     }
 
-    async findManyByUser({ userId, page, perPage }: findManyByUser) {
+    // @ts-ignore
+    async findManyByUser({ userId, page, perPage }: FindManyByUserInput) {
         const progress = this.items
             .filter((item) => item.user_id === userId)
             .slice((page - 1) * perPage, page * perPage);
