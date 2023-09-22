@@ -34,7 +34,7 @@ export class FetchManyReadsByBookAndUserUseCase {
         });
 
         reads.forEach((item) => {
-            if (item.book.image_key) {
+            if (item.book?.image_key) {
                 item.book.imageUrl = getSignedUrlUtil({ key: item.book.image_key });
             }
         });

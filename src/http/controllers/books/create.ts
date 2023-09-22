@@ -6,44 +6,15 @@ import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createBookBodySchema = z.object({
-        id: z.string(),
-        title: z.string(),
-        subtitle: z.string().optional(),
-        authors: z.string().array(),
-        publisher: z.string().optional(),
-        publishDate: z.string().datetime().optional(),
-        language: z.string().optional(),
-        pageCount: z.coerce.number().optional(),
-        description: z.string().optional(),
-        imageLink: z.string().url().optional(),
+        bookId: z.string(),
     });
 
     try {
-        const {
-            id,
-            title,
-            subtitle,
-            authors,
-            publisher,
-            publishDate,
-            language,
-            pageCount,
-            description,
-            imageLink,
-        } = createBookBodySchema.parse(request.body);
+        const { bookId } = createBookBodySchema.parse(request.body);
 
         const createBookUseCase = makeCreateBookUseCase();
         const book = await createBookUseCase.execute({
-            id,
-            title,
-            subtitle,
-            authors,
-            publisher,
-            publishDate,
-            language,
-            pageCount,
-            description,
-            imageLink,
+            bookId,
         });
 
         reply.status(200).send(transformKeysToCamelCase(book));
