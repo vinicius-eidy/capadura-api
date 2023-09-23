@@ -8,6 +8,8 @@ import { putS3Object } from "@/utils/put-s3-object";
 import { UsersRepository } from "@/repositories/users-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 import { getSignedUrlUtil } from "@/utils/get-signed-url";
+import { UserAlreadyExistsError } from "./_errors/user-already-exists-error";
+import { CustomError } from "./_errors/custom-error";
 
 interface UpdateUserUseCaseRequest {
     id: string;
@@ -46,6 +48,17 @@ export class UpdateUserUseCase {
         const existentUser = await this.usersRepository.findById(id);
         if (!existentUser) {
             throw new ResourceNotFoundError();
+        }
+
+        const existentUserWithUsername = await this.usersRepository.findByUsername(username);
+        if (existentUserWithUsername && existentUserWithUsername.id !== id) {
+            throw new UserAlreadyExistsError();
+        }
+
+        // letters, numbers, dot and underscore
+        const validUsernameCharactersRgx = /^[a-zA-Z0-9._]+$/;
+        if (!validUsernameCharactersRgx.test(username)) {
+            throw new CustomError("Invalid username characters.");
         }
 
         if (imageBuffer) {

@@ -13,7 +13,7 @@ interface GetUserByUsernameUseCaseRequest {
 }
 
 interface GetUserByUsernameUseCaseResponse {
-    user: UserWithImageUrl;
+    user: UserWithImageUrl | null;
 }
 
 export class GetUserByUsernameUseCase {
@@ -24,7 +24,9 @@ export class GetUserByUsernameUseCase {
     }: GetUserByUsernameUseCaseRequest): Promise<GetUserByUsernameUseCaseResponse> {
         const user = await this.usersRepository.findByUsername(username);
         if (!user) {
-            throw new ResourceNotFoundError();
+            return {
+                user: null,
+            };
         }
 
         let imageUrl;

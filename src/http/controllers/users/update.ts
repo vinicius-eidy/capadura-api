@@ -2,8 +2,11 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
 import { makeUpdateUserUseCase } from "@/use-cases/_factories/users/make-update-user-use-case";
-import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+
+import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
+import { UserAlreadyExistsError } from "@/use-cases/_errors/user-already-exists-error";
+import { CustomError } from "@/use-cases/_errors/custom-error";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const MAX_FILE_SIZE = 1024 * 1024 * 2; // 2 MB;
@@ -59,6 +62,14 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     } catch (err) {
         if (err instanceof ResourceNotFoundError) {
             return reply.status(404).send({ message: err.message });
+        }
+
+        if (err instanceof UserAlreadyExistsError) {
+            return reply.status(409).send({ message: err.message });
+        }
+
+        if (err instanceof CustomError) {
+            return reply.status(400).send({ message: err.message });
         }
 
         if (err instanceof Error) {
