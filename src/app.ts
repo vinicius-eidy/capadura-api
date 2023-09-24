@@ -24,7 +24,7 @@ export const app = fastify({
 
 if (env.NODE_ENV === "dev") {
     app.register(cors, {
-        origin: env.BASE_URL_FRONT_END,
+        origin: "*",
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,

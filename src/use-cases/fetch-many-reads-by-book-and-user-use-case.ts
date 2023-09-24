@@ -4,7 +4,6 @@ import { getSignedUrlUtil } from "@/utils/get-signed-url";
 
 interface FetchManyReadsByBookAndUserUseCaseRequest {
     userId: string;
-    bookId?: string;
     status?: "ACTIVE" | "FINISHED" | "CANCELLED" | "DELETED";
     page: number;
     perPage: number;
@@ -20,22 +19,20 @@ export class FetchManyReadsByBookAndUserUseCase {
 
     async execute({
         userId,
-        bookId,
         status,
         page,
         perPage,
     }: FetchManyReadsByBookAndUserUseCaseRequest): Promise<FetchManyReadsByBookAndUserUseCaseResponse> {
         const { reads, total } = await this.readsRepository.findManyByUserId({
             userId,
-            bookId,
             status,
             page,
             perPage,
         });
 
-        reads.forEach((item) => {
-            if (item.book?.image_key) {
-                item.book.imageUrl = getSignedUrlUtil({ key: item.book.image_key });
+        reads.forEach((read) => {
+            if (read.book?.image_key) {
+                read.book.imageUrl = getSignedUrlUtil({ key: read.book.image_key });
             }
         });
 

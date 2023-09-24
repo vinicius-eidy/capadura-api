@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { BooksRepository } from "../books-repository";
+import { BooksRepository, FindManyBooksInput } from "../books-repository";
 
 export class PrismaBooksRepository implements BooksRepository {
     async findById(bookId: string) {
@@ -11,6 +11,18 @@ export class PrismaBooksRepository implements BooksRepository {
         });
 
         return book ?? null;
+    }
+
+    async findMany({ page, perPage }: FindManyBooksInput) {
+        const books = await prisma.book.findMany({
+            orderBy: {
+                title: "asc",
+            },
+            take: perPage,
+            skip: (page - 1) * perPage,
+        });
+
+        return books;
     }
 
     async update(data: Prisma.BookUpdateInput) {

@@ -3,7 +3,8 @@ import { FastifyInstance } from "fastify";
 import { verifyJWT } from "@/http/middlewares/verify-jwt";
 
 // GET
-import { findManyByUser } from "./find-many-by-book-and-user";
+import { fetchManyByUser } from "./fetch-many-by-user";
+import { fetchManyByUserForUniqueBook } from "./fetch-many-by-user-for-unique-book";
 import { getReadsRatings } from "./get-reads-ratings";
 import { getTotalFinishedReadsCountByBook } from "./get-total-finished-reads-count-by-book";
 
@@ -17,7 +18,8 @@ import { update } from "./update";
 import { deleteRead } from "./delete";
 
 export async function readRoutes(app: FastifyInstance) {
-    app.get("/user-reads", { onRequest: [verifyJWT] }, findManyByUser);
+    app.get("/user-reads", fetchManyByUser);
+    app.get("/user-reads/book/:bookId", { onRequest: [verifyJWT] }, fetchManyByUserForUniqueBook);
     app.get("/read/ratings", getReadsRatings);
     app.get("/get-total-finished-reads-count/book/:bookId", getTotalFinishedReadsCountByBook);
 

@@ -1,9 +1,11 @@
 import { BookList } from "@prisma/client";
-import { BookListsRepository } from "@/repositories/book-lists-repository";
 import sharp from "sharp";
-import { putS3Object } from "@/utils/put-s3-object";
+
 import { env } from "@/env";
+import { BookListsRepository } from "@/repositories/book-lists-repository";
+
 import { getSignedUrlUtil } from "@/utils/get-signed-url";
+import { putS3Object } from "@/utils/put-s3-object";
 
 interface CreateBookListUseCaseRequest {
     name: string;
@@ -25,7 +27,7 @@ export class CreateBookListUseCase {
         imageBuffer,
         userId,
     }: CreateBookListUseCaseRequest): Promise<BookListWithImageUrl> {
-        const bookList = await this.booksListsRepository.create({
+        const bookList: BookListWithImageUrl = await this.booksListsRepository.create({
             name,
             description,
             user_id: userId,
@@ -50,16 +52,10 @@ export class CreateBookListUseCase {
             });
         }
 
-        let imageUrl;
         if (imageBuffer) {
-            imageUrl = getSignedUrlUtil({ key: bookListImageKey });
+            bookList.imageUrl = getSignedUrlUtil({ key: bookListImageKey });
         }
 
-        const bookListWithImageUrl = {
-            ...bookList,
-            imageUrl,
-        };
-
-        return bookListWithImageUrl;
+        return bookList;
     }
 }

@@ -25,7 +25,7 @@ export class AuthenticateUseCase {
         email,
         password,
     }: AuthenticateUseCaseRequest): Promise<AuthenticateUseCaseResponse> {
-        const user = await this.usersRepository.findByEmail(email);
+        const user: UserWithImageUrl | null = await this.usersRepository.findByEmail(email);
         if (!user) {
             throw new InvalidCredentialsError();
         }
@@ -35,18 +35,12 @@ export class AuthenticateUseCase {
             throw new InvalidCredentialsError();
         }
 
-        let imageUrl;
         if (user.image_key) {
-            imageUrl = getSignedUrlUtil({ key: user.image_key });
+            user.imageUrl = getSignedUrlUtil({ key: user.image_key });
         }
 
-        const userWithImageUrl = {
-            ...user,
-            imageUrl,
-        };
-
         return {
-            user: userWithImageUrl,
+            user,
         };
     }
 }

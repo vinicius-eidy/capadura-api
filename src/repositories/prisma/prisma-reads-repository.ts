@@ -1,6 +1,10 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ReadsRepository, findManyByUserIdRequest } from "../reads-repository";
+import {
+    FindManyByUserIdForUniqueBookInput,
+    ReadsRepository,
+    findManyByUserIdRequest,
+} from "../reads-repository";
 
 export class PrismaReadRepository implements ReadsRepository {
     async findUniqueById(readId: string) {
@@ -13,13 +17,51 @@ export class PrismaReadRepository implements ReadsRepository {
         return read || null;
     }
 
-    async findManyByUserId({ userId, bookId, status, page, perPage }: findManyByUserIdRequest) {
+    async findManyByUserId({ userId, status, page, perPage }: findManyByUserIdRequest) {
         const [reads, total] = await Promise.all([
             prisma.read.findMany({
                 where: {
                     user_id: userId,
-                    ...(bookId && { book_id: bookId }),
+                    is_private: false,
                     ...(status && { status }),
+                },
+                orderBy: [
+                    {
+                        end_date: "desc",
+                    },
+                    {
+                        start_date: "desc",
+                    },
+                ],
+                include: {
+                    book: {
+                        select: {
+                            title: true,
+                            image_key: true,
+                        },
+                    },
+                },
+                take: perPage,
+                skip: (page - 1) * perPage,
+            }),
+            prisma.read.count({
+                where: {
+                    user_id: userId,
+                    is_private: false,
+                    ...(status && { status }),
+                },
+            }),
+        ]);
+
+        return { reads, total };
+    }
+
+    async findManyByUserIdForUniqueBook({ userId, bookId }: FindManyByUserIdForUniqueBookInput) {
+        const [reads, total] = await Promise.all([
+            prisma.read.findMany({
+                where: {
+                    user_id: userId,
+                    book_id: bookId,
                 },
                 orderBy: [
                     {
@@ -36,16 +78,12 @@ export class PrismaReadRepository implements ReadsRepository {
                         },
                         take: 3,
                     },
-                    book: !bookId,
                 },
-                take: perPage,
-                skip: (page - 1) * perPage,
             }),
             prisma.read.count({
                 where: {
                     user_id: userId,
-                    ...(bookId && { book_id: bookId }),
-                    ...(status && { status }),
+                    book_id: bookId,
                 },
             }),
         ]);

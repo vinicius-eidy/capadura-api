@@ -1,16 +1,18 @@
 import { FastifyInstance } from "fastify";
 
 // GET
-import { create } from "./create";
+import { findUnique } from "./find-unique";
+import { fetchMany } from "./fetch-many";
 
 // POST
-import { update } from "./update";
+import { create } from "./create";
 
 // PUT
-import { findUnique } from "./find-unique";
+import { update } from "./update";
 
 export async function bookRoutes(app: FastifyInstance) {
     app.get("/book/:id", findUnique);
+    app.get("/books", fetchMany);
 
     app.post("/book", create);
 

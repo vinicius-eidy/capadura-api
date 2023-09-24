@@ -55,18 +55,14 @@ export class CreateBookUseCase {
     constructor(private booksRepository: BooksRepository) {}
 
     async execute({ bookId }: CreateBookUseCaseRequest): Promise<BookWithImageUrl> {
-        const book = await this.booksRepository.findById(bookId);
+        const book: BookWithImageUrl | null = await this.booksRepository.findById(bookId);
 
         if (book) {
-            let imageUrl;
             if (book.image_key) {
-                imageUrl = getSignedUrlUtil({ key: book.image_key });
+                book.imageUrl = getSignedUrlUtil({ key: book.image_key });
             }
 
-            return {
-                ...book,
-                imageUrl,
-            };
+            return book;
         }
 
         const { data } = await axios.get<BookDataFromGoogle>(

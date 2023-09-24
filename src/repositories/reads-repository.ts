@@ -1,19 +1,28 @@
-import { Book, Prisma, Read } from "@prisma/client";
+import { Prisma, Read } from "@prisma/client";
 
 export interface findManyByUserIdRequest {
     userId: string;
-    bookId?: string;
     status?: "ACTIVE" | "FINISHED" | "CANCELLED" | "DELETED";
     page: number;
     perPage: number;
 }
 
-interface BookWithImageUrl extends Book {
-    imageUrl?: string;
+export interface FindManyByUserIdForUniqueBookInput {
+    userId: string;
+    bookId: string;
+}
+
+interface FindManyByUserIdForUniqueBookOutput {
+    reads: Read[];
+    total: number;
 }
 
 export interface ReadWithBook extends Read {
-    book: BookWithImageUrl;
+    book: {
+        title: string;
+        image_key: string | null;
+        imageUrl?: string;
+    };
 }
 
 interface findManyByUserIdResponse {
@@ -33,6 +42,9 @@ interface getAllReviewRatingsResponse {
 export interface ReadsRepository {
     findUniqueById(readId: string): Promise<Read | null>;
     findManyByUserId(data: findManyByUserIdRequest): Promise<findManyByUserIdResponse>;
+    findManyByUserIdForUniqueBook(
+        data: FindManyByUserIdForUniqueBookInput,
+    ): Promise<FindManyByUserIdForUniqueBookOutput>;
     getAllReviewRatings({
         bookId,
         userId,

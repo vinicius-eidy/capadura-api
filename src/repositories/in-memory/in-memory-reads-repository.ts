@@ -1,7 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { Prisma, Read, ReadStatus } from "@prisma/client";
 
-import { ReadsRepository, findManyByUserIdRequest } from "../reads-repository";
+import {
+    FindManyByUserIdForUniqueBookInput,
+    ReadsRepository,
+    findManyByUserIdRequest,
+} from "../reads-repository";
 
 export class InMemoryReadsRepository implements ReadsRepository {
     public items: Read[] = [];
@@ -12,14 +16,21 @@ export class InMemoryReadsRepository implements ReadsRepository {
         return read || null;
     }
 
-    async findManyByUserId({ userId, bookId }: findManyByUserIdRequest) {
-        const reads = this.items.filter(
-            (item) => item.user_id === userId && item.book_id === bookId,
-        );
+    // @ts-ignore
+    async findManyByUserId({ userId, status, page, perPage }: findManyByUserIdRequest) {
+        const reads = this.items
+            .filter((item) => {
+                return item.user_id === userId && item.book_id === bookId && item.status === status;
+            })
+            .slice((page - 1) * perPage, page * perPage);
 
         return { reads, total: reads.length };
     }
 
+    // @ts-ignore
+    async findManyByUserIdForUniqueBook({ bookId, userId }: FindManyByUserIdForUniqueBookInput) {}
+
+    // @ts-ignore
     async getAllReviewRatings({ bookId, userId }: { bookId?: string; userId?: string }) {}
 
     async getTotalFinishedReadsCountByBook(bookId: string) {

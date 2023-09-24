@@ -58,23 +58,17 @@ export class UpdateBookListUseCase {
             });
         }
 
-        const bookList = await this.booksListsRepository.update({
+        const bookList: BookListWithImageUrl = await this.booksListsRepository.update({
             id: bookListId,
             name,
             description,
             image_key: imageBuffer ? `booklist-${bookListId}` : undefined,
         });
 
-        let imageUrl;
         if (bookList.image_key) {
-            imageUrl = getSignedUrlUtil({ key: bookList.image_key });
+            bookList.imageUrl = getSignedUrlUtil({ key: bookList.image_key });
         }
 
-        const bookListWithImageUrl = {
-            ...bookList,
-            imageUrl,
-        };
-
-        return bookListWithImageUrl;
+        return bookList;
     }
 }

@@ -35,7 +35,7 @@ export class UpdateFavoriteBookUseCase {
         userId,
     }: UpdateFavoriteBookUseCaseRequest): Promise<FavoriteBookWithBook> {
         const bookListToUpdate = await this.favoriteBooksRepository.findUnique(favoriteBookId);
-        const relationedBook = await this.booksRepository.findById(bookId);
+        const relationedBook: BookWithImageUrl | null = await this.booksRepository.findById(bookId);
 
         if (!bookListToUpdate || !relationedBook) {
             throw new ResourceNotFoundError();
@@ -55,19 +55,13 @@ export class UpdateFavoriteBookUseCase {
             },
         });
 
-        let imageUrl;
         if (relationedBook.image_key) {
-            imageUrl = getSignedUrlUtil({ key: relationedBook.image_key });
+            relationedBook.imageUrl = getSignedUrlUtil({ key: relationedBook.image_key });
         }
-
-        const relationedBookWithImageUrl = {
-            ...relationedBook,
-            imageUrl,
-        };
 
         return {
             ...favoriteBook,
-            book: relationedBookWithImageUrl,
+            book: relationedBook,
         };
     }
 }

@@ -22,23 +22,17 @@ export class GetUserProfileUseCase {
     async execute({
         userId,
     }: GetUsersProfileUseCaseRequest): Promise<GetUsersProfileUseCaseResponse> {
-        const user = await this.usersRepository.findById(userId);
+        const user: UserWithImageUrl | null = await this.usersRepository.findById(userId);
         if (!user) {
             throw new ResourceNotFoundError();
         }
 
-        let imageUrl;
         if (user.image_key) {
-            imageUrl = getSignedUrlUtil({ key: user.image_key });
+            user.imageUrl = getSignedUrlUtil({ key: user.image_key });
         }
 
-        const userWithImageUrl = {
-            ...user,
-            imageUrl,
-        };
-
         return {
-            user: userWithImageUrl,
+            user,
         };
     }
 }

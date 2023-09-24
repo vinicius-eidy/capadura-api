@@ -77,7 +77,7 @@ export class UpdateUserUseCase {
             });
         }
 
-        const user = await this.usersRepository.update({
+        const user: UserWithImageUrl = await this.usersRepository.update({
             id,
             name,
             username,
@@ -89,18 +89,12 @@ export class UpdateUserUseCase {
             twitter,
         });
 
-        let imageUrl;
         if (user.image_key) {
-            imageUrl = getSignedUrlUtil({ key: user.image_key });
+            user.imageUrl = getSignedUrlUtil({ key: user.image_key });
         }
 
-        const userWithImageUrl = {
-            ...user,
-            imageUrl,
-        };
-
         return {
-            user: userWithImageUrl,
+            user,
         };
     }
 }
