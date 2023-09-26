@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 
 // GET
 import { findUnique } from "./find-unique";
-import { fetchMany } from "./fetch-many";
+import { fetchManyIds } from "./fetch-many-ids";
 
 // POST
 import { create } from "./create";
@@ -12,7 +12,7 @@ import { update } from "./update";
 
 export async function bookRoutes(app: FastifyInstance) {
     app.get("/book/:id", findUnique);
-    app.get("/books", fetchMany);
+    app.get("/book-ids", fetchManyIds);
 
     app.post("/book", create);
 

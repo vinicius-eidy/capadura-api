@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { BooksRepository, FindManyBooksInput } from "../books-repository";
+import { BooksRepository, FindManyBookIdsInput } from "../books-repository";
 
 export class PrismaBooksRepository implements BooksRepository {
     async findById(bookId: string) {
@@ -13,10 +13,13 @@ export class PrismaBooksRepository implements BooksRepository {
         return book ?? null;
     }
 
-    async findMany({ page, perPage }: FindManyBooksInput) {
+    async findManyIds({ page, perPage }: FindManyBookIdsInput) {
         const books = await prisma.book.findMany({
+            select: {
+                id: true,
+            },
             orderBy: {
-                title: "asc",
+                id: "asc",
             },
             take: perPage,
             skip: (page - 1) * perPage,

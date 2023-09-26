@@ -1,13 +1,17 @@
 import { Book, Prisma } from "@prisma/client";
 
-export interface FindManyBooksInput {
+export interface FindManyBookIdsInput {
     page: number;
     perPage: number;
 }
 
+interface FindManyBookIdsOutput {
+    id: string;
+}
+
 export interface BooksRepository {
     findById(bookId: string): Promise<Book | null>;
-    findMany({ page, perPage }: FindManyBooksInput): Promise<Book[]>;
+    findManyIds({ page, perPage }: FindManyBookIdsInput): Promise<FindManyBookIdsOutput[]>;
     update(data: Prisma.BookUpdateInput): Promise<Book>;
     create(data: Prisma.BookUncheckedCreateInput): Promise<Book>;
 }

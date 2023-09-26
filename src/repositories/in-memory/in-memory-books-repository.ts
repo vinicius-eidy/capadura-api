@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Book, Prisma } from "@prisma/client";
 
-import { BooksRepository, FindManyBooksInput } from "../books-repository";
+import { BooksRepository, FindManyBookIdsInput } from "../books-repository";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 
 export class InMemoryBooksRepository implements BooksRepository {
@@ -13,8 +13,12 @@ export class InMemoryBooksRepository implements BooksRepository {
         return book ?? null;
     }
 
-    async findMany({ page, perPage }: FindManyBooksInput) {
-        const books = this.items.slice((page - 1) * perPage, page * perPage);
+    async findManyIds({ page, perPage }: FindManyBookIdsInput) {
+        const books = this.items
+            .map((item) => ({
+                id: item.id,
+            }))
+            .slice((page - 1) * perPage, page * perPage);
 
         return books;
     }

@@ -19,7 +19,7 @@ import { bookListRoutes } from "./http/controllers/book-lists/routes";
 import { booksOnBookListsRoutes } from "./http/controllers/books-on-book-lists/routes";
 
 export const app = fastify({
-    bodyLimit: 1024 * 1024 * 1024 * 2.5, // 2.5GB
+    bodyLimit: (1024 * 1024 * 1024 * 1) / 0.1, // 0.5GB
 });
 
 if (env.NODE_ENV === "dev") {
