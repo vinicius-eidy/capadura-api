@@ -1,8 +1,5 @@
 import { LikesRepository } from "@/repositories/likes-repository";
 
-import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
-import { UnauthorizedError } from "./_errors/unauthorized-error";
-
 interface GetTotalLikeCountByBookUseCaseRequest {
     bookId: string;
 }
