@@ -55,6 +55,7 @@ model Book {
     page_count   Int?
     description  String?
     image_key    String?
+    isbn13       String?
 
     books_on_list BooksOnBookLists[]
     like          Like[]

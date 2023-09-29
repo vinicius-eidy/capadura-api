@@ -1,7 +1,12 @@
-import { UsersRepository } from "@/repositories/users-repository";
-import { getGoogleOAuthTokens } from "@/utils/get-google-oauth-tokens";
-import { GoogleOAuthUserResponse, getGoogleOAuthUser } from "@/utils/get-google-oauth-user";
+import { randomBytes, randomUUID } from "node:crypto";
 import { User } from "@prisma/client";
+
+import { env } from "@/env";
+import { UsersRepository } from "@/repositories/users-repository";
+
+import { GoogleOAuthUserResponse, getGoogleOAuthUser } from "@/utils/get-google-oauth-user";
+import { getGoogleOAuthTokens } from "@/utils/get-google-oauth-tokens";
+import { putS3Object } from "@/utils/put-s3-object";
 
 interface HandleGoogleOAuthSessionUseCaseRequest {
     code: string;
@@ -32,16 +37,50 @@ export class HandleGoogleOAuthSessionUseCase {
             };
         }
 
-        const { id, name, email } = googleUser;
-        const user = await this.usersRepository.create({
-            id,
+        const { name, email, picture } = googleUser;
+
+        const createUserId = randomUUID();
+
+        if (picture) {
+            const response = await fetch(picture);
+            const imageBuffer: ArrayBuffer = await response.arrayBuffer();
+            const imageContentType = response.headers.get("Content-Type") || undefined;
+
+            await putS3Object({
+                Bucket: env.S3_BUCKET_NAME,
+                Key: `user-${createUserId}`,
+                Body: Buffer.from(imageBuffer),
+                ContentType: imageContentType,
+            });
+        }
+
+        const baseRandomUsername = name.toLowerCase().replaceAll(" ", "-").slice(0, 16);
+        let usernameNotExists = false;
+        let finalUsername = "";
+        do {
+            // generate 8 random hexadecimal digits
+            const buffer = randomBytes(4);
+            const randomHex = buffer.toString("hex");
+
+            const randomUsername = `${baseRandomUsername}-${randomHex}`;
+            const userWithSameUsername = await this.usersRepository.findByUsername(randomUsername);
+            if (!userWithSameUsername) {
+                usernameNotExists = true;
+                finalUsername = randomUsername;
+            }
+        } while (!usernameNotExists);
+
+        const createdUser = await this.usersRepository.create({
+            id: createUserId,
             name,
+            username: finalUsername,
             email,
             password_hash: "gauth",
+            image_key: picture ? `user-${createUserId}` : undefined,
         });
 
         return {
-            user,
+            user: createdUser,
         };
     }
 }

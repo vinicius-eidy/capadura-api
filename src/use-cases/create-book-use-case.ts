@@ -79,7 +79,10 @@ export class CreateBookUseCase {
             pageCount,
             description,
             imageLinks,
+            industryIdentifiers,
         } = data.volumeInfo;
+
+        const bookISBN13 = industryIdentifiers.find((item) => item.type === "ISBN_13")?.identifier;
 
         const parsedPulishedDate = dayjs(publishedDate, { format: "YYYY-MM-DD" });
         const dbPublishedDate = parsedPulishedDate.isValid()
@@ -113,6 +116,7 @@ export class CreateBookUseCase {
             page_count: pageCount,
             description,
             image_key: imageLink ? `book-${bookId}` : undefined,
+            isbn13: bookISBN13,
         });
 
         const imageUrl = imageLink ? getSignedUrlUtil({ key: `book-${bookId}` }) : undefined;
