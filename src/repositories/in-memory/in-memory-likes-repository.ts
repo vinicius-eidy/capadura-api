@@ -58,6 +58,7 @@ export class InMemoryLikesRepository implements LikesRepository {
             id: data.id || randomUUID(),
             book_id: data.book_id,
             user_id: data.user_id,
+            created_at: new Date(),
         };
 
         this.items.push(like);

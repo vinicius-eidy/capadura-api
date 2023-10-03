@@ -163,11 +163,12 @@ model Progress {
 }
 
 model Like {
-    id      String @id @default(uuid())
-    user    User   @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    user_id String
-    book    Book   @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    book_id String
+    id         String   @id @default(uuid())
+    created_at DateTime @default(now())
+    user       User     @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    user_id    String
+    book       Book     @relation(fields: [book_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    book_id    String
 
     @@unique([user_id, book_id])
     @@map("likes")

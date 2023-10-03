@@ -20,6 +20,18 @@ export class PrismaLikesRepository implements LikesRepository {
             where: {
                 user_id: userId,
             },
+            include: {
+                book: {
+                    select: {
+                        id: true,
+                        title: true,
+                        authors: true,
+                        publish_date: true,
+                        page_count: true,
+                        image_key: true,
+                    },
+                },
+            },
         });
 
         return likes;
