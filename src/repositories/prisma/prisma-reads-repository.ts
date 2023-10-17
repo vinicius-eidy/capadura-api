@@ -36,9 +36,18 @@ export class PrismaReadRepository implements ReadsRepository {
                 include: {
                     book: {
                         select: {
+                            id: true,
                             title: true,
                             image_key: true,
+                            publish_date: true,
+                            page_count: true,
                         },
+                    },
+                    progress: {
+                        orderBy: {
+                            created_at: "desc",
+                        },
+                        take: 1,
                     },
                 },
                 take: perPage,

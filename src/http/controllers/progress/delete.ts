@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { makeDeleteProgressUseCase } from "@/use-cases/_factories/progress/make-delete-progress-use-case copy";
+import { makeDeleteProgressUseCase } from "@/use-cases/_factories/progress/make-delete-progress-use-case";
 
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
 import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
