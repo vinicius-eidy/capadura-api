@@ -2,8 +2,11 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
     FindManyByUserIdForUniqueBookInput,
+    FindManyByReviewRatingsAndUserInput,
     ReadsRepository,
-    findManyByUserIdRequest,
+    findManyByUserIdInput,
+    FindManyByReviewRatingsAndBookInput,
+    findManyByBookIdInput,
 } from "../reads-repository";
 
 export class PrismaReadRepository implements ReadsRepository {
@@ -17,7 +20,7 @@ export class PrismaReadRepository implements ReadsRepository {
         return read || null;
     }
 
-    async findManyByUserId({ userId, status, page, perPage }: findManyByUserIdRequest) {
+    async findManyByUserId({ userId, status, page, perPage }: findManyByUserIdInput) {
         const [reads, total] = await Promise.all([
             prisma.read.findMany({
                 where: {
@@ -65,6 +68,58 @@ export class PrismaReadRepository implements ReadsRepository {
         return { reads, total };
     }
 
+    async findManyByBookId({ bookId, page, perPage }: findManyByBookIdInput) {
+        const [reads, total] = await Promise.all([
+            prisma.read.findMany({
+                where: {
+                    book_id: bookId,
+                    review_rating: {
+                        not: null,
+                    },
+                    review_content: {
+                        not: null,
+                    },
+                    is_private: false,
+                },
+                orderBy: [
+                    {
+                        end_date: "desc",
+                    },
+                    {
+                        start_date: "desc",
+                    },
+                ],
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            username: true,
+                            description: true,
+                            image_key: true,
+                        },
+                    },
+                },
+                take: perPage,
+                skip: (page - 1) * perPage,
+            }),
+            prisma.read.count({
+                where: {
+                    book_id: bookId,
+                    review_rating: {
+                        not: null,
+                    },
+                    review_content: {
+                        not: null,
+                    },
+                    is_private: false,
+                },
+            }),
+        ]);
+
+        return { reads, total };
+    }
+
     async findManyByUserIdForUniqueBook({ userId, bookId }: FindManyByUserIdForUniqueBookInput) {
         const [reads, total] = await Promise.all([
             prisma.read.findMany({
@@ -93,6 +148,107 @@ export class PrismaReadRepository implements ReadsRepository {
                 where: {
                     user_id: userId,
                     book_id: bookId,
+                },
+            }),
+        ]);
+
+        return { reads, total };
+    }
+
+    async findManyByReviewRatingsAndUser({
+        rating,
+        userId,
+        page,
+        perPage,
+    }: FindManyByReviewRatingsAndUserInput) {
+        const [reads, total] = await Promise.all([
+            prisma.read.findMany({
+                where: {
+                    user_id: userId,
+                    review_rating: rating,
+                },
+                orderBy: [
+                    {
+                        end_date: "desc",
+                    },
+                    {
+                        start_date: "desc",
+                    },
+                ],
+                include: {
+                    book: {
+                        select: {
+                            id: true,
+                            title: true,
+                            image_key: true,
+                            publish_date: true,
+                            page_count: true,
+                        },
+                    },
+                },
+                take: perPage,
+                skip: (page - 1) * perPage,
+            }),
+            prisma.read.count({
+                where: {
+                    user_id: userId,
+                    review_rating: rating,
+                },
+            }),
+        ]);
+
+        return { reads, total };
+    }
+
+    async findManyByReviewRatingsAndBook({
+        rating,
+        bookId,
+        page,
+        perPage,
+    }: FindManyByReviewRatingsAndBookInput) {
+        const [reads, total] = await Promise.all([
+            prisma.read.findMany({
+                where: {
+                    book_id: bookId,
+                    review_rating: rating,
+                    is_private: false,
+                },
+                orderBy: [
+                    {
+                        end_date: "desc",
+                    },
+                    {
+                        start_date: "desc",
+                    },
+                ],
+                include: {
+                    book: {
+                        select: {
+                            id: true,
+                            title: true,
+                            image_key: true,
+                            publish_date: true,
+                            page_count: true,
+                        },
+                    },
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            username: true,
+                            description: true,
+                            image_key: true,
+                        },
+                    },
+                },
+                take: perPage,
+                skip: (page - 1) * perPage,
+            }),
+            prisma.read.count({
+                where: {
+                    book_id: bookId,
+                    review_rating: rating,
+                    is_private: false,
                 },
             }),
         ]);

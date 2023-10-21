@@ -2,9 +2,12 @@ import { randomUUID } from "node:crypto";
 import { Prisma, Read, ReadStatus } from "@prisma/client";
 
 import {
+    FindManyByReviewRatingsAndBookInput,
+    FindManyByReviewRatingsAndUserInput,
     FindManyByUserIdForUniqueBookInput,
     ReadsRepository,
-    findManyByUserIdRequest,
+    findManyByBookIdInput,
+    findManyByUserIdInput,
 } from "../reads-repository";
 
 export class InMemoryReadsRepository implements ReadsRepository {
@@ -17,7 +20,7 @@ export class InMemoryReadsRepository implements ReadsRepository {
     }
 
     // @ts-ignore
-    async findManyByUserId({ userId, status, page, perPage }: findManyByUserIdRequest) {
+    async findManyByUserId({ userId, status, page, perPage }: findManyByUserIdInput) {
         const reads = this.items
             .filter((item) => {
                 return item.user_id === userId && item.book_id === bookId && item.status === status;
@@ -28,7 +31,26 @@ export class InMemoryReadsRepository implements ReadsRepository {
     }
 
     // @ts-ignore
+    async findManyByBookId({ bookId, page, perPage }: findManyByBookIdInput) {}
+
+    // @ts-ignore
     async findManyByUserIdForUniqueBook({ bookId, userId }: FindManyByUserIdForUniqueBookInput) {}
+
+    // @ts-ignore
+    async findManyByReviewRatingsAndUser({
+        rating,
+        userId,
+        page,
+        perPage,
+    }: FindManyByReviewRatingsAndUserInput) {}
+
+    // @ts-ignore
+    async findManyByReviewRatingsAndBook({
+        rating,
+        bookId,
+        page,
+        perPage,
+    }: FindManyByReviewRatingsAndBookInput) {}
 
     // @ts-ignore
     async getAllReviewRatings({ bookId, userId }: { bookId?: string; userId?: string }) {}
