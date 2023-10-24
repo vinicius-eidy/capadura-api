@@ -23,7 +23,7 @@
     "license": "ISC",
     "dependencies": {
         "@aws-sdk/client-cloudfront": "3.388.0",
-        "@aws-sdk/client-s3": "3.325.0",
+        "@aws-sdk/client-s3": "3.433.0",
         "@aws-sdk/cloudfront-signer": "3.387.0",
         "@aws-sdk/s3-request-presigner": "3.325.0",
         "@aws-sdk/signature-v4-crt": "3.310.0",
@@ -35,7 +35,7 @@
         "aws-sdk": "2.1386.0",
         "axios": "1.4.0",
         "bcryptjs": "2.4.3",
-        "dayjs": "1.11.7",
+        "date-fns": "2.30.0",
         "dotenv": "16.0.3",
         "fastify": "^4.15.0",
         "ffprobe": "1.1.2",
@@ -46,7 +46,7 @@
         "openai": "3.2.1",
         "qs": "6.11.1",
         "sharp": "0.32.4",
-        "zod": "3.21.4"
+        "zod": "3.22.4"
     },
     "devDependencies": {
         "@types/bcryptjs": "2.4.2",
@@ -65,7 +65,7 @@
         "eslint-plugin-prettier": "^4.2.1",
         "npm-run-all": "4.1.5",
         "prettier": "^2.8.4",
-        "prisma": "4.12.0",
+        "prisma": "5.4.2",
         "supertest": "6.3.3",
         "tsup": "^6.7.0",
         "tsx": "^3.12.6",

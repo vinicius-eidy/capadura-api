@@ -151,8 +151,9 @@ model Progress {
     id          String   @id @default(uuid())
     description String?
     is_spoiler  Boolean
-    page        Int?
-    percentage  Float?
+    pages_read  Int
+    page        Int
+    percentage  Float
     created_at  DateTime @default(now())
     read        Read     @relation(fields: [read_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
     read_id     String

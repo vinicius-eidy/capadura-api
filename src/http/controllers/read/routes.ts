@@ -6,6 +6,7 @@ import { verifyJWT } from "@/http/middlewares/verify-jwt";
 import { findUnique } from "./find-unique";
 import { fetchManyByUser } from "./fetch-many-by-user";
 import { fetchManyByBook } from "./fetch-many-by-book";
+import { fetchManyFinishedReads } from "./fetch-many-finished-reads";
 import { fetchManyByUserForUniqueBook } from "./fetch-many-by-user-for-unique-book";
 import { fetchManyByReviewRatingsAndUser } from "./fetch-many-by-review-ratings-and-user";
 import { fetchManyByReviewRatingsAndBook } from "./fetch-many-by-review-ratings-and-book";
@@ -25,6 +26,7 @@ export async function readRoutes(app: FastifyInstance) {
     app.get("/read/:readId", findUnique);
     app.get("/user-reads", fetchManyByUser);
     app.get("/book/:bookId/reads", fetchManyByBook);
+    app.get("/reads/finished-reads", fetchManyFinishedReads);
     app.get("/user-reads/book/:bookId", { onRequest: [verifyJWT] }, fetchManyByUserForUniqueBook);
     app.get("/user/:userId/read-ratings/:rating", fetchManyByReviewRatingsAndUser);
     app.get("/book/:bookId/read-ratings/:rating", fetchManyByReviewRatingsAndBook);

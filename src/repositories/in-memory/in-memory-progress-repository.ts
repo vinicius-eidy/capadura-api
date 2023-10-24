@@ -4,6 +4,8 @@ import { Prisma, Progress } from "@prisma/client";
 import {
     FindManyByReadInput,
     FindManyByUserInput,
+    GetLastProgressPageInput,
+    getPagesReadedByDayInput,
     ProgressRepository,
 } from "../progress-repository";
 import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
@@ -37,6 +39,12 @@ export class InMemoryProgressRepository implements ProgressRepository {
 
         return { progress, total };
     }
+
+    // @ts-ignore
+    async getLastProgressPage({ readId, lessThanPages }: GetLastProgressPageInput) {}
+
+    // @ts-ignore
+    async getPagesReadedByDay({ userId, startDate }: getPagesReadedByDayInput) {}
 
     async update(data: Prisma.ProgressUpdateInput) {
         let updateItem = this.items.find((item) => item.id === data.id);

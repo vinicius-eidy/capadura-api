@@ -7,9 +7,11 @@ interface UpdateProgressUseCaseRequest {
     id: string;
     description?: string;
     isSpoiler: boolean;
-    page?: number;
-    percentage?: number;
     userId: string;
+}
+
+interface UpdateProgressUseCaseResponse {
+    progress: Progress;
 }
 
 export class UpdateProgressUseCase {
@@ -19,10 +21,8 @@ export class UpdateProgressUseCase {
         id,
         description,
         isSpoiler,
-        page,
-        percentage,
         userId,
-    }: UpdateProgressUseCaseRequest): Promise<Progress> {
+    }: UpdateProgressUseCaseRequest): Promise<UpdateProgressUseCaseResponse> {
         const progressToUpdate = await this.progressRepository.findUniqueById(id);
 
         if (!progressToUpdate) {
@@ -37,10 +37,10 @@ export class UpdateProgressUseCase {
             id,
             description,
             is_spoiler: isSpoiler,
-            page,
-            percentage,
         });
 
-        return progress;
+        return {
+            progress,
+        };
     }
 }

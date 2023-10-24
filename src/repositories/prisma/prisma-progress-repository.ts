@@ -4,6 +4,9 @@ import {
     ProgressRepository,
     FindManyByReadInput,
     FindManyByUserInput,
+    GetLastProgressPageInput,
+    getPagesReadedByDayInput,
+    GetPagesReadedByDayOutput,
 } from "../progress-repository";
 
 export class PrismaProgressRepository implements ProgressRepository {
@@ -75,6 +78,47 @@ export class PrismaProgressRepository implements ProgressRepository {
         ]);
 
         return { progress, total };
+    }
+
+    async getLastProgressPage({ readId, lessThanPages }: GetLastProgressPageInput) {
+        const progress = await prisma.progress.findFirst({
+            where: {
+                read_id: readId,
+                page: {
+                    lt: lessThanPages,
+                },
+            },
+            select: {
+                page: true,
+            },
+            orderBy: {
+                created_at: "desc",
+            },
+        });
+
+        if (!progress) return null;
+
+        return progress.page;
+    }
+
+    async getPagesReadedByDay({ userId, startDate, endDate }: getPagesReadedByDayInput) {
+        const pagesReadedByDay: GetPagesReadedByDayOutput = await prisma.$queryRawUnsafe(` 
+            WITH date_series AS (
+                SELECT generate_series(
+                    DATE '${startDate}'::DATE,
+                    DATE '${endDate}'::DATE,
+                    INTERVAL '1 day'
+                )::DATE as date
+            )
+            SELECT TO_CHAR(ds.date, 'YYYY-MM-DD') as created_at,
+                COALESCE(SUM(p.pages_read), 0)::integer as pages_readed
+            FROM date_series ds
+            LEFT JOIN progress p ON ds.date = DATE(p.created_at) AND p.user_id = '${userId}'
+            GROUP BY ds.date
+            ORDER BY ds.date;
+        `);
+
+        return pagesReadedByDay;
     }
 
     async update(data: Prisma.ProgressUpdateInput) {

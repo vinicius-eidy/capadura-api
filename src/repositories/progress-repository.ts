@@ -36,10 +36,25 @@ interface FindManyByUserOutput {
     total: number;
 }
 
+export interface GetLastProgressPageInput {
+    readId: string;
+    lessThanPages: number;
+}
+
+export interface getPagesReadedByDayInput {
+    userId: string;
+    startDate: string;
+    endDate: string;
+}
+
+export type GetPagesReadedByDayOutput = { created_at: string; pages_readed: number }[];
+
 export interface ProgressRepository {
     findUniqueById(progressId: string): Promise<Progress | null>;
-    findManyByRead({ readId, page, perPage }: FindManyByReadInput): Promise<FindManyByReadOutput>;
-    findManyByUser({ userId, page, perPage }: FindManyByUserInput): Promise<FindManyByUserOutput>;
+    findManyByRead(data: FindManyByReadInput): Promise<FindManyByReadOutput>;
+    findManyByUser(data: FindManyByUserInput): Promise<FindManyByUserOutput>;
+    getLastProgressPage(data: GetLastProgressPageInput): Promise<number | null>;
+    getPagesReadedByDay(data: getPagesReadedByDayInput): Promise<GetPagesReadedByDayOutput>;
     update(data: Prisma.ProgressUpdateInput): Promise<Progress>;
     create(data: Prisma.ProgressUncheckedCreateInput): Promise<Progress>;
     delete(progressId: string): Promise<void>;

@@ -5,6 +5,7 @@ import {
     FindManyByReviewRatingsAndBookInput,
     FindManyByReviewRatingsAndUserInput,
     FindManyByUserIdForUniqueBookInput,
+    FindManyFinishedReadsInput,
     ReadsRepository,
     findManyByBookIdInput,
     findManyByUserIdInput,
@@ -51,6 +52,18 @@ export class InMemoryReadsRepository implements ReadsRepository {
         page,
         perPage,
     }: FindManyByReviewRatingsAndBookInput) {}
+
+    // @ts-ignore
+    async findManyFinishedReads({ page, perPage }: FindManyFinishedReadsInput) {
+        const reads = this.items
+            .filter((item) => !item.is_private && item.status === "FINISHED")
+            .slice((page - 1) * perPage, page * perPage);
+
+        return {
+            reads,
+            total: reads.length,
+        };
+    }
 
     // @ts-ignore
     async getAllReviewRatings({ bookId, userId }: { bookId?: string; userId?: string }) {}

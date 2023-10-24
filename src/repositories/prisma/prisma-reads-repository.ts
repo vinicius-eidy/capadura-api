@@ -7,6 +7,7 @@ import {
     findManyByUserIdInput,
     FindManyByReviewRatingsAndBookInput,
     findManyByBookIdInput,
+    FindManyFinishedReadsInput,
 } from "../reads-repository";
 
 export class PrismaReadRepository implements ReadsRepository {
@@ -249,6 +250,56 @@ export class PrismaReadRepository implements ReadsRepository {
                     book_id: bookId,
                     review_rating: rating,
                     is_private: false,
+                },
+            }),
+        ]);
+
+        return { reads, total };
+    }
+
+    async findManyFinishedReads({ page, perPage }: FindManyFinishedReadsInput) {
+        const [reads, total] = await Promise.all([
+            prisma.read.findMany({
+                where: {
+                    is_private: false,
+                    status: "FINISHED",
+                    review_rating: {
+                        not: null,
+                    },
+                },
+                orderBy: {
+                    end_date: "desc",
+                },
+                include: {
+                    book: {
+                        select: {
+                            id: true,
+                            title: true,
+                            image_key: true,
+                            publish_date: true,
+                            page_count: true,
+                        },
+                    },
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            username: true,
+                            description: true,
+                            image_key: true,
+                        },
+                    },
+                },
+                take: perPage,
+                skip: (page - 1) * perPage,
+            }),
+            prisma.read.count({
+                where: {
+                    is_private: false,
+                    status: "FINISHED",
+                    review_rating: {
+                        not: null,
+                    },
                 },
             }),
         ]);

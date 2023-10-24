@@ -1,5 +1,5 @@
 import axios from "axios";
-import dayjs from "dayjs";
+import { isValid } from "date-fns";
 import { Book } from "@prisma/client";
 
 import { env } from "@/env";
@@ -84,8 +84,8 @@ export class CreateBookUseCase {
 
         const bookISBN13 = industryIdentifiers.find((item) => item.type === "ISBN_13")?.identifier;
 
-        const parsedPulishedDate = dayjs(publishedDate, { format: "YYYY-MM-DD" });
-        const dbPublishedDate = parsedPulishedDate.isValid()
+        const parsedPulishedDate = new Date(publishedDate);
+        const dbPublishedDate = isValid(parsedPulishedDate)
             ? parsedPulishedDate.toISOString()
             : null;
 

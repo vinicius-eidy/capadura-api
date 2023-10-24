@@ -82,6 +82,16 @@ export interface FindManyByReviewRatingsAndBookInput {
     perPage: number;
 }
 
+export interface FindManyFinishedReadsInput {
+    page: number;
+    perPage: number;
+}
+
+interface FindManyFinishedReadsOutput {
+    reads: ReadWithBookAndUser[];
+    total: number;
+}
+
 interface FindManyByReviewRatingsAndBookOutput {
     reads: ReadWithBookAndUser[];
     total: number;
@@ -114,6 +124,7 @@ export interface ReadsRepository {
     findManyByReviewRatingsAndBook(
         data: FindManyByReviewRatingsAndBookInput,
     ): Promise<FindManyByReviewRatingsAndBookOutput>;
+    findManyFinishedReads(data: FindManyFinishedReadsInput): Promise<FindManyFinishedReadsOutput>;
     getAllReviewRatings(data: {
         bookId?: string;
         userId?: string;

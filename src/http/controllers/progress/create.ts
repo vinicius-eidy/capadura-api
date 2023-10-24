@@ -56,7 +56,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             userId: request.user.sub,
         });
 
-        const [progress] = await Promise.all([
+        const [{ progress }] = await Promise.all([
             createProgressUseCasePromise,
             createUserActivityUseCasePromise,
         ]);
