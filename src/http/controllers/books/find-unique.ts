@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeGetBookUseCase } from "@/use-cases/_factories/books/make-get-book-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function findUnique(request: FastifyRequest, reply: FastifyReply) {
     const findUniqueBookParamsSchema = z.object({
@@ -22,10 +23,9 @@ export async function findUnique(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(200).send(transformKeysToCamelCase(book));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[BOOKS - Find unique]: ",
+        });
     }
 }

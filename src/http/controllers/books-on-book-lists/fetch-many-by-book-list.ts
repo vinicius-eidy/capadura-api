@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { makeFetchManyByBookListUseCase } from "@/use-cases/_factories/books-on-book-lists/make-fetch-many-by-book-list-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyByBookList(request: FastifyRequest, reply: FastifyReply) {
     const fetchManyByBookListQuerySchema = z.object({
@@ -27,10 +28,9 @@ export async function fetchManyByBookList(request: FastifyRequest, reply: Fastif
 
         reply.status(200).send(transformKeysToCamelCase(booksOnBookList));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[BOOKS ON BOOK LIST - Fetch many by book list]: ",
+        });
     }
 }

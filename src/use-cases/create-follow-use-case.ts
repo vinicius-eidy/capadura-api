@@ -1,6 +1,5 @@
 import { Follow } from "@prisma/client";
 import { FollowsRepository } from "@/repositories/follows-repository";
-import { IsNotAllowedToFollowYourself } from "./_errors/is-not-allowed-to-follow-yourself";
 
 interface CreateFollowUseCaseRequest {
     followerId: string;
@@ -12,7 +11,7 @@ export class CreateFollowUseCase {
 
     async execute({ followerId, followingId }: CreateFollowUseCaseRequest): Promise<Follow> {
         if (followerId === followingId) {
-            throw new IsNotAllowedToFollowYourself();
+            throw new Error("Is not allowed to follow yourself.");
         }
 
         const follow = await this.followsRepository.create({

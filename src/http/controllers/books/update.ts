@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeUpdateBookUseCase } from "@/use-cases/_factories/books/make-update-book-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const updateBookBodySchema = z.object({
@@ -45,10 +46,9 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(200).send(transformKeysToCamelCase(book));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[BOOKS - Update]: ",
+        });
     }
 }

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeFetchManyProgressByUserUseCase } from "@/use-cases/_factories/progress/make-fetch-many-progress-by-user-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function findManyByUser(request: FastifyRequest, reply: FastifyReply) {
     const findManyByUserParamsSchema = z.object({
@@ -29,10 +30,9 @@ export async function findManyByUser(request: FastifyRequest, reply: FastifyRepl
             total,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[PROGRESS - Find many by user]: ",
+        });
     }
 }

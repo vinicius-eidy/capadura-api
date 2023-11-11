@@ -3,7 +3,6 @@ import fastify from "fastify";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fastifyMultipart from "@fastify/multipart";
-import { ZodError } from "zod";
 
 import { env } from "./env";
 
@@ -17,6 +16,7 @@ import { progressRoutes } from "./http/controllers/progress/routes";
 import { likeRoutes } from "./http/controllers/likes/routes";
 import { bookListRoutes } from "./http/controllers/book-lists/routes";
 import { booksOnBookListsRoutes } from "./http/controllers/books-on-book-lists/routes";
+import errorHandler from "./utils/error-handler";
 
 export const app = fastify({
     bodyLimit: 1024 * 1024 * 512, // 0.5GB
@@ -66,15 +66,9 @@ app.addHook("onSend", (request, reply, payload, done) => {
 });
 
 app.setErrorHandler((error, _request, reply) => {
-    if (error instanceof ZodError) {
-        return reply.status(400).send({ message: "Validation error.", issues: error.format() });
-    }
-
     if (env.NODE_ENV === "production") {
         // TODO: Here we should log to and external tool like DataDog/NewRelic/Sentry
-    } else {
-        console.error(error);
     }
 
-    return reply.status(500).send({ message: "Internal server error." });
+    errorHandler(error, _request, reply);
 });

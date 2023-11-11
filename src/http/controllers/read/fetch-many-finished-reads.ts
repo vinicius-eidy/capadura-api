@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeFetchManyFinishedReadsUseCase } from "@/use-cases/_factories/reads/make-fetch-many-finished-reads-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyFinishedReads(request: FastifyRequest, reply: FastifyReply) {
     const fetchManyFinishedReadsQuerySchema = z.object({
@@ -24,10 +25,9 @@ export async function fetchManyFinishedReads(request: FastifyRequest, reply: Fas
             total,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Fetch many finished reads]: ",
+        });
     }
 }

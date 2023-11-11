@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeGetTotalFinishedReadsCountByBookUseCase } from "@/use-cases/_factories/reads/make-get-total-finished-reads-count-by-book-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function getTotalFinishedReadsCountByBook(
     request: FastifyRequest,
@@ -24,10 +25,9 @@ export async function getTotalFinishedReadsCountByBook(
             total,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Get total finished reads count by book]: ",
+        });
     }
 }

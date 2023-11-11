@@ -9,7 +9,6 @@ import { UsersRepository } from "@/repositories/users-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
 import { getSignedUrlUtil } from "@/utils/get-signed-url";
 import { UserAlreadyExistsError } from "./_errors/user-already-exists-error";
-import { CustomError } from "./_errors/custom-error";
 
 interface UpdateUserUseCaseRequest {
     id: string;
@@ -58,7 +57,7 @@ export class UpdateUserUseCase {
         // letters, numbers, dot and underscore
         const validUsernameCharactersRgx = /^[a-zA-Z0-9._]+$/;
         if (!validUsernameCharactersRgx.test(username)) {
-            throw new CustomError("Invalid username characters.");
+            throw new Error("Invalid username characters.");
         }
 
         if (imageBuffer) {

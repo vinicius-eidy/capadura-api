@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeFetchManyReadsByBookUseCase } from "@/use-cases/_factories/reads/make-fetch-many-reads-by-book";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyByBook(request: FastifyRequest, reply: FastifyReply) {
     const fetchManyReadsByBookParamsSchema = z.object({
@@ -32,10 +33,9 @@ export async function fetchManyByBook(request: FastifyRequest, reply: FastifyRep
             }),
         );
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Fetch many by book]: ",
+        });
     }
 }

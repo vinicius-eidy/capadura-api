@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
-import { InvalidCredentialsError } from "@/use-cases/_errors/invalid-credentials-error";
 import { makeAuthenticateUseCase } from "@/use-cases/_factories/users/make-authenticate-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export const sessionCookieSettings = {
     path: "/",
@@ -60,14 +60,9 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
                 },
             });
     } catch (err) {
-        if (err instanceof InvalidCredentialsError) {
-            return reply.status(400).send({ message: err.message });
-        }
-
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[USERS - Authenticate]: ",
+        });
     }
 }

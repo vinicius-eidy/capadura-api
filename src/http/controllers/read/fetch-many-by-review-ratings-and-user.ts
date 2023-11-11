@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeFetchManyReadsByReviewRatingsAndUserUseCase } from "@/use-cases/_factories/reads/make-fetch-many-reads-by-review-ratings-and-user-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyByReviewRatingsAndUser(
     request: FastifyRequest,
@@ -42,10 +43,9 @@ export async function fetchManyByReviewRatingsAndUser(
             }),
         );
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Fetch many by review ratings and user]: ",
+        });
     }
 }

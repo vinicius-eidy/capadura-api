@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeFetchManyReadsByBookAndUserUseCase } from "@/use-cases/_factories/reads/make-fetch-many-reads-by-book-and-user-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyByUser(request: FastifyRequest, reply: FastifyReply) {
     const findManyByUserQuerySchema = z.object({
@@ -28,10 +29,9 @@ export async function fetchManyByUser(request: FastifyRequest, reply: FastifyRep
             total,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Fetch many by user]: ",
+        });
     }
 }

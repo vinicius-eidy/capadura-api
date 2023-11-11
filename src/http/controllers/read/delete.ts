@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeDeleteReadUseCase } from "@/use-cases/_factories/reads/make-delete-read-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function deleteRead(request: FastifyRequest, reply: FastifyReply) {
     const deleteReadParamsSchema = z.object({
@@ -19,10 +20,9 @@ export async function deleteRead(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(204).send();
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Delete]: ",
+        });
     }
 }

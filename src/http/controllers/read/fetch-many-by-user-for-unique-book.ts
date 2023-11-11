@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { makeFetchManyReadsByUserForUniqueBookUseCase } from "@/use-cases/_factories/reads/make-fetch-many-reads-by-user-for-unique-book-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyByUserForUniqueBook(request: FastifyRequest, reply: FastifyReply) {
     const fetchManyByUserForUniqueBookBodySchema = z.object({
@@ -24,10 +25,9 @@ export async function fetchManyByUserForUniqueBook(request: FastifyRequest, repl
             total,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Fetch many by user for unique book]: ",
+        });
     }
 }

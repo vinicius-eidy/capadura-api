@@ -3,6 +3,8 @@ import { z } from "zod";
 
 import { makeGetIsCurrentUserFollowingAnUniqueUserUseCase } from "@/use-cases/_factories/follows/make-get-is-current-user-following-an-unique-user-use-case";
 
+import { buildErrorMessage } from "@/utils/build-error-message";
+
 export async function getIsCurrentUserFollowingAnUniqueUser(
     request: FastifyRequest,
     reply: FastifyReply,
@@ -27,10 +29,9 @@ export async function getIsCurrentUserFollowingAnUniqueUser(
             isFollowing,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[FOLLOWS - Get is current user following an unique user]: ",
+        });
     }
 }

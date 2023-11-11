@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeGetUserByUsernameUseCase } from "@/use-cases/_factories/users/make-get-user-by-username-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function findByUsername(request: FastifyRequest, reply: FastifyReply) {
     const getUserByUsernameParamsSchema = z.object({
@@ -22,10 +23,9 @@ export async function findByUsername(request: FastifyRequest, reply: FastifyRepl
             passwordHash: undefined,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[USERS - Find by username]: ",
+        });
     }
 }

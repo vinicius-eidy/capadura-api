@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeGetTotalLikeCountByBookUseCase } from "@/use-cases/_factories/likes/make-get-total-like-count-by-book-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function getTotalCountByBook(request: FastifyRequest, reply: FastifyReply) {
     const getTotalCountByParamsSchema = z.object({
@@ -20,10 +21,9 @@ export async function getTotalCountByBook(request: FastifyRequest, reply: Fastif
             total,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[LIKES - Get total count by book]: ",
+        });
     }
 }

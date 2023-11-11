@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeGetCountUserFollowsUseCase } from "@/use-cases/_factories/follows/make-get-count-user-follows-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function getCountUserFollows(request: FastifyRequest, reply: FastifyReply) {
     const getCountUserFollowsParamsSchema = z.object({
@@ -21,10 +22,9 @@ export async function getCountUserFollows(request: FastifyRequest, reply: Fastif
             following,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[FOLLOWS - Get count user follows]: ",
+        });
     }
 }

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { makeCreateLikeBookUseCase } from "@/use-cases/_factories/likes/make-create-like-book-use-case";
 import { makeCreateUserActivityUseCase } from "@/use-cases/_factories/user-activities/make-create-user-activity-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createLikeBookBodySchema = z.object({
@@ -35,10 +36,9 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             like: transformKeysToCamelCase(like),
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[LIKES - Create]: ",
+        });
     }
 }

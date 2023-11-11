@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeFetchManyProgressByReadUseCase } from "@/use-cases/_factories/progress/make-fetch-many-progress-by-read-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function findManyByRead(request: FastifyRequest, reply: FastifyReply) {
     const findManyByReadParamsSchema = z.object({
@@ -29,10 +30,9 @@ export async function findManyByRead(request: FastifyRequest, reply: FastifyRepl
             total,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[PROGRESS - Find many by read]: ",
+        });
     }
 }

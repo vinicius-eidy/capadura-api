@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { makeFetchManyBooksIdsUseCase } from "@/use-cases/_factories/books/make-fetch-many-book-ids-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyIds(request: FastifyRequest, reply: FastifyReply) {
     const fetchManyBookIdsQuerySchema = z.object({
@@ -21,10 +22,9 @@ export async function fetchManyIds(request: FastifyRequest, reply: FastifyReply)
 
         reply.status(200).send(transformKeysToCamelCase(bookIds));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[BOOKS - Fetch many ids]: ",
+        });
     }
 }

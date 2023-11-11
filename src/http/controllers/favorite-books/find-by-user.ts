@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeFetchManyFavoriteBooksByUserUseCase } from "@/use-cases/_factories/favorite-books/make-fetch-many-favorite-books-by-user-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
     const fetchFavoriteBooksByUserParamsSchema = z.object({
@@ -19,10 +20,9 @@ export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(201).send(transformKeysToCamelCase(favoriteBooks));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[FAVORITE BOOKS - Find by user]: ",
+        });
     }
 }

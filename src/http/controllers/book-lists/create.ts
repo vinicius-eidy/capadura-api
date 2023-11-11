@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeCreateBookListUseCase } from "@/use-cases/_factories/book-lists/make-create-book-list-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const MAX_FILE_SIZE = 1024 * 1024 * 2; // 2 MB;
@@ -37,10 +38,9 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(201).send(transformKeysToCamelCase(bookList));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[BOOK LISTS - Create]: ",
+        });
     }
 }

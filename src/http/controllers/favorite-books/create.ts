@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeCreateFavoriteBookUseCase } from "@/use-cases/_factories/favorite-books/make-create-favorite-book-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createFavoriteBookBodySchema = z.object({
@@ -24,10 +25,9 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(201).send(transformKeysToCamelCase(favoriteBook));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[FAVORITE BOOKS - Create]: ",
+        });
     }
 }

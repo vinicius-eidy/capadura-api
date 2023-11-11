@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { makeCreateFollowUseCase } from "@/use-cases/_factories/follows/make-create-follow-use-case";
-import { IsNotAllowedToFollowYourself } from "@/use-cases/_errors/is-not-allowed-to-follow-yourself";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
     const createFollowBodySchema = z.object({
@@ -22,14 +22,9 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(200).send(transformKeysToCamelCase(follows));
     } catch (err) {
-        if (err instanceof IsNotAllowedToFollowYourself) {
-            return reply.status(400).send({ message: err.message });
-        }
-
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[FOLLOWS - Create follow]: ",
+        });
     }
 }

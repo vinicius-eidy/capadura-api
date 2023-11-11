@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { makeFetchManyUserActivitiesUseCase } from "@/use-cases/_factories/user-activities/make-fetch-many-user-activities-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyByUser(request: FastifyRequest, reply: FastifyReply) {
     const fetchManyUserActivitiesQuerySchema = z.object({
@@ -27,10 +28,9 @@ export async function fetchManyByUser(request: FastifyRequest, reply: FastifyRep
 
         reply.status(200).send(transformKeysToCamelCase(userActivities));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[USER ACTIVITIES - Fetch many by user]: ",
+        });
     }
 }

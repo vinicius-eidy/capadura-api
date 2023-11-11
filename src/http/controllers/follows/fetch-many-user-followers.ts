@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { makeFetchManyUserFollowersUseCase } from "@/use-cases/_factories/follows/make-fetch-many-user-followers-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function fetchManyUserFollowers(request: FastifyRequest, reply: FastifyReply) {
     const fetchManyUserFollowersQuerySchema = z.object({
@@ -28,10 +29,9 @@ export async function fetchManyUserFollowers(request: FastifyRequest, reply: Fas
 
         reply.status(200).send(transformKeysToCamelCase(follows));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[FOLLOWS - Fetch many user followers]: ",
+        });
     }
 }

@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { makeGetTotalListsWithSomeBookCountUseCase } from "@/use-cases/_factories/books-on-book-lists/make-get-total-lists-with-some-book-count-use-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function getTotalListsWithSomeBookCount(request: FastifyRequest, reply: FastifyReply) {
     const getTotalListsWithSomeBookCountParamsSchema = z.object({
@@ -20,10 +21,9 @@ export async function getTotalListsWithSomeBookCount(request: FastifyRequest, re
             total,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[BOOKS ON BOOK LIST - Get total lists with some book count]: ",
+        });
     }
 }

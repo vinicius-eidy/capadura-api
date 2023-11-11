@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeFetchManyLikesByUserUseCase } from "@/use-cases/_factories/likes/make-fetch-many-likes-by-user-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function findManyByUser(request: FastifyRequest, reply: FastifyReply) {
     const findManyByUserParamsSchema = z.object({
@@ -19,10 +20,9 @@ export async function findManyByUser(request: FastifyRequest, reply: FastifyRepl
 
         reply.status(200).send(transformKeysToCamelCase(likes));
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[LIKES - Find many by user]: ",
+        });
     }
 }

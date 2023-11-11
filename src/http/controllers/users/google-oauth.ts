@@ -1,10 +1,10 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
+import { env } from "@/env";
 import { sessionCookieSettings } from "./authenticate";
 import { makeHandleGoogleOAuthUseCase } from "@/use-cases/_factories/users/make-handle-google-oauth-session-use-case";
-import { EmailNotVerifiedError } from "@/use-cases/_errors/email-not-verified-error";
-import { env } from "@/env";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function googleOAuth(request: FastifyRequest, reply: FastifyReply) {
     const googleOAuthQuerySchema = z.object({
@@ -43,14 +43,9 @@ export async function googleOAuth(request: FastifyRequest, reply: FastifyReply) 
 
         reply.redirect(`${env.BASE_URL_FRONT_END}/inicio`);
     } catch (err) {
-        if (err instanceof EmailNotVerifiedError) {
-            return reply.status(403).send({ message: "Email not verified." });
-        }
-
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[USERS - Google OAuth]: ",
+        });
     }
 }

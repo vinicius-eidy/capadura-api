@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { makeGetBookRatingsUseCase } from "@/use-cases/_factories/reads/make-get-book-ratings-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function getReadsRatings(request: FastifyRequest, reply: FastifyReply) {
     const getBookRatingsParamsSchema = z.object({
@@ -25,10 +26,9 @@ export async function getReadsRatings(request: FastifyRequest, reply: FastifyRep
             averageRating,
         });
     } catch (err) {
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Get reads ratings]: ",
+        });
     }
 }

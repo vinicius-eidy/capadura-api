@@ -1,11 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
-import { UnauthorizedError } from "@/use-cases/_errors/unauthorized-error";
-
 import { makeUpdateBookListUseCase } from "@/use-cases/_factories/book-lists/make-update-book-list-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
     const MAX_FILE_SIZE = 1024 * 1024 * 2; // 2 MB;
@@ -41,18 +39,9 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(200).send(transformKeysToCamelCase(updatedBookList));
     } catch (err) {
-        if (err instanceof ResourceNotFoundError) {
-            return reply.status(404).send({ message: err.message });
-        }
-
-        if (err instanceof UnauthorizedError) {
-            return reply.status(401).send({ message: err.message });
-        }
-
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[BOOK LISTS - Update]: ",
+        });
     }
 }

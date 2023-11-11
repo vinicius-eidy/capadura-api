@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { makeFindUniqueReadUseCase } from "@/use-cases/_factories/reads/make-find-unique-read-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
-import { ResourceNotFoundError } from "@/use-cases/_errors/resource-not-found-error";
+import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function findUnique(request: FastifyRequest, reply: FastifyReply) {
     const createReadParamsSchema = z.object({
@@ -20,14 +20,9 @@ export async function findUnique(request: FastifyRequest, reply: FastifyReply) {
 
         reply.status(200).send(transformKeysToCamelCase(read));
     } catch (err) {
-        if (err instanceof ResourceNotFoundError) {
-            return reply.status(404).send({ message: err.message });
-        }
-
-        if (err instanceof Error) {
-            return reply.status(500).send({ message: err.message });
-        }
-
-        throw err;
+        buildErrorMessage({
+            err,
+            prefix: "[READS - Find unique]: ",
+        });
     }
 }
