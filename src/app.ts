@@ -22,14 +22,12 @@ export const app = fastify({
     bodyLimit: 1024 * 1024 * 512, // 0.5GB
 });
 
-if (env.NODE_ENV === "dev") {
-    app.register(cors, {
-        origin: env.BASE_URL_FRONT_END,
-        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true,
-    });
-}
+app.register(cors, {
+    origin: env.BASE_URL_FRONT_END,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+});
 
 app.register(fastifyMultipart, {
     addToBody: true,
