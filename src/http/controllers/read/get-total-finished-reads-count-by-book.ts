@@ -21,7 +21,7 @@ export async function getTotalFinishedReadsCountByBook(
             bookId,
         });
 
-        reply.status(201).send({
+        reply.status(200).send({
             total,
         });
     } catch (err) {

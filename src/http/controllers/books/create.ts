@@ -18,7 +18,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             bookId,
         });
 
-        reply.status(200).send(transformKeysToCamelCase(book));
+        reply.status(201).send(transformKeysToCamelCase(book));
     } catch (err) {
         buildErrorMessage({
             err,

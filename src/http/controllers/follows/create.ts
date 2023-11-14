@@ -20,7 +20,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             followingId,
         });
 
-        reply.status(200).send(transformKeysToCamelCase(follows));
+        reply.status(201).send(transformKeysToCamelCase(follows));
     } catch (err) {
         buildErrorMessage({
             err,

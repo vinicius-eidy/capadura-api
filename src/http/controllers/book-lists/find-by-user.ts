@@ -26,7 +26,7 @@ export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
             bookId,
         });
 
-        reply.status(201).send(transformKeysToCamelCase(bookList));
+        reply.status(200).send(transformKeysToCamelCase(bookList));
     } catch (err) {
         buildErrorMessage({
             err,

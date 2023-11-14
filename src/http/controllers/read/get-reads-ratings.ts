@@ -20,7 +20,7 @@ export async function getReadsRatings(request: FastifyRequest, reply: FastifyRep
             userId,
         });
 
-        reply.status(201).send({
+        reply.status(200).send({
             data: transformKeysToCamelCase(data),
             total,
             averageRating,

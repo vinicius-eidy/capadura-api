@@ -18,7 +18,7 @@ export async function findByUser(request: FastifyRequest, reply: FastifyReply) {
             username,
         });
 
-        reply.status(201).send(transformKeysToCamelCase(favoriteBooks));
+        reply.status(200).send(transformKeysToCamelCase(favoriteBooks));
     } catch (err) {
         buildErrorMessage({
             err,

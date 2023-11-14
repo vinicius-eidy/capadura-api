@@ -5,7 +5,8 @@ interface buildErrorMessageProps {
 
 export function buildErrorMessage({ err, prefix }: buildErrorMessageProps) {
     if (err instanceof Error) {
-        throw new Error(prefix + err.message);
+        err.message = prefix + err.message;
+        throw err;
     }
 
     throw new Error(prefix + `Unexpected error type: ${typeof err}: ${err}`);
