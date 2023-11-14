@@ -38,10 +38,10 @@ export async function googleOAuth(request: FastifyRequest, reply: FastifyReply) 
             },
         );
 
-        reply.setCookie("token", token, sessionCookieSettings);
-        reply.setCookie("refreshToken", refreshToken, sessionCookieSettings);
-
-        reply.redirect(`${env.BASE_URL_FRONT_END}/inicio`);
+        reply
+            .setCookie("token", token, sessionCookieSettings)
+            .setCookie("refreshToken", refreshToken, sessionCookieSettings)
+            .redirect(`${env.BASE_URL_FRONT_END}/inicio`);
     } catch (err) {
         buildErrorMessage({
             err,

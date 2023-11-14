@@ -82,7 +82,8 @@ export class CreateBookUseCase {
             industryIdentifiers,
         } = data.volumeInfo;
 
-        const bookISBN13 = industryIdentifiers.find((item) => item.type === "ISBN_13")?.identifier;
+        const bookISBN13 =
+            industryIdentifiers?.find((item) => item.type === "ISBN_13")?.identifier ?? null;
 
         const parsedPulishedDate = new Date(publishedDate);
         const dbPublishedDate = isValid(parsedPulishedDate)
