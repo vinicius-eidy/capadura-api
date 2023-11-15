@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
     NODE_ENV: z.enum(["dev", "test", "production"]).default("dev"),
+    DOMAIN: z.string().default("127.0.0.1"),
     BASE_URL_FRONT_END: z.string().default("http://127.0.0.1:3000"),
 
     S3_BUCKET_NAME: z.string(),
@@ -16,6 +17,9 @@ const envSchema = z.object({
     CLOUDFRONT_KEY_PAIR_ID: z.string(),
 
     JWT_SECRET: z.string(),
+
+    DATABASE_URL: z.string(),
+    REDIS_URL: z.string().default("redis://127.0.0.1:6379"),
 
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_SECRET_ID: z.string(),

@@ -31,6 +31,5 @@ export async function getGoogleOAuthTokens(code: string) {
         return response.data;
     } catch (error: any) {
         console.error(error.response.data.error);
-        throw new Error(error.message);
     }
 }

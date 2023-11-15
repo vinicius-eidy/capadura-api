@@ -2,6 +2,7 @@ import { Book } from "@prisma/client";
 
 import { env } from "@/env";
 import { putS3Object } from "@/utils/put-s3-object";
+import { setRedis } from "@/lib/redis";
 
 import { BooksRepository } from "@/repositories/books-repository";
 import { ResourceNotFoundError } from "./_errors/resource-not-found-error";
@@ -70,6 +71,8 @@ export class UpdateBookUseCase {
         });
 
         const imageUrl = imageLink ? getSignedUrlUtil({ key: `book-${id}` }) : undefined;
+
+        await setRedis(id, JSON.stringify(book));
 
         return {
             ...updatedBook,

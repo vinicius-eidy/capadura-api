@@ -1,15 +1,17 @@
 import { FastifyRequest, FastifyReply } from "fastify";
+import { CookieSerializeOptions } from "@fastify/cookie";
 import { z } from "zod";
 
+import { env } from "@/env";
 import { makeAuthenticateUseCase } from "@/use-cases/_factories/users/make-authenticate-use-case";
 import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { buildErrorMessage } from "@/utils/build-error-message";
 
-export const sessionCookieSettings = {
+export const sessionCookieSettings: CookieSerializeOptions = {
     path: "/",
     secure: true, // HTTPS
     sameSite: true,
-    // httpOnly: true, // accessible just in back-end
+    domain: env.DOMAIN,
 };
 
 export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
