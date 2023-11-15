@@ -10,9 +10,9 @@ import { buildErrorMessage } from "@/utils/build-error-message";
 export const sessionCookieSettings: CookieSerializeOptions = {
     secure: true, // HTTPS
     maxAge: 864000, // 60 * 60 * 24 * 10 (10 days)
-    httpOnly: true,
-    sameSite: "lax",
+    sameSite: true,
     domain: env.DOMAIN,
+    path: "/",
 };
 
 export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
