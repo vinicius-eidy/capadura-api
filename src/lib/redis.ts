@@ -10,7 +10,9 @@ const getRedisUrl = () => {
     throw new Error("REDIS_URL is not defined.");
 };
 
-export const redis = new Redis(getRedisUrl());
+export const redis = new Redis(getRedisUrl(), {
+    password: env.REDIS_PASSWORD,
+});
 
 redis.on("error", function (error) {
     console.error("[REDIS ERROR]: " + error);

@@ -20,6 +20,7 @@ const envSchema = z.object({
 
     DATABASE_URL: z.string(),
     REDIS_URL: z.string().default("redis://127.0.0.1:6379"),
+    REDIS_PASSWORD: z.string().default("pwd"),
 
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_SECRET_ID: z.string(),
