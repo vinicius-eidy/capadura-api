@@ -7,6 +7,7 @@
         "start:dev": "tsx watch src/server.ts",
         "start": "node build/server.js",
         "build": "tsup src --out-dir build",
+        "deploy": "npm ci && npx prisma migrate deploy && npm run start",
         "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
         "test:install-prisma-environment": "npm link vitest-environment-prisma",
         "test": "vitest run --dir src/use-cases",

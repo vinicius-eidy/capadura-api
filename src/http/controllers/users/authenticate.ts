@@ -8,9 +8,10 @@ import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { buildErrorMessage } from "@/utils/build-error-message";
 
 export const sessionCookieSettings: CookieSerializeOptions = {
-    path: "/",
     secure: true, // HTTPS
-    sameSite: true,
+    maxAge: 864.000, // 60 * 60 * 24 * 10 (10 days)
+    httpOnly: true,
+    sameSite: "lax",
     domain: env.DOMAIN,
 };
 

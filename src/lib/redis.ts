@@ -13,7 +13,7 @@ const getRedisUrl = () => {
 export const redis = new Redis(getRedisUrl());
 
 redis.on("error", function (error) {
-    console.error(error);
+    console.error("[REDIS ERROR]: " + error);
 });
 
 export const getRedis = async <T>(key: string): Promise<T | null> => {
