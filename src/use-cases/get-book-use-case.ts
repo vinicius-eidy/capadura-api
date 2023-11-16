@@ -29,7 +29,7 @@ export class GetBookUseCase {
             book.imageUrl = getSignedUrlUtil({ key: book.image_key });
         }
 
-        await setRedis(id, JSON.stringify(book));
+        await setRedis(id, book);
 
         return book;
     }

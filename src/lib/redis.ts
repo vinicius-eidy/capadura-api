@@ -36,7 +36,7 @@ export const getRedis = async <T>(key: string): Promise<T | null> => {
 export const setRedis = async (key: string, value: any): Promise<void> => {
     try {
         const stringValue = JSON.stringify(value);
-        await redis.set(key, stringValue, "EX", 60 * 60 * 2); // 2 hours
+        await redis.set(key, stringValue, "EX", 60 * 60 * 24 * 30); // 30 days
     } catch (error) {
         console.error("Error setting data in Redis:", error);
     }

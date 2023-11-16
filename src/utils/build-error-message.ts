@@ -5,6 +5,10 @@ interface buildErrorMessageProps {
 
 export function buildErrorMessage({ err, prefix }: buildErrorMessageProps) {
     if (err instanceof Error) {
+        if (err.name === "ZodError") {
+            throw err;
+        }
+
         err.message = prefix + err.message;
         throw err;
     }

@@ -72,7 +72,7 @@ export class UpdateBookUseCase {
 
         const imageUrl = imageLink ? getSignedUrlUtil({ key: `book-${id}` }) : undefined;
 
-        await setRedis(id, JSON.stringify(book));
+        await setRedis(id, book);
 
         return {
             ...updatedBook,
