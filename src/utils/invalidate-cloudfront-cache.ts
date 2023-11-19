@@ -11,7 +11,7 @@ export async function invalidateCloudFrontCache({ key }: invalidateCloudFrontCac
     const invalidationParams = {
         DistributionId: env.CLOUDFRONT_DISTRIBUTION_ID,
         InvalidationBatch: {
-            CallerReference: key,
+            CallerReference: `${key}-${Date.now()}`,
             Paths: {
                 Quantity: 1,
                 Items: ["/" + key],

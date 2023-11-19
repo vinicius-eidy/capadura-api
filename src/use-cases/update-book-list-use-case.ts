@@ -65,8 +65,20 @@ export class UpdateBookListUseCase {
             image_key: imageBuffer ? `booklist-${bookListId}` : undefined,
         });
 
-        if (bookList.image_key) {
-            bookList.imageUrl = getSignedUrlUtil({ key: bookList.image_key });
+        if (imageBuffer) {
+            // wait 1.5s to get the new cached image
+            await new Promise<void>((resolve) =>
+                setTimeout(() => {
+                    if (bookList.image_key) {
+                        bookList.imageUrl = getSignedUrlUtil({ key: bookList.image_key });
+                    }
+                    resolve();
+                }, 1500),
+            );
+        } else {
+            if (bookList.image_key) {
+                bookList.imageUrl = getSignedUrlUtil({ key: bookList.image_key });
+            }
         }
 
         return bookList;

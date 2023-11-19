@@ -65,7 +65,6 @@ export class UpdateUserUseCase {
                 await invalidateCloudFrontCache({ key: existentUser.image_key });
             }
 
-            // upload new image in S3
             const updatedBuffer = await sharp(imageBuffer).jpeg({ quality: 80 }).toBuffer();
 
             await putS3Object({
@@ -88,8 +87,20 @@ export class UpdateUserUseCase {
             twitter,
         });
 
-        if (user.image_key) {
-            user.imageUrl = getSignedUrlUtil({ key: user.image_key });
+        if (imageBuffer) {
+            // wait 1.5s to get the new cached image
+            await new Promise<void>((resolve) =>
+                setTimeout(() => {
+                    if (user.image_key) {
+                        user.imageUrl = getSignedUrlUtil({ key: user.image_key });
+                    }
+                    resolve();
+                }, 1500),
+            );
+        } else {
+            if (user.image_key) {
+                user.imageUrl = getSignedUrlUtil({ key: user.image_key });
+            }
         }
 
         return {
