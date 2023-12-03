@@ -1,4 +1,4 @@
-![Screenshot](/public/capadura-app.png)
+![Screenshot](/public/capadura-homepage.jpg)
 
 # Projeto Capadura - Repo Back-end
 
@@ -106,6 +106,7 @@ Para quem deseja contribuir: recomendo abrir uma discussão com a alteração qu
 - [ ] Isolar a camada de DTO
 - [ ] Isolar a camada de entidades
 - [ ] Testes unitário/integração e e2e em toda a aplicação
+- [ ] Documentação das rotas
 
 ## ⚙️ Variaveis de ambiente
 
