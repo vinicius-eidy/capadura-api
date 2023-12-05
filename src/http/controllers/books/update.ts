@@ -6,8 +6,11 @@ import { transformKeysToCamelCase } from "@/utils/transform-keys-to-camel-case";
 import { buildErrorMessage } from "@/utils/build-error-message";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
-    const updateBookBodySchema = z.object({
+    const updateBookParamsSchema = z.object({
         id: z.string(),
+    });
+
+    const updateBookBodySchema = z.object({
         subtitle: z.string().optional(),
         authors: z.string().array().optional(),
         publisher: z.string().optional(),
@@ -19,8 +22,9 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     });
 
     try {
+        const { id } = updateBookParamsSchema.parse(request.params);
+
         const {
-            id,
             subtitle,
             authors,
             publisher,
