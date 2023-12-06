@@ -27,9 +27,8 @@ export class GetBookUseCase {
 
         if (book.image_key) {
             book.imageUrl = getSignedUrlUtil({ key: book.image_key });
+            await setRedis(id, book);
         }
-
-        await setRedis(id, book);
 
         return book;
     }
