@@ -6,7 +6,7 @@ interface getSignedUrlUtilProps {
     dateLessThan?: number;
 }
 
-const DEFAULT_EXPIRES_DATE_TIME = 1000 * 60 * 60 * 24 * 30; // 30 days,
+const DEFAULT_EXPIRES_DATE_TIME = 1000 * 60 * 60 * 24; // 24 hours,
 
 export function getSignedUrlUtil({
     key,
