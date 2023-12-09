@@ -1,6 +1,5 @@
 import { Read } from "@prisma/client";
 import { ReadsRepository } from "@/repositories/reads-repository";
-import { getSignedUrlUtil } from "@/utils/get-signed-url";
 
 interface FetchManyReadsByUserForUniqueBookUseCaseRequest {
     userId: string;

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { isValid } from "date-fns";
 import { Book } from "@prisma/client";
+import sharp from "sharp";
 
 import { env } from "@/env";
 import { putS3Object } from "@/utils/put-s3-object";
@@ -92,17 +93,20 @@ export class CreateBookUseCase {
 
         const imageLink = imageLinks?.medium?.replace("&edge=curl", "");
 
-        // save image book on AWS S3
         if (imageLink) {
             const response = await fetch(imageLink);
             const imageBuffer: ArrayBuffer = await response.arrayBuffer();
-            const imageContentType = response.headers.get("Content-Type") || undefined;
+
+            const sharpedBuffer = await sharp(imageBuffer)
+                .resize(312, null)
+                .jpeg({ quality: 80 })
+                .toBuffer();
 
             await putS3Object({
                 Bucket: env.S3_BUCKET_NAME,
                 Key: `book-${bookId}`,
-                Body: Buffer.from(imageBuffer),
-                ContentType: imageContentType,
+                Body: sharpedBuffer,
+                ContentType: "image/jpeg",
             });
         }
 

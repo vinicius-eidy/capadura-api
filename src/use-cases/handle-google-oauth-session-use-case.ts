@@ -1,5 +1,6 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import { User } from "@prisma/client";
+import sharp from "sharp";
 
 import { env } from "@/env";
 import { UsersRepository } from "@/repositories/users-repository";
@@ -44,13 +45,17 @@ export class HandleGoogleOAuthSessionUseCase {
         if (picture) {
             const response = await fetch(picture);
             const imageBuffer: ArrayBuffer = await response.arrayBuffer();
-            const imageContentType = response.headers.get("Content-Type") || undefined;
+
+            const updatedBuffer = await sharp(imageBuffer)
+                .resize(160, 160)
+                .jpeg({ quality: 80 })
+                .toBuffer();
 
             await putS3Object({
                 Bucket: env.S3_BUCKET_NAME,
                 Key: `user-${createUserId}`,
-                Body: Buffer.from(imageBuffer),
-                ContentType: imageContentType,
+                Body: updatedBuffer,
+                ContentType: "image/jpeg",
             });
         }
 

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import qs from "qs";
 import { env } from "@/env";
 
@@ -22,14 +22,18 @@ export async function getGoogleOAuthTokens(code: string) {
     };
 
     try {
-        const response = await axios.post<GoogleTokensResult>(url, qs.stringify(values), {
+        const response = await axios.post(url, qs.stringify(values), {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         });
 
-        return response.data;
-    } catch (error: any) {
-        console.error(error.response.data.error);
+        return response.data as GoogleTokensResult;
+    } catch (err) {
+        if (err instanceof AxiosError && err.response) {
+            console.error(err.response.data.error);
+        }
+
+        throw err;
     }
 }

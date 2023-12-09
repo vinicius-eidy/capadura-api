@@ -37,7 +37,10 @@ export class CreateBookListUseCase {
 
         if (imageBuffer) {
             // upload new image in S3
-            const updatedBuffer = await sharp(imageBuffer).jpeg({ quality: 80 }).toBuffer();
+            const updatedBuffer = await sharp(imageBuffer)
+                .resize(224, 224)
+                .jpeg({ quality: 80 })
+                .toBuffer();
 
             await putS3Object({
                 Bucket: env.S3_BUCKET_NAME,
